@@ -1,6 +1,12 @@
 <?php
 namespace Hostnet\Entities\Installer;
 
+use Composer\Repository\InstalledRepositoryInterface;
+
+use Composer\IO\IOInterface;
+
+use Composer\Composer;
+
 use Symfony\Component\Finder\Finder;
 
 use Composer\Package\PackageInterface;
@@ -9,13 +15,32 @@ use Composer\Installer\LibraryInstaller;
 
 /**
  * Custom installer to generate the various traits and interfaces for that package
+ * Assumption: installers are singletons, so this is the only installer for this type
  * @author Nico Schoenmaker <nschoenmaker@hostnet.nl>
  */
 class Installer extends LibraryInstaller
 {
+  const PACKAGE_TYPE = 'hostnet-entity';
+
   public function supports($packageType)
   {
-    return 'hostnet-entity' === $packageType;
+    return self::PACKAGE_TYPE === $packageType;
+  }
+
+  public function __destruct()
+  {
+    $local_repository = $this->composer->getRepositoryManager()->getLocalRepository();
+    $hostnet_entities = array();
+
+    /* @var $local_repository \Composer\Repository\RepositoryInterface */
+    foreach($local_repository->getPackages() as $package) {
+      /* @var $package \Composer\Package\PackageInterface */
+      if($this->supports($package->getType())) {
+        $hostnet_entities[] = $package;
+      }
+    }
+    $this->io->write(print_r($hostnet_entities, true));
+    $this->io->write('<info>Thats all folks!</info>');
   }
 
   protected function installBinaries(PackageInterface $package)
