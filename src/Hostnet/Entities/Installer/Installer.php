@@ -11,6 +11,11 @@ use Composer\Installer\LibraryInstaller;
  */
 class Installer extends LibraryInstaller
 {
+  public function supports($packageType)
+  {
+    return 'hostnet-entity' === $packageType;
+  }
+
   protected function installBinaries(PackageInterface $package)
   {
     parent::installBinaries($package);
