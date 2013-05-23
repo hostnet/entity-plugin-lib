@@ -1,0 +1,8 @@
+{% for parameter in parameters %}
+{%- if parameter.isArray() %}array {% endif %}
+{# TODO add typehint for class. Cant call parameter.class because that will trigger the autoloader #}
+${{  parameter.name }}
+{%- if parameter.isOptional() %}
+{%- if parameter.allowsNull() %} = null{% else %} = {{ parameter.defaultValue }}{% endif %}
+{%- endif %}
+{% endfor %}
