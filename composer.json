@@ -5,7 +5,11 @@
     "license": "proprietary",
     "require": {
         "php": ">=5.4",
-        "twig/twig": "*"
+        "composer/composer": "1.0.*@dev",
+        "twig/twig": ">=1.13"
+    },
+    "require-dev": {
+        "phpunit/phpunit": ">=3.7"
     },
     "minimum-stability": "stable",
     "repositories": [
@@ -21,9 +25,6 @@
         "github-oauth": {
             "github.com": "8ed444290f5ae4c7e82628ef30acc90680f0474b"
         }
-    },
-    "require-dev": {
-        "composer/composer": "1.0.*@dev"
     },
     "extra": {
         "class": "Hostnet\\Entities\\Installer\\Installer"
