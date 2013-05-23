@@ -1,0 +1,30 @@
+{
+    "name": "hostnet/entity-installer",
+    "type": "composer-installer",
+    "description": "Installer for all the Hostnet Doctrine entity libraries",
+    "license": "proprietary",
+    "require": {
+        "php": ">=5.4"
+    },
+    "minimum-stability": "stable",
+    "repositories": [
+        {
+            "type":"composer",
+            "url": "http://packagist.hostnetbv.nl"
+        }
+    ],
+    "autoload": {
+        "psr-0": { "Hostnet\\Entities\\Installer": "src/" }
+    },
+    "config": {
+        "github-oauth": {
+            "github.com": "8ed444290f5ae4c7e82628ef30acc90680f0474b"
+        }
+    },
+    "require-dev": {
+        "composer/composer": "1.0.*@dev"
+    },
+    "extra": {
+        "class": "Hostnet\\Entities\\Installer\\Installer"
+    }
+}
