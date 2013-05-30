@@ -3,29 +3,32 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "41d54a8e70330752c2e5025c3617368c",
+    "hash": "5272ac3569415f976d756a2486675dc9",
     "packages": [
         {
             "name": "composer/composer",
-            "version": "1.0.0-alpha6",
+            "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/composer/composer.git",
-                "reference": "1.0.0-alpha6"
+                "reference": "c0679232e24af279f2b99cb5f30d0704aa3f17c6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/composer/composer/zipball/1.0.0-alpha6",
-                "reference": "1.0.0-alpha6",
+                "url": "https://api.github.com/repos/composer/composer/zipball/c0679232e24af279f2b99cb5f30d0704aa3f17c6",
+                "reference": "c0679232e24af279f2b99cb5f30d0704aa3f17c6",
                 "shasum": ""
             },
             "require": {
                 "justinrainbow/json-schema": "1.1.*",
                 "php": ">=5.3.2",
                 "seld/jsonlint": "1.*",
-                "symfony/console": ">=2.1,<3.0",
+                "symfony/console": ">=2.3,<3.0",
                 "symfony/finder": ">=2.1,<3.0",
                 "symfony/process": ">=2.1,<3.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": ">=3.7.10.0,<3.8"
             },
             "suggest": {
                 "ext-openssl": "Enabling the openssl extension allows you to access https URLs for repositories and packages",
@@ -62,14 +65,14 @@
                     "homepage": "http://www.naderman.de"
                 }
             ],
-            "description": "Package Manager",
+            "description": "Dependency Manager",
             "homepage": "http://getcomposer.org/",
             "keywords": [
                 "autoload",
                 "dependency",
                 "package"
             ],
-            "time": "2012-10-23 08:54:25"
+            "time": "2013-05-30 09:09:03"
         },
         {
             "name": "justinrainbow/json-schema",
@@ -175,26 +178,32 @@
         },
         {
             "name": "symfony/console",
-            "version": "v2.2.1",
+            "version": "dev-master",
             "target-dir": "Symfony/Component/Console",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/Console.git",
-                "reference": "v2.2.1"
+                "reference": "883831e2864a702de8e8c44b4d7691fa7ec44911"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/Console/zipball/v2.2.1",
-                "reference": "v2.2.1",
+                "url": "https://api.github.com/repos/symfony/Console/zipball/883831e2864a702de8e8c44b4d7691fa7ec44911",
+                "reference": "883831e2864a702de8e8c44b4d7691fa7ec44911",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.3.3"
             },
+            "require-dev": {
+                "symfony/event-dispatcher": ">=2.1,<3.0"
+            },
+            "suggest": {
+                "symfony/event-dispatcher": ""
+            },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.2-dev"
+                    "dev-master": "2.4-dev"
                 }
             },
             "autoload": {
@@ -218,21 +227,21 @@
             ],
             "description": "Symfony Console Component",
             "homepage": "http://symfony.com",
-            "time": "2013-03-19 20:48:08"
+            "time": "2013-05-27 14:49:42"
         },
         {
             "name": "symfony/finder",
-            "version": "v2.2.1",
+            "version": "dev-master",
             "target-dir": "Symfony/Component/Finder",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/Finder.git",
-                "reference": "v2.2.1"
+                "reference": "864ccacd5327dce1417e16eaaae310d80d4b052f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/Finder/zipball/v2.2.1",
-                "reference": "v2.2.1",
+                "url": "https://api.github.com/repos/symfony/Finder/zipball/864ccacd5327dce1417e16eaaae310d80d4b052f",
+                "reference": "864ccacd5327dce1417e16eaaae310d80d4b052f",
                 "shasum": ""
             },
             "require": {
@@ -241,7 +250,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.2-dev"
+                    "dev-master": "2.4-dev"
                 }
             },
             "autoload": {
@@ -265,21 +274,21 @@
             ],
             "description": "Symfony Finder Component",
             "homepage": "http://symfony.com",
-            "time": "2013-04-01 07:51:50"
+            "time": "2013-05-27 14:49:42"
         },
         {
             "name": "symfony/process",
-            "version": "v2.2.1",
+            "version": "dev-master",
             "target-dir": "Symfony/Component/Process",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/Process.git",
-                "reference": "v2.2.1"
+                "reference": "75c810176f8e069714cef8696d7ecc3aa86e8168"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/Process/zipball/v2.2.1",
-                "reference": "v2.2.1",
+                "url": "https://api.github.com/repos/symfony/Process/zipball/75c810176f8e069714cef8696d7ecc3aa86e8168",
+                "reference": "75c810176f8e069714cef8696d7ecc3aa86e8168",
                 "shasum": ""
             },
             "require": {
@@ -288,7 +297,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.2-dev"
+                    "dev-master": "2.4-dev"
                 }
             },
             "autoload": {
@@ -312,20 +321,20 @@
             ],
             "description": "Symfony Process Component",
             "homepage": "http://symfony.com",
-            "time": "2013-03-23 07:49:54"
+            "time": "2013-05-16 07:54:39"
         },
         {
             "name": "twig/twig",
-            "version": "v1.13.0",
+            "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fabpot/Twig.git",
-                "reference": "v1.13.0"
+                "reference": "fca6a9562dc032a7ba3ab8278b731b72efa8bd9c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fabpot/Twig/zipball/v1.13.0",
-                "reference": "v1.13.0",
+                "url": "https://api.github.com/repos/fabpot/Twig/zipball/fca6a9562dc032a7ba3ab8278b731b72efa8bd9c",
+                "reference": "fca6a9562dc032a7ba3ab8278b731b72efa8bd9c",
                 "shasum": ""
             },
             "require": {
@@ -361,38 +370,44 @@
             "keywords": [
                 "templating"
             ],
-            "time": "2013-05-10 15:12:43"
+            "time": "2013-05-29 14:58:12"
         }
     ],
     "packages-dev": [
         {
             "name": "phpunit/php-code-coverage",
-            "version": "1.2.11",
+            "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/php-code-coverage.git",
-                "reference": "1.2.11"
+                "reference": "3f016c546ad206ebced25a1d0bfae318104faace"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/php-code-coverage/zipball/1.2.11",
-                "reference": "1.2.11",
+                "url": "https://api.github.com/repos/sebastianbergmann/php-code-coverage/zipball/3f016c546ad206ebced25a1d0bfae318104faace",
+                "reference": "3f016c546ad206ebced25a1d0bfae318104faace",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.3.3",
-                "phpunit/php-file-iterator": ">=1.3.0@stable",
-                "phpunit/php-text-template": ">=1.1.1@stable",
-                "phpunit/php-token-stream": ">=1.1.3@stable"
+                "php": ">=5.4.7",
+                "phpunit/php-file-iterator": ">=1.3.0",
+                "phpunit/php-text-template": ">=1.1.1",
+                "phpunit/php-token-stream": ">=1.1.3",
+                "sebastian/version": ">=1.0.0"
             },
             "require-dev": {
-                "phpunit/phpunit": "3.7.*"
+                "phpunit/phpunit": "dev-master"
             },
             "suggest": {
                 "ext-dom": "*",
-                "ext-xdebug": ">=2.0.5"
+                "ext-xdebug": ">=2.2.1"
             },
             "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.3.x-dev"
+                }
+            },
             "autoload": {
                 "classmap": [
                     "PHP/"
@@ -419,20 +434,20 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2013-05-23 18:23:24"
+            "time": "2013-05-30 04:26:48"
         },
         {
             "name": "phpunit/php-file-iterator",
-            "version": "1.3.3",
+            "version": "dev-master",
             "source": {
                 "type": "git",
-                "url": "git://github.com/sebastianbergmann/php-file-iterator.git",
-                "reference": "1.3.3"
+                "url": "https://github.com/sebastianbergmann/php-file-iterator.git",
+                "reference": "2deb24c65ea78e126daa8d45b2089ddc29ec1d26"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/sebastianbergmann/php-file-iterator/zipball/1.3.3",
-                "reference": "1.3.3",
+                "url": "https://api.github.com/repos/sebastianbergmann/php-file-iterator/zipball/2deb24c65ea78e126daa8d45b2089ddc29ec1d26",
+                "reference": "2deb24c65ea78e126daa8d45b2089ddc29ec1d26",
                 "shasum": ""
             },
             "require": {
@@ -459,25 +474,25 @@
                 }
             ],
             "description": "FilterIterator implementation that filters files based on a list of suffixes.",
-            "homepage": "http://www.phpunit.de/",
+            "homepage": "https://github.com/sebastianbergmann/php-file-iterator/",
             "keywords": [
                 "filesystem",
                 "iterator"
             ],
-            "time": "2012-10-11 04:44:38"
+            "time": "2013-01-07 10:47:05"
         },
         {
             "name": "phpunit/php-text-template",
-            "version": "1.1.4",
+            "version": "dev-master",
             "source": {
                 "type": "git",
-                "url": "git://github.com/sebastianbergmann/php-text-template.git",
-                "reference": "1.1.4"
+                "url": "https://github.com/sebastianbergmann/php-text-template.git",
+                "reference": "1eeef106193d2f8c539728e566bb4793071a9e18"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/sebastianbergmann/php-text-template/zipball/1.1.4",
-                "reference": "1.1.4",
+                "url": "https://api.github.com/repos/sebastianbergmann/php-text-template/zipball/1eeef106193d2f8c539728e566bb4793071a9e18",
+                "reference": "1eeef106193d2f8c539728e566bb4793071a9e18",
                 "shasum": ""
             },
             "require": {
@@ -508,24 +523,24 @@
             "keywords": [
                 "template"
             ],
-            "time": "2012-10-31 11:15:28"
+            "time": "2013-01-07 10:56:17"
         },
         {
             "name": "phpunit/php-timer",
-            "version": "1.0.4",
+            "version": "dev-master",
             "source": {
                 "type": "git",
-                "url": "git://github.com/sebastianbergmann/php-timer.git",
-                "reference": "1.0.4"
+                "url": "https://github.com/sebastianbergmann/php-timer.git",
+                "reference": "b8711450c866702ba33666a507eb366e4e5d4ff1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/sebastianbergmann/php-timer/zipball/1.0.4",
-                "reference": "1.0.4",
+                "url": "https://api.github.com/repos/sebastianbergmann/php-timer/zipball/b8711450c866702ba33666a507eb366e4e5d4ff1",
+                "reference": "b8711450c866702ba33666a507eb366e4e5d4ff1",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.3.3"
+                "php": ">=5.4.7"
             },
             "type": "library",
             "autoload": {
@@ -548,24 +563,24 @@
                 }
             ],
             "description": "Utility class for timing",
-            "homepage": "http://www.phpunit.de/",
+            "homepage": "https://github.com/sebastianbergmann/php-timer/",
             "keywords": [
                 "timer"
             ],
-            "time": "2012-10-11 04:45:58"
+            "time": "2013-02-18 08:52:11"
         },
         {
             "name": "phpunit/php-token-stream",
-            "version": "1.1.5",
+            "version": "dev-master",
             "source": {
                 "type": "git",
-                "url": "git://github.com/sebastianbergmann/php-token-stream.git",
-                "reference": "1.1.5"
+                "url": "https://github.com/sebastianbergmann/php-token-stream.git",
+                "reference": "c25dd88e1592e66dee2553c99ef244203d5a1b98"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/sebastianbergmann/php-token-stream/zipball/1.1.5",
-                "reference": "1.1.5",
+                "url": "https://api.github.com/repos/sebastianbergmann/php-token-stream/zipball/c25dd88e1592e66dee2553c99ef244203d5a1b98",
+                "reference": "c25dd88e1592e66dee2553c99ef244203d5a1b98",
                 "shasum": ""
             },
             "require": {
@@ -593,24 +608,24 @@
                 }
             ],
             "description": "Wrapper around PHP's tokenizer extension.",
-            "homepage": "http://www.phpunit.de/",
+            "homepage": "https://github.com/sebastianbergmann/php-token-stream/",
             "keywords": [
                 "tokenizer"
             ],
-            "time": "2012-10-11 04:47:14"
+            "time": "2013-01-07 10:56:35"
         },
         {
             "name": "phpunit/phpunit",
-            "version": "3.7.21",
+            "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "3.7.21"
+                "reference": "439f7f6de0cb5b04c4cf160fdd02b59964d49a08"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/3.7.21",
-                "reference": "3.7.21",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/439f7f6de0cb5b04c4cf160fdd02b59964d49a08",
+                "reference": "439f7f6de0cb5b04c4cf160fdd02b59964d49a08",
                 "shasum": ""
             },
             "require": {
@@ -618,12 +633,15 @@
                 "ext-pcre": "*",
                 "ext-reflection": "*",
                 "ext-spl": "*",
-                "php": ">=5.3.3",
-                "phpunit/php-code-coverage": ">=1.2.1,<1.3.0",
+                "php": ">=5.4.7",
+                "phpunit/php-code-coverage": "1.3.*@dev",
                 "phpunit/php-file-iterator": ">=1.3.1",
                 "phpunit/php-text-template": ">=1.1.1",
-                "phpunit/php-timer": ">=1.0.2,<1.1.0",
-                "phpunit/phpunit-mock-objects": ">=1.2.0,<1.3.0",
+                "phpunit/php-timer": ">=1.1.0",
+                "phpunit/phpunit-mock-objects": "1.3.*@dev",
+                "sebastian/diff": ">=1.0.0",
+                "sebastian/exporter": ">=1.0.0",
+                "sebastian/version": ">=1.0.0",
                 "symfony/yaml": ">=2.0,<3.0"
             },
             "require-dev": {
@@ -633,7 +651,7 @@
                 "ext-json": "*",
                 "ext-simplexml": "*",
                 "ext-tokenizer": "*",
-                "phpunit/php-invoker": ">=1.1.0,<1.2.0"
+                "phpunit/php-invoker": ">=1.2.0"
             },
             "bin": [
                 "composer/bin/phpunit"
@@ -641,7 +659,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "3.7.x-dev"
+                    "dev-master": "3.8.x-dev"
                 }
             },
             "autoload": {
@@ -671,30 +689,38 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2013-05-23 18:54:29"
+            "time": "2013-05-30 04:22:27"
         },
         {
             "name": "phpunit/phpunit-mock-objects",
-            "version": "1.2.3",
+            "version": "dev-master",
             "source": {
                 "type": "git",
-                "url": "git://github.com/sebastianbergmann/phpunit-mock-objects.git",
-                "reference": "1.2.3"
+                "url": "https://github.com/sebastianbergmann/phpunit-mock-objects.git",
+                "reference": "a35e63460d2b4524e026b9f1bd288e592ec1620c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/sebastianbergmann/phpunit-mock-objects/archive/1.2.3.zip",
-                "reference": "1.2.3",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit-mock-objects/zipball/a35e63460d2b4524e026b9f1bd288e592ec1620c",
+                "reference": "a35e63460d2b4524e026b9f1bd288e592ec1620c",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.3.3",
-                "phpunit/php-text-template": ">=1.1.1@stable"
+                "php": ">=5.4.7",
+                "phpunit/php-text-template": ">=1.1.1"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "dev-master"
             },
             "suggest": {
                 "ext-soap": "*"
             },
             "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.3.x-dev"
+                }
+            },
             "autoload": {
                 "classmap": [
                     "PHPUnit/"
@@ -720,21 +746,20 @@
                 "mock",
                 "xunit"
             ],
-            "time": "2013-01-13 10:24:48"
+            "time": "2013-05-07 12:03:33"
         },
         {
-            "name": "symfony/yaml",
-            "version": "v2.2.1",
-            "target-dir": "Symfony/Component/Yaml",
+            "name": "sebastian/diff",
+            "version": "dev-master",
             "source": {
                 "type": "git",
-                "url": "https://github.com/symfony/Yaml.git",
-                "reference": "v2.2.1"
+                "url": "https://github.com/sebastianbergmann/diff.git",
+                "reference": "222e1939856808fe4d02ec856a08721858d0217b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/Yaml/zipball/v2.2.1",
-                "reference": "v2.2.1",
+                "url": "https://api.github.com/repos/sebastianbergmann/diff/zipball/222e1939856808fe4d02ec856a08721858d0217b",
+                "reference": "222e1939856808fe4d02ec856a08721858d0217b",
                 "shasum": ""
             },
             "require": {
@@ -743,7 +768,156 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.2-dev"
+                    "dev-master": "1.0.x-dev"
+                }
+            },
+            "autoload": {
+                "classmap": [
+                    "src/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Sebastian Bergmann",
+                    "email": "sebastian@phpunit.de",
+                    "role": "lead"
+                },
+                {
+                    "name": "Kore Nordmann",
+                    "email": "mail@kore-nordmann.de"
+                }
+            ],
+            "description": "Diff implementation",
+            "homepage": "http://www.github.com/sebastianbergmann/diff",
+            "keywords": [
+                "diff"
+            ],
+            "time": "2013-05-23 05:55:40"
+        },
+        {
+            "name": "sebastian/exporter",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/sebastianbergmann/exporter.git",
+                "reference": "ded61126bda06f9743cd4b3db1758d0554cbf1d9"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/sebastianbergmann/exporter/zipball/ded61126bda06f9743cd4b3db1758d0554cbf1d9",
+                "reference": "ded61126bda06f9743cd4b3db1758d0554cbf1d9",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.3"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0.x-dev"
+                }
+            },
+            "autoload": {
+                "classmap": [
+                    "src/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Sebastian Bergmann",
+                    "email": "sebastian@phpunit.de",
+                    "role": "lead"
+                },
+                {
+                    "name": "Jeff Welch",
+                    "email": "whatthejeff@gmail.com"
+                },
+                {
+                    "name": "Volker Dusch",
+                    "email": "github@wallbash.com"
+                },
+                {
+                    "name": "Adam Harvey",
+                    "email": "aharvey@php.net"
+                },
+                {
+                    "name": "Bernhard Schussek",
+                    "email": "bschussek@2bepublished.at"
+                }
+            ],
+            "description": "Provides the functionality to export PHP variables for visualization",
+            "homepage": "http://www.github.com/sebastianbergmann/exporter",
+            "keywords": [
+                "export",
+                "exporter"
+            ],
+            "time": "2013-02-18 17:48:31"
+        },
+        {
+            "name": "sebastian/version",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/sebastianbergmann/version.git",
+                "reference": "1.0.1"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/sebastianbergmann/version/zipball/1.0.1",
+                "reference": "1.0.1",
+                "shasum": ""
+            },
+            "type": "library",
+            "autoload": {
+                "classmap": [
+                    "src/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Sebastian Bergmann",
+                    "email": "sebastian@phpunit.de",
+                    "role": "lead"
+                }
+            ],
+            "description": "Library that helps with managing the version number of Git-hosted PHP projects",
+            "homepage": "https://github.com/sebastianbergmann/version",
+            "time": "2013-05-29 10:02:00"
+        },
+        {
+            "name": "symfony/yaml",
+            "version": "dev-master",
+            "target-dir": "Symfony/Component/Yaml",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/Yaml.git",
+                "reference": "82100c7732c95452702d11433aad50988700d36c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/Yaml/zipball/82100c7732c95452702d11433aad50988700d36c",
+                "reference": "82100c7732c95452702d11433aad50988700d36c",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.3"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.4-dev"
                 }
             },
             "autoload": {
@@ -767,13 +941,13 @@
             ],
             "description": "Symfony Yaml Component",
             "homepage": "http://symfony.com",
-            "time": "2013-03-23 07:49:54"
+            "time": "2013-05-16 07:54:39"
         }
     ],
     "aliases": [
 
     ],
-    "minimum-stability": "stable",
+    "minimum-stability": "dev",
     "stability-flags": {
         "composer/composer": 20
     },

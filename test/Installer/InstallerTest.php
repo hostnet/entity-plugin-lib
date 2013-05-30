@@ -1,5 +1,5 @@
 <?php
-use Composer\Repository\ArrayRepository;
+use Composer\Repository\WritableArrayRepository;
 
 use Composer\Repository\RepositoryManager;
 
@@ -31,8 +31,7 @@ class InstallerTest extends PHPUnit_Framework_TestCase
   private function mockRepositoryManager()
   {
     $repository_manager = new RepositoryManager($this->mockIO(), $this->mockConfig());
-    $repository_manager->setLocalRepository(new ArrayRepository());
-    $repository_manager->setLocalDevRepository(new ArrayRepository());
+    $repository_manager->setLocalRepository(new WritableArrayRepository());
     return $repository_manager;
   }
 

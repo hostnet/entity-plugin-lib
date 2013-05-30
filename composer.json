@@ -5,13 +5,13 @@
     "license": "proprietary",
     "require": {
         "php": ">=5.4",
-        "composer/composer": "1.0.*@dev",
+        "composer/composer": "master@dev",
         "twig/twig": ">=1.13"
     },
     "require-dev": {
         "phpunit/phpunit": ">=3.7"
     },
-    "minimum-stability": "stable",
+    "minimum-stability": "dev",
     "repositories": [
         {
             "type":"composer",
