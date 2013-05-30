@@ -1,6 +1,8 @@
 <?php
 namespace Hostnet\Entities\Installer;
 
+use Composer\Script\ScriptEvents;
+
 use Composer\Repository\InstalledRepositoryInterface;
 
 use Composer\IO\IOInterface;
@@ -22,12 +24,28 @@ class Installer extends LibraryInstaller
 {
   const PACKAGE_TYPE = 'hostnet-entity';
 
+  public function __construct(IOInterface $io, Composer $composer, $type = 'library')
+  {
+    parent::__construct($io, $composer, $type);
+    $composer->getEventDispatcher()->bind(ScriptEvents::PRE_AUTOLOAD_DUMP, array($this, 'postAutoloadDump'));
+  }
+
   public function supports($packageType)
   {
     return self::PACKAGE_TYPE === $packageType;
   }
 
-  public function __destruct()
+  public function postAutoloadDump()
+  {
+    $this->io->write('    <info>Helllo, world!</info>');
+  }
+
+  /**
+   * This is a bit nasty, but we need to generate the Generated\Client class here.
+   * For that we need to know all the combinations, i.e. combine ClientTrait and ClientContractTrait
+   * into one class
+   */
+  public function __destructzzzz()
   {
     $local_repository = $this->composer->getRepositoryManager()->getLocalRepository();
     $hostnet_entities = array();
@@ -53,10 +71,8 @@ class Installer extends LibraryInstaller
     \Twig_Autoloader::register();
 
     $this->io->write("  - Generating abstract traits, interfaces and normal class for");
-    $finder = new Finder();
-    $path = $this->getInstallPath($package) . '/src';
-    $finder->files()->in($path)->name('*Trait.php');
-    foreach($finder as $file) {
+
+    foreach($this->findTraits($package) as $file) {
       /* @var $file \Symfony\Component\Finder\SplFileInfo */
 
       // Since this runs before the autoloader is generated, we need to require it ourselves
@@ -91,5 +107,18 @@ class Installer extends LibraryInstaller
     }
 
     $this->io->write("");
+  }
+
+  /**
+   * Finds all the traits in a package. At least, assuming they are following our coding standard
+   * @param PackageInterface $package
+   * @return \Symfony\Component\Finder\Finder
+   */
+  private function findTraits(PackageInterface $package)
+  {
+    $finder = new Finder();
+    $path = $this->getInstallPath($package) . '/src';
+    $finder->files()->in($path)->name('*Trait.php');
+    return $finder;
   }
 }
