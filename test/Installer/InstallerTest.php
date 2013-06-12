@@ -1,4 +1,6 @@
 <?php
+use Composer\Script\EventDispatcher;
+
 use Composer\Repository\WritableArrayRepository;
 
 use Composer\Repository\RepositoryManager;
@@ -25,6 +27,7 @@ class InstallerTest extends PHPUnit_Framework_TestCase
     $composer = new Composer();
     $composer->setConfig($this->mockConfig());
     $composer->setRepositoryManager($this->mockRepositoryManager());
+    $composer->setEventDispatcher(new EventDispatcher($composer, $this->mockIO()));
     return $composer;
   }
 
