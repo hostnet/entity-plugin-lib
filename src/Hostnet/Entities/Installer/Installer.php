@@ -20,14 +20,16 @@ use Composer\Installer\LibraryInstaller;
  * Assumption: installers are singletons, so this is the only installer for this type
  * @author Nico Schoenmaker <nschoenmaker@hostnet.nl>
  */
-class Installer extends LibraryInstaller
+class Installer extends LibraryInstaller implements PackagePathResolver
 {
+  private $twig_environment = false;
+
   const PACKAGE_TYPE = 'hostnet-entity';
 
   public function __construct(IOInterface $io, Composer $composer, $type = 'library')
   {
     parent::__construct($io, $composer, $type);
-    $composer->getEventDispatcher()->bind(ScriptEvents::PRE_AUTOLOAD_DUMP, array($this, 'postAutoloadDump'));
+    $composer->getEventDispatcher()->bind(ScriptEvents::POST_AUTOLOAD_DUMP, array($this, 'postAutoloadDump'));
   }
 
   public function supports($packageType)
@@ -35,30 +37,34 @@ class Installer extends LibraryInstaller
     return self::PACKAGE_TYPE === $packageType;
   }
 
-  public function postAutoloadDump()
+  public function getSourcePath(PackageInterface $package)
   {
-    $this->io->write('    <info>Helllo, world!</info>');
+    return $this->getInstallPath($package) . '/src';
   }
 
-  /**
-   * This is a bit nasty, but we need to generate the Generated\Client class here.
-   * For that we need to know all the combinations, i.e. combine ClientTrait and ClientContractTrait
-   * into one class
-   */
-  public function __destructzzzz()
+  public function postAutoloadDump()
   {
+    $this->io->write('<info>Generating files for entities</info>');
     $local_repository = $this->composer->getRepositoryManager()->getLocalRepository();
-    $hostnet_entities = array();
+    $supported_packages = $this->getSupportedPackages($local_repository->getPackages());
+    $graph = new EntityPackageBuilder($this, $supported_packages);
+    foreach($graph->getEntityPackages() as $entity_package) {
+      /* @var $entity_package EntityPackage */
+      $generator = new CombinedGenerator($this->io, $this->getTwigEnvironment(), $entity_package);
+      $generator->generateTraits();
+    }
+  }
 
-    /* @var $local_repository \Composer\Repository\RepositoryInterface */
-    foreach($local_repository->getPackages() as $package) {
+  private function getSupportedPackages(array $packages)
+  {
+    $supported_packages = array();
+    foreach($packages as $package) {
       /* @var $package \Composer\Package\PackageInterface */
       if($this->supports($package->getType())) {
-        $hostnet_entities[] = $package;
+        $supported_packages[] = $package;
       }
     }
-    $this->io->write(print_r($hostnet_entities, true));
-    $this->io->write('<info>Thats all folks!</info>');
+    return $supported_packages;
   }
 
   protected function installBinaries(PackageInterface $package)
@@ -67,8 +73,6 @@ class Installer extends LibraryInstaller
 
     // TODO how to handle autoloading?
     // TODO don't do this in Installer class, but create own class for it
-    require_once(__DIR__ . '/../../../../../../twig/twig/lib/Twig/Autoloader.php');
-    \Twig_Autoloader::register();
 
     $this->io->write("  - Generating abstract traits, interfaces and normal class for");
 
@@ -90,9 +94,7 @@ class Installer extends LibraryInstaller
       }
 
       $class = new \ReflectionClass($namespace . '\\' . $trait_name);
-
-      $loader = new \Twig_Loader_Filesystem(__DIR__ . '/../Resources/templates/');
-      $twig = new \Twig_Environment($loader);
+      $twig = $this->getTwigEnvironment();
 
       // Replace suffix "Trait" by "Interface"
       $interface_name = strstr($trait_name, 'Trait', true) . 'Interface';
@@ -120,5 +122,16 @@ class Installer extends LibraryInstaller
     $path = $this->getInstallPath($package) . '/src';
     $finder->files()->in($path)->name('*Trait.php');
     return $finder;
+  }
+
+  private function getTwigEnvironment()
+  {
+    if(!$this->twig_environment) {
+      require_once(__DIR__ . '/../../../../../../twig/twig/lib/Twig/Autoloader.php');
+      \Twig_Autoloader::register();
+      $loader = new \Twig_Loader_Filesystem(__DIR__ . '/../Resources/templates/');
+      $this->twig_environment = new \Twig_Environment($loader);
+    }
+    return $this->twig_environment;
   }
 }
