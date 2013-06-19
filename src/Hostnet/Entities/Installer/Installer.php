@@ -44,7 +44,7 @@ class Installer extends LibraryInstaller implements PackagePathResolver
 
   public function postAutoloadDump()
   {
-    $this->io->write('<info>Generating files for entities</info>');
+    $this->io->write('<info>Generating files for entities, pass 1</info>');
     $local_repository = $this->composer->getRepositoryManager()->getLocalRepository();
     $supported_packages = $this->getSupportedPackages($local_repository->getPackages());
     $graph = new EntityPackageBuilder($this, $supported_packages);
@@ -53,7 +53,11 @@ class Installer extends LibraryInstaller implements PackagePathResolver
       $this->io->write('  - Now at package <info>' . $entity_package->getPackage()->getName() . '</info>');
       $generator = new CombinedGenerator($this->io, $this->getTwigEnvironment(), $entity_package);
       $generator->generate();
-
+    }
+    $this->io->write('<info>Generating files for entities, pass 2</info>');
+    foreach($graph->getEntityPackages() as $entity_package) {
+      /* @var $entity_package EntityPackage */
+      $this->io->write('  - Now at package <info>' . $entity_package->getPackage()->getName() . '</info>');
       foreach($entity_package->getPackageIO()->getEntities() as $entity) {
         $generator = new SingleGenerator($this->io, $this->getTwigEnvironment(), $entity_package->getPackageIO(), $entity);
         $generator->generate();
