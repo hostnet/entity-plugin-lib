@@ -53,8 +53,7 @@ class CombinedGenerator
     $file = $entity_package->getPackageIO()->getEntityTrait($class_name);
     if($file) {
       $namespace = $this->convertPathToNamespace($file->getRelativePath());
-      $generated_namespace = $namespace . '\Generated';
-      $result[$generated_namespace] = str_replace('\\', '', $namespace);
+      $result[$namespace] = str_replace('\\', '', $namespace);
     }
     return $result;
   }
