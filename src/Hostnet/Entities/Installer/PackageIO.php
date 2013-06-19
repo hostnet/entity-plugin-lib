@@ -135,6 +135,9 @@ class PackageIO implements PackageIOInterface
       mkdir($path, 0755, true);
     }
     file_put_contents($path . '/' . $file, $data);
+    // TODO remove this once composer issue #187 is fixed
+    // @see https://github.com/composer/composer/issues/187
+    //require_once $path . '/' . $file;
   }
 
 }

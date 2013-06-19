@@ -10,7 +10,7 @@ use Symfony\Component\Finder\SplFileInfo;
  * It does not know about the composer structure, since thats expensive to build
  * @author Nico Schoenmaker <nschoenmaker@hostnet.nl>
  */
-class SingleGenerator
+class ReflectionGenerator
 {
   private $io;
   private $environment;
@@ -40,38 +40,64 @@ class SingleGenerator
    */
   public function generate()
   {
-    // TODO how to handle autoloading?
-
-    // Since this runs before the autoloader is generated, we need to require it
-    // ourselves
-    require_once ($this->file->getPathname());
     $namespace = str_replace("/", "\\", $this->file->getRelativePath());
     $trait_or_class_name = $this->file->getBasename('.' . $this->file->getExtension());
     $this->io->write('    Generating interface and abstract trait for <info>' . $trait_or_class_name . '</info>');
 
-    // Ensure directory exists
-    $generated_dir = $this->file->getPath() . '/Generated';
-    if(! is_dir($generated_dir)) {
-      if(! mkdir($this->file->getPath() . '/Generated')) {
-        throw new \RuntimeException('Could not create "Generated" directory');
-      }
-    }
+    $this->ensureDirectoryExists();
 
-    $class = new \ReflectionClass($namespace . '\\' . $trait_or_class_name);
     $interface_name = $this->getInterfaceName($trait_or_class_name);
     $generated_namespace = $namespace . '\Generated';
     $params = array(
                     'trait_or_class_name' => $trait_or_class_name,
                     'name' => $interface_name,
                     'namespace' => $generated_namespace,
-                    'methods' => $class->getMethods()
+                    'methods' => $this->getMethods($namespace, $trait_or_class_name)
     );
     $interface = $this->environment->render('trait_interface.php.twig', $params);
+    $generated_dir = $this->getGeneratedDir();
     file_put_contents($generated_dir . '/' . $interface_name . '.php', $interface);
 
     $params['name'] = $this->getAbstractTraitName($trait_or_class_name);
     $abstract_trait = $this->environment->render('abstract_trait.php.twig', $params);
+    // TODO use $this->package_io
     file_put_contents($generated_dir . '/' . $params['name'] . '.php', $abstract_trait);
+  }
+
+  /**
+   * Which methods do we have to generate?
+   * @param string $namespace
+   * @param string $trait_or_class_name
+   * @return \ReflectionMethod[]
+   */
+  protected function getMethods($namespace, $trait_or_class_name)
+  {
+    // TODO how to handle autoloading?
+
+    // TODO remove this once composer issue #187 is fixed
+    // @see https://github.com/composer/composer/issues/187
+    //require_once ($this->file->getPathname());
+    $class = new \ReflectionClass($namespace . '\\' . $trait_or_class_name);
+    return $class->getMethods();
+  }
+
+  /**
+   * Ensures that the Generated/ folder exists
+   * @throws \RuntimeException
+   */
+  private function ensureDirectoryExists()
+  {
+    $generated_dir = $this->getGeneratedDir();
+    if(! is_dir($generated_dir)) {
+      if(! mkdir($generated_dir)) {
+        throw new \RuntimeException('Could not create "Generated" directory "' . $generated_dir . '"');
+      }
+    }
+  }
+
+  private function getGeneratedDir()
+  {
+    return $this->file->getPath() . '/Generated';
   }
 
   private function getInterfaceName($trait_or_class_name)
