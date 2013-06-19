@@ -76,10 +76,17 @@ class PackageIO implements PackageIOInterface
   }
 
   /**
-   * @see \Hostnet\Entities\Installer\PackageIOInterface::getEntityTrait()
+   * @see \Hostnet\Entities\Installer\PackageIOInterface::getEntityOrEntityTrait()
    */
-  public function getEntityTrait($name)
+  public function getEntityOrEntityTrait($name)
   {
+    $looking_for = $name .'.php';
+    foreach($this->entities as $file) {
+      /* @var $file \Symfony\Component\Finder\SplFileInfo */
+      if($file->getBasename() == $looking_for) {
+        return $file;
+      }
+    }
     $looking_for = $name .'Trait.php';
     foreach($this->entity_traits as $file) {
       /* @var $file \Symfony\Component\Finder\SplFileInfo */
