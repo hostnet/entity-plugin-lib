@@ -29,10 +29,10 @@ class PackageOITest extends PHPUnit_Framework_TestCase
   public function __constructProvider()
   {
     $irrelevant_file = $this->mockFileInfo('foo', 'meh');
-    $client_entity = $this->mockFileInfo('Foo/Entity/Client.php', 'Client.php');
-    $client_trait = $this->mockFileInfo('Foo/Entity/ClientTrait.php', 'ClientTrait.php');
-    $client_repository = $this->mockFileInfo('Foo/Service/ClientService.php', 'ClientService.php');
-    $client_repository_trait = $this->mockFileInfo('Foo/Service/ClientServiceTrait.php', 'ClientServiceTrait.php');
+    $client_entity = $this->mockFileInfo('Foo/Entity', 'Client.php');
+    $client_trait = $this->mockFileInfo('Foo/Entity', 'ClientTrait.php');
+    $client_repository = $this->mockFileInfo('Foo/Service', 'ClientService.php');
+    $client_repository_trait = $this->mockFileInfo('Foo/Service', 'ClientServiceTrait.php');
     $one_entity = new ArrayIterator(array($client_entity));
 
     $one_of_all = new ArrayIterator(array($irrelevant_file, $client_entity, $client_trait, $client_repository, $client_repository_trait));

@@ -39,9 +39,9 @@ class PackageIO implements PackageIOInterface
       // TODO strpos and then use only the last part as values of generated_files. Maybe even keys?
       if(strstr($namespace, '\\Generated')) {
         $this->generated_files[] = $file;
-      } else if(strpos($namespace, '\\Entity\\')) {
+      } else if(strpos($namespace, '\\Entity')) {
         $this->addEntity($file);
-      } else if(strpos($namespace, '\\Service\\')) {
+      } else if(strpos($namespace, '\\Service')) {
         $this->addService($file);
       }
     }
