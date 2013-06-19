@@ -61,7 +61,7 @@ class CombinedGenerator
 
   private function generateTrait(SplFileInfo $file, $class_name, array $traits)
   {
-    $this->io->write('  - Generating trait of traits for <info>' . $class_name. '</info>');
+    $this->io->write('  - Generating trait of traits for <info>' . $class_name. '</info>.');
     $namespace = $this->convertPathToNamespace($file->getRelativePath() . '/Generated');
     $data = $this->environment->render('traits.php.twig', array('class_name' => $class_name, 'namespace' => $namespace, 'use_statements' => $traits));
     $this->entity_package->getPackageIO()->writeGeneratedFile($file->getRelativePath() . '/Generated/', $class_name . 'Traits.php', $data);
