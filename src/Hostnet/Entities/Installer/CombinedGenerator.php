@@ -50,7 +50,7 @@ class CombinedGenerator
       /* @var $package EntityPackage */
       $result = array_merge($result, $this->recursivelyFindTraitsFor($dependent_package, $class_name));
     }
-    $file = $entity_package->getPackageIO()->getEntityTrait($class_name);
+    $file = $entity_package->getPackageIO()->getEntityOrEntityTrait($class_name);
     if($file) {
       $namespace = $this->convertPathToNamespace($file->getRelativePath());
       $result[$namespace] = str_replace('\\', '', $namespace);

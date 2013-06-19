@@ -19,11 +19,11 @@ interface PackageIOInterface
   public function getEntities();
 
   /**
-   * Get the entity trait by name
+   * Get an entity, or entity trait by name, provided it exists in this package
    * @param string $name
    * @return SplFileInfo|null
    */
-  public function getEntityTrait($name);
+  public function getEntityOrEntityTrait($name);
 
   /**
    * Get all entity traits in the package

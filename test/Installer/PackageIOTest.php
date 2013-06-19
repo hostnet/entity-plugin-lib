@@ -17,10 +17,10 @@ class PackageOITest extends PHPUnit_Framework_TestCase
     $finder = $this->getMock('Symfony\Component\Finder\Finder', array('getIterator'));
     $finder->expects($this->once())->method('getIterator')->will($this->returnValue($iterator));
     $io = new PackageIO($finder, __DIR__);
-    $this->assertEquals($entities, $io->getEntities());
+    $this->assertEquals(array_values($entities), $io->getEntities());
     $this->assertEquals($services, $io->getServices());
-    foreach($entity_traits as $name => $entity_trait) {
-      $this->assertEquals($entity_trait, $io->getEntityTrait($name));
+    foreach(array_merge($entities, $entity_traits) as $name => $entity_trait) {
+      $this->assertEquals($entity_trait, $io->getEntityOrEntityTrait($name));
     }
     $this->assertEquals(array_values($entity_traits), $io->getEntityTraits());
     $this->assertEquals($service_traits, $io->getServiceTraits());
@@ -41,8 +41,8 @@ class PackageOITest extends PHPUnit_Framework_TestCase
     return array(
         array(new ArrayIterator(array())),
         array(new ArrayIterator(array($irrelevant_file))),
-        array($one_entity, array($client_entity)),
-        array($one_of_all, array($client_entity), array($client_repository), array('Client' => $client_trait), array($client_repository_trait))
+        array($one_entity, array('Client' => $client_entity)),
+        array($one_of_all, array('Client' => $client_entity), array($client_repository), array('Client' => $client_trait), array($client_repository_trait))
         );
   }
 
