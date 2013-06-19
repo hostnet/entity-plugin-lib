@@ -52,7 +52,7 @@ class Installer extends LibraryInstaller implements PackagePathResolver
       /* @var $entity_package EntityPackage */
       $this->io->write('  - Now at package <info>' . $entity_package->getPackage()->getName() . '</info>');
       $generator = new CombinedGenerator($this->io, $this->getTwigEnvironment(), $entity_package);
-      $generator->generateTraits();
+      $generator->generate();
 
       foreach($entity_package->getPackageIO()->getEntities() as $entity) {
         $generator = new SingleGenerator($this->io, $this->getTwigEnvironment(), $entity_package->getPackageIO(), $entity);

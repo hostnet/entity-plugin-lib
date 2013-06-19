@@ -30,16 +30,16 @@ class CombinedGenerator
   }
 
   /**
-   * Ask the generator to generate all the trait of traits
+   * Ask the generator to generate all the trait of traits, and their matching combined interfaces
    * @return void
    */
-  public function generateTraits()
+  public function generate()
   {
-    //$this->io->write(print_r($this->entity_package->getPackageIO()));
     foreach($this->entity_package->getPackageIO()->getEntities() as $file) {
       $class_name = strstr($file->getFilename(), '.', true);
       $traits = $this->recursivelyFindTraitsFor($this->entity_package, $class_name);
       $this->generateTrait($file, $class_name, $traits);
+      $this->generateInterface($file, $class_name, $traits);
     }
   }
 
@@ -60,10 +60,18 @@ class CombinedGenerator
 
   private function generateTrait(SplFileInfo $file, $class_name, array $traits)
   {
-    $this->io->write('  - Generating trait of traits for <info>' . $class_name. '</info>.');
+    $this->io->write('    Generating trait of traits for <info>' . $class_name. '</info>.');
     $namespace = $this->convertPathToNamespace($file->getRelativePath() . '/Generated');
     $data = $this->environment->render('traits.php.twig', array('class_name' => $class_name, 'namespace' => $namespace, 'use_statements' => $traits));
     $this->entity_package->getPackageIO()->writeGeneratedFile($file->getRelativePath() . '/Generated/', $class_name . 'Traits.php', $data);
+  }
+
+  private function generateInterface(SplFileInfo $file, $class_name, array $traits)
+  {
+    $this->io->write('    Generating combined interface for <info>' . $class_name. '</info>.');
+    $namespace = $this->convertPathToNamespace($file->getRelativePath() . '/Generated');
+    $data = $this->environment->render('combined_interface.php.twig', array('class_name' => $class_name, 'namespace' => $namespace, 'use_statements' => $traits));
+    $this->entity_package->getPackageIO()->writeGeneratedFile($file->getRelativePath() . '/Generated/', $class_name . 'Interface.php', $data);
   }
 
   /**

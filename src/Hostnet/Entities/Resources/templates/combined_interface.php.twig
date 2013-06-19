@@ -1,0 +1,14 @@
+<?php
+namespace {{ namespace }};
+
+{% for generated_namespace, alias in use_statements %}
+use {{ generated_namespace }}\Generated\{{ class_name }}TraitInterface as {{ alias }};
+{% endfor %}
+
+/**
+ * Implement this interface in {{ class_name }}!
+ * This is a combined interface that will automatically extend to contain the required functions.
+ */
+interface {{ class_name }}Interface extends {{ use_statements | join(', ') }}
+{
+}
