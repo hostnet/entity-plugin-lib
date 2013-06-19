@@ -14,7 +14,7 @@ use Composer\Package\PackageInterface;
  *
  * @author Nico Schoenmaker <nschoenmaker@hostnet.nl>
  */
-class CombinedGenerator
+class CompoundGenerator
 {
   private $io;
 
