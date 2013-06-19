@@ -47,7 +47,7 @@ class SingleGenerator
     require_once ($this->file->getPathname());
     $namespace = str_replace("/", "\\", $this->file->getRelativePath());
     $trait_or_class_name = $this->file->getBasename('.' . $this->file->getExtension());
-    $this->io->write('  - Generating interface and abstract trait for <info>' . $trait_or_class_name . '</info>');
+    $this->io->write('    Generating interface and abstract trait for <info>' . $trait_or_class_name . '</info>');
 
     // Ensure directory exists
     $generated_dir = $this->file->getPath() . '/Generated';
