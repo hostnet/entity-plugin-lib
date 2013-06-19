@@ -2,7 +2,7 @@
 namespace {{ namespace }};
 
 {% for generated_namespace, alias in use_statements %}
-use {{ generated_namespace }}\{{ class_name }} as {{ alias }};
+use {{ generated_namespace }}\{{ class_name }}Trait as {{ alias }};
 {% endfor %}
 
 /**
