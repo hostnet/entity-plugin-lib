@@ -29,13 +29,13 @@ interface PackageIOInterface
    * Get the repositories contained in the package
    * @return SplFileInfo[]
    */
-  public function getRepositories();
+  public function getServices();
 
   /**
    * Get the repository traits contained in the package
    * @return SplFileInfo[]
    */
-  public function getRepositoryTraits();
+  public function getServiceTraits();
 
   /**
    * Get the generated files contained in the package

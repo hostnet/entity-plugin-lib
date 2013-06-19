@@ -1,6 +1,8 @@
 <?php
 namespace Hostnet\Entities\Installer;
 
+use Symfony\Component\Finder\SplFileInfo;
+
 use Symfony\Component\Finder\Finder;
 
 /**
@@ -16,9 +18,9 @@ class PackageIO implements PackageIOInterface
 
   private $entity_traits = array();
 
-  private $repositories = array();
+  private $services = array();
 
-  private $repository_traits = array();
+  private $service_traits = array();
 
   private $generated_files = array();
 
@@ -34,24 +36,35 @@ class PackageIO implements PackageIOInterface
     foreach($files as $file) {
       /* @var $file \Symfony\Component\Finder\SplFileInfo */
       $namespace = str_replace("/", "\\", $file->getRelativePath());
-      if(!strpos($namespace, '\\Entities\\')) {
-        continue;
-      }
-      $basename = $file->getBasename();
-
       // TODO strpos and then use only the last part as values of generated_files. Maybe even keys?
       if(strstr($namespace, '\\Generated')) {
         $this->generated_files[] = $file;
-      } else if(strpos($basename, 'RepositoryTrait.php')) {
-        $this->repository_traits[] = $file;
-      } else if(strpos($basename, 'Trait.php')) {
-        $this->entity_traits[] = $file;
-      } else if(strpos($basename, 'Repository.php')) {
-        $this->repositories[] = $file;
-      } else if(strpos($basename, '.php')) {
-        $this->entities[] = $file;
+      } else if(strpos($namespace, '\\Entity\\')) {
+        $this->addEntity($file);
+      } else if(strpos($namespace, '\\Service\\')) {
+        $this->addService($file);
       }
     }
+  }
+
+  private function addEntity(SplFileInfo $file)
+  {
+    $basename = $file->getBasename();
+    if(strpos($basename, 'Trait.php')) {
+      $this->entity_traits[] = $file;
+    } else if(strpos($basename, '.php')) {
+        $this->entities[] = $file;
+    }
+  }
+
+  private function addService(SplFileInfo $file)
+  {
+      $basename = $file->getBasename();
+      if(strpos($basename, 'ServiceTrait.php')) {
+          $this->service_traits[] = $file;
+      } else if(strpos($basename, 'Service.php')) {
+          $this->services[] = $file;
+      }
   }
 
   /**
@@ -77,19 +90,19 @@ class PackageIO implements PackageIOInterface
   }
 
   /**
-   * @see \Hostnet\Entities\Installer\PackageIOInterface::getRepositories()
+   * @see \Hostnet\Entities\Installer\PackageIOInterface::getServices()
    */
-  public function getRepositories()
+  public function getServices()
   {
-    return $this->repositories;
+    return $this->services;
   }
 
   /**
-   * @see \Hostnet\Entities\Installer\PackageIOInterface::getRepositoryTraits()
+   * @see \Hostnet\Entities\Installer\PackageIOInterface::getServiceTraits()
    */
-  public function getRepositoryTraits()
+  public function getServiceTraits()
   {
-    return $this->repository_traits;
+    return $this->service_traits;
   }
 
   /**
