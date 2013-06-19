@@ -26,6 +26,12 @@ interface PackageIOInterface
   public function getEntityTrait($name);
 
   /**
+   * Get all entity traits in the package
+   * @return SplFileInfo[]
+   */
+  public function getEntityTraits();
+
+  /**
    * Get the repositories contained in the package
    * @return SplFileInfo[]
    */

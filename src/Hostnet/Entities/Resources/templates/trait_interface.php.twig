@@ -1,0 +1,18 @@
+<?php
+namespace {{ namespace }};
+
+/**
+ * Interface generated for {{ trait_or_class_name }}.
+ * This is an internal interface, not to be used in any typehint.
+ */
+interface {{ name }}
+{
+{% for method in methods %}
+    {%- if method.isPublic() and not method.isStatic() %}
+
+    public function {{ method.name }}(
+      {%- include 'parameters.php.twig' with { parameters: method.parameters } -%});
+    {%- endif %}
+    {%- endfor %}
+
+}

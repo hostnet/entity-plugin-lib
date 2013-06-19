@@ -89,6 +89,11 @@ class PackageIO implements PackageIOInterface
     }
   }
 
+  public function getEntityTraits()
+  {
+    return $this->entity_traits;
+  }
+
   /**
    * @see \Hostnet\Entities\Installer\PackageIOInterface::getServices()
    */

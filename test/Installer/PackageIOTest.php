@@ -22,6 +22,7 @@ class PackageOITest extends PHPUnit_Framework_TestCase
     foreach($entity_traits as $name => $entity_trait) {
       $this->assertEquals($entity_trait, $io->getEntityTrait($name));
     }
+    $this->assertEquals(array_values($entity_traits), $io->getEntityTraits());
     $this->assertEquals($service_traits, $io->getServiceTraits());
     $this->assertEquals($generated_files, $io->getGeneratedFiles());
   }

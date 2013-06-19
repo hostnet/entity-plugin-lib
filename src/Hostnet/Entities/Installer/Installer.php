@@ -50,8 +50,18 @@ class Installer extends LibraryInstaller implements PackagePathResolver
     $graph = new EntityPackageBuilder($this, $supported_packages);
     foreach($graph->getEntityPackages() as $entity_package) {
       /* @var $entity_package EntityPackage */
+      $this->io->write('  - Now at package <info>' . $entity_package->getPackage()->getName() . '</info>');
       $generator = new CombinedGenerator($this->io, $this->getTwigEnvironment(), $entity_package);
       $generator->generateTraits();
+
+      foreach($entity_package->getPackageIO()->getEntities() as $entity) {
+        $generator = new SingleGenerator($this->io, $this->getTwigEnvironment(), $entity_package->getPackageIO(), $entity);
+        $generator->generate();
+      }
+      foreach($entity_package->getPackageIO()->getEntityTraits() as $entity) {
+        $generator = new SingleGenerator($this->io, $this->getTwigEnvironment(), $entity_package->getPackageIO(), $entity);
+        $generator->generate();
+      }
     }
   }
 
@@ -65,50 +75,6 @@ class Installer extends LibraryInstaller implements PackagePathResolver
       }
     }
     return $supported_packages;
-  }
-
-  protected function installBinaries(PackageInterface $package)
-  {
-    parent::installBinaries($package);
-
-    // TODO how to handle autoloading?
-    // TODO don't do this in Installer class, but create own class for it
-
-    $this->io->write("  - Generating abstract traits, interfaces and normal class for");
-
-    foreach($this->findTraits($package) as $file) {
-      /* @var $file \Symfony\Component\Finder\SplFileInfo */
-
-      // Since this runs before the autoloader is generated, we need to require it ourselves
-      require_once($file->getPathname());
-      $namespace = str_replace("/", "\\", $file->getRelativePath());
-      $trait_name = $file->getBasename('.' . $file->getExtension());
-      $this->io->write('    - <info>' . $trait_name . '</info>');
-
-      // Ensure directory exists
-      $generated_dir = $file->getPath() . '/Generated';
-      if(!is_dir($generated_dir)) {
-        if(!mkdir($file->getPath() . '/Generated')) {
-          throw new \RuntimeException('Could not create "Generated" directory');
-        }
-      }
-
-      $class = new \ReflectionClass($namespace . '\\' . $trait_name);
-      $twig = $this->getTwigEnvironment();
-
-      // Replace suffix "Trait" by "Interface"
-      $interface_name = strstr($trait_name, 'Trait', true) . 'Interface';
-      $generated_namespace = $namespace . '\Generated';
-      $params = array('trait_name' => $trait_name, 'name' => $interface_name, 'namespace' => $generated_namespace, 'methods' => $class->getMethods());
-      $interface = $twig->render('interface.php.twig', $params);
-      file_put_contents($generated_dir . '/' . $interface_name .'.php', $interface);
-
-      $params['name'] = 'Abstract' . $trait_name;
-      $abstract_trait = $twig->render('abstract_trait.php.twig', $params);
-      file_put_contents($generated_dir . '/' . $params['name'] .'.php', $abstract_trait);
-    }
-
-    $this->io->write("");
   }
 
   /**
