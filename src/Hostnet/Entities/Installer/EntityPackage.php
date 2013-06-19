@@ -26,6 +26,9 @@ class EntityPackage
     $this->package_io = $package_io;
   }
 
+  /**
+   * @return PackageInterface
+   */
   public function getPackage()
   {
     return $this->package;
