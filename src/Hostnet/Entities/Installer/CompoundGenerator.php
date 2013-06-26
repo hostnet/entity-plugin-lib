@@ -37,18 +37,27 @@ class CompoundGenerator
   {
     foreach($this->entity_package->getPackageIO()->getEntities() as $file) {
       $class_name = strstr($file->getFilename(), '.', true);
-      $traits = $this->recursivelyFindTraitsFor($this->entity_package, $class_name);
-      $this->generateTrait($file, $class_name, $traits);
-      $this->generateInterface($file, $class_name, $traits);
+      $traits = $this->recursivelyFindEntitiesFor($this->entity_package, $class_name);
+      $generated_directory = $file->getRelativePath() . '/Generated';
+      $this->generateTrait($generated_directory, $class_name, $traits);
+      $this->generateInterface($generated_directory, $class_name, $traits);
     }
   }
 
-  private function recursivelyFindTraitsFor(EntityPackage $entity_package, $class_name)
+  /**
+   * Gives all the entities to be required in the compound interface
+   * Also generates a unique alias for them
+   *
+   * @param EntityPackage $entity_package
+   * @param string $class_name
+   * @return array[string]string Namespace => Unique alias
+   */
+  private function recursivelyFindEntitiesFor(EntityPackage $entity_package, $class_name)
   {
     $result = array();
     foreach($entity_package->getDependentPackages() as $dependent_package) {
       /* @var $package EntityPackage */
-      $result = array_merge($result, $this->recursivelyFindTraitsFor($dependent_package, $class_name));
+      $result = array_merge($result, $this->recursivelyFindEntitiesFor($dependent_package, $class_name));
     }
     $file = $entity_package->getPackageIO()->getEntityOrEntityTrait($class_name);
     if($file) {
@@ -58,20 +67,32 @@ class CompoundGenerator
     return $result;
   }
 
-  private function generateTrait(SplFileInfo $file, $class_name, array $traits)
+  /**
+   * Generates Generated/<class_name>Traits.php
+   * @param string $generated_directory The relative path to the directory to generate the trait in
+   * @param string $class_name
+   * @param array $traits
+   */
+  private function generateTrait($generated_directory, $class_name, array $traits)
   {
     $this->io->write('    Generating trait of traits for <info>' . $class_name. '</info>.');
-    $namespace = $this->convertPathToNamespace($file->getRelativePath() . '/Generated');
+    $namespace = $this->convertPathToNamespace($generated_directory);
     $data = $this->environment->render('traits.php.twig', array('class_name' => $class_name, 'namespace' => $namespace, 'use_statements' => $traits));
-    $this->entity_package->getPackageIO()->writeGeneratedFile($file->getRelativePath() . '/Generated/', $class_name . 'Traits.php', $data);
+    $this->entity_package->getPackageIO()->writeGeneratedFile($generated_directory, $class_name . 'Traits.php', $data);
   }
 
-  private function generateInterface(SplFileInfo $file, $class_name, array $traits)
+  /**
+   * Generates Generated/<class_name>Interfaces.php
+   * @param string $generated_directory The relative path to the directory to generate the interface in
+   * @param string $class_name
+   * @param array $traits
+   */
+  private function generateInterface($generated_directory, $class_name, array $traits)
   {
     $this->io->write('    Generating combined interface for <info>' . $class_name. '</info>.');
-    $namespace = $this->convertPathToNamespace($file->getRelativePath() . '/Generated');
+    $namespace = $this->convertPathToNamespace($generated_directory);
     $data = $this->environment->render('combined_interface.php.twig', array('class_name' => $class_name, 'namespace' => $namespace, 'use_statements' => $traits));
-    $this->entity_package->getPackageIO()->writeGeneratedFile($file->getRelativePath() . '/Generated/', $class_name . 'Interface.php', $data);
+    $this->entity_package->getPackageIO()->writeGeneratedFile($generated_directory, $class_name . 'Interfaces.php', $data);
   }
 
   /**
