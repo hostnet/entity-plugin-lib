@@ -75,7 +75,7 @@ class CompoundGenerator
    */
   private function generateTrait($generated_directory, $class_name, array $traits)
   {
-    $this->io->write('    Generating trait of traits for <info>' . $class_name. '</info>.');
+    $this->writeIfVeryVerbose('    - Generating trait of traits for <info>' . $class_name. '</info>');
     $namespace = $this->convertPathToNamespace($generated_directory);
     $data = $this->environment->render('traits.php.twig', array('class_name' => $class_name, 'namespace' => $namespace, 'use_statements' => $traits));
     $this->entity_package->getPackageIO()->writeGeneratedFile($generated_directory, $class_name . 'Traits.php', $data);
@@ -89,7 +89,7 @@ class CompoundGenerator
    */
   private function generateInterface($generated_directory, $class_name, array $traits)
   {
-    $this->io->write('    Generating combined interface for <info>' . $class_name. '</info>.');
+    $this->writeIfVeryVerbose('    - Generating combined interface for <info>' . $class_name. '</info>');
     $namespace = $this->convertPathToNamespace($generated_directory);
     $data = $this->environment->render('combined_interface.php.twig', array('class_name' => $class_name, 'namespace' => $namespace, 'use_statements' => $traits));
     $this->entity_package->getPackageIO()->writeGeneratedFile($generated_directory, $class_name . 'Interfaces.php', $data);
@@ -103,5 +103,12 @@ class CompoundGenerator
   private function convertPathToNamespace($path)
   {
     return str_replace("/", "\\", $path);
+  }
+
+  private function writeIfVeryVerbose($text)
+  {
+    if($this->io->isVeryVerbose()) {
+      $this->io->write($text);
+    }
   }
 }
