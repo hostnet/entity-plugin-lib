@@ -37,7 +37,7 @@ class CompoundGenerator
   {
     foreach($this->entity_package->getPackageIO()->getEntities() as $file) {
       $class_name = strstr($file->getFilename(), '.', true);
-      $traits = $this->recursivelyFindEntitiesFor($this->entity_package, $class_name);
+      $traits = $this->recursivelyFindUseStatementsFor($this->entity_package, $class_name);
       $generated_directory = $file->getRelativePath() . '/Generated';
       $this->generateTrait($generated_directory, $class_name, $traits);
       $this->generateInterface($generated_directory, $class_name, $traits);
@@ -50,19 +50,19 @@ class CompoundGenerator
    *
    * @param EntityPackage $entity_package
    * @param string $class_name
-   * @return array[string]string Namespace => Unique alias
+   * @return array[]UseStatement
    */
-  private function recursivelyFindEntitiesFor(EntityPackage $entity_package, $class_name)
+  private function recursivelyFindUseStatementsFor(EntityPackage $entity_package, $class_name)
   {
     $result = array();
     foreach($entity_package->getDependentPackages() as $dependent_package) {
       /* @var $package EntityPackage */
-      $result = array_merge($result, $this->recursivelyFindEntitiesFor($dependent_package, $class_name));
+      $result = array_merge($result, $this->recursivelyFindUseStatementsFor($dependent_package, $class_name));
     }
     $file = $entity_package->getPackageIO()->getEntityOrEntityTrait($class_name);
     if($file) {
       $namespace = $this->convertPathToNamespace($file->getRelativePath());
-      $result[$namespace] = str_replace('\\', '', $namespace);
+      $result[] = new UseStatement($namespace, $file);
     }
     return $result;
   }

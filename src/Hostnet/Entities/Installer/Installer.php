@@ -1,6 +1,10 @@
 <?php
 namespace Hostnet\Entities\Installer;
 
+use Composer\Package\RootPackageInterface;
+
+use Composer\Package\RootPackage;
+
 use Composer\Package\Package;
 
 use Composer\Script\ScriptEvents;
@@ -60,13 +64,27 @@ class Installer extends LibraryInstaller implements PackagePathResolver
   }
 
   /**
+   * Overridden to take into account the root package
+   * @see \Composer\Installer\LibraryInstaller::getInstallPath()
+   */
+  public function getInstallPath(PackageInterface $package)
+  {
+    if($package instanceof RootPackageInterface) {
+      return '.';
+    }
+    return parent::getInstallPath($package);
+  }
+
+  /**
    * Gets called on the POST_AUTOLOAD_DUMP event
    */
   public function postAutoloadDump()
   {
     $this->io->write('<info>Generating code for entities</info>');
     $local_repository = $this->composer->getRepositoryManager()->getLocalRepository();
-    $supported_packages = $this->getSupportedPackages($local_repository->getPackages());
+    $packages = $local_repository->getPackages();
+    $packages[] = $this->composer->getPackage();
+    $supported_packages = $this->getSupportedPackages($packages);
     $this->setUpAutoloading($supported_packages);
     $graph = new EntityPackageBuilder($this, $supported_packages);
 

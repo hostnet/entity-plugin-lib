@@ -21,7 +21,7 @@ interface PackageIOInterface
   /**
    * Get an entity, or entity trait by name, provided it exists in this package
    * @param string $name
-   * @return SplFileInfo|null
+   * @return Symfony\Component\Finder\SplFileInfo|null
    */
   public function getEntityOrEntityTrait($name);
 
