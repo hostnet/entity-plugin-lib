@@ -9,7 +9,7 @@ use {{ use_statement.namespace }}\Generated\{{ class_name }}TraitInterface as {{
  * Implement this interface in {{ class_name }}!
  * This is a combined interface that will automatically extend to contain the required functions.
  */
-interface {{ class_name }}Interfaces extends
+interface {{ class_name }}Interface extends
     {% for use_statement in use_statements %}
 {{ use_statement.alias }}{% if not loop.last %},{% endif %}
 {% endfor %}
