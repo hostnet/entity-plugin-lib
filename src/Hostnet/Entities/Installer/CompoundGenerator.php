@@ -92,7 +92,7 @@ class CompoundGenerator
     $this->writeIfVeryVerbose('    - Generating combined interface for <info>' . $class_name. '</info>');
     $namespace = $this->convertPathToNamespace($generated_directory);
     $data = $this->environment->render('combined_interface.php.twig', array('class_name' => $class_name, 'namespace' => $namespace, 'use_statements' => $traits));
-    $this->entity_package->getPackageIO()->writeGeneratedFile($generated_directory, $class_name . 'Interfaces.php', $data);
+    $this->entity_package->getPackageIO()->writeGeneratedFile($generated_directory, $class_name . 'Interface.php', $data);
   }
 
   /**
