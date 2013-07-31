@@ -43,24 +43,22 @@ class ReflectionGenerator
     $namespace = str_replace("/", "\\", $this->file->getRelativePath());
     $trait_or_class_name = $this->file->getBasename('.' . $this->file->getExtension());
 
-    $this->ensureDirectoryExists();
-
     $interface_name = $this->getInterfaceName($trait_or_class_name);
     $generated_namespace = $namespace . '\Generated';
     $params = array(
                     'trait_or_class_name' => $trait_or_class_name,
                     'name' => $interface_name,
                     'namespace' => $generated_namespace,
+                    'type_hinter' => new TypeHinter(),
                     'methods' => $this->getMethods($namespace, $trait_or_class_name)
     );
     $interface = $this->environment->render('trait_interface.php.twig', $params);
-    $generated_dir = $this->getGeneratedDir();
-    file_put_contents($generated_dir . '/' . $interface_name . '.php', $interface);
+    $path = $this->file->getRelativePath();
+    $this->package_io->writeGeneratedFile($path, $interface_name . '.php', $interface);
 
     $params['name'] = $this->getAbstractTraitName($trait_or_class_name);
     $abstract_trait = $this->environment->render('abstract_trait.php.twig', $params);
-    // TODO use $this->package_io
-    file_put_contents($generated_dir . '/' . $params['name'] . '.php', $abstract_trait);
+    $this->package_io->writeGeneratedFile($path, $params['name'] . '.php', $abstract_trait);
   }
 
   /**
@@ -71,32 +69,17 @@ class ReflectionGenerator
    */
   protected function getMethods($namespace, $trait_or_class_name)
   {
-    // TODO how to handle autoloading?
-
     // TODO remove this once composer issue #187 is fixed
     // @see https://github.com/composer/composer/issues/187
     //require_once ($this->file->getPathname());
     $class = new \ReflectionClass($namespace . '\\' . $trait_or_class_name);
-    return $class->getMethods();
-  }
-
-  /**
-   * Ensures that the Generated/ folder exists
-   * @throws \RuntimeException
-   */
-  private function ensureDirectoryExists()
-  {
-    $generated_dir = $this->getGeneratedDir();
-    if(! is_dir($generated_dir)) {
-      if(! mkdir($generated_dir)) {
-        throw new \RuntimeException('Could not create "Generated" directory "' . $generated_dir . '"');
+    $methods = $class->getMethods();
+    foreach($methods as $key => $method) {
+      if($method->name === '__construct') {
+        unset($methods[$key]);
       }
     }
-  }
-
-  private function getGeneratedDir()
-  {
-    return $this->file->getPath() . '/Generated';
+    return $methods;
   }
 
   private function getInterfaceName($trait_or_class_name)

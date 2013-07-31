@@ -14,6 +14,7 @@ trait {{ name }}
 {% for method in methods %}
     {%- if method.isPublic() and not method.isStatic() %}
 
+    {{ method.docComment }}
     abstract public function {{ method.name }}(
       {%- include 'parameters.php.twig' with { parameters: method.parameters } -%});
     {%- endif %}

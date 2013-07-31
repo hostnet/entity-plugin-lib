@@ -50,8 +50,8 @@ interface PackageIOInterface
   public function getGeneratedFiles();
 
   /**
-   * Write a generated file to the package.
-   * @param $directory The directory relative to the root url for the package
+   * Write a generated file to the package. Ensures by itself that the directory exists
+   * @param $directory The directory, relative to the root url for the package
    * @param $file The filename
    * @param $data The data to write
    */

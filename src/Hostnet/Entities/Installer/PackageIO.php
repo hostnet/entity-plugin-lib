@@ -131,6 +131,10 @@ class PackageIO implements PackageIOInterface
   public function writeGeneratedFile($directory, $file, $data)
   {
     $path = $this->path . '/' . $directory;
+    $path = $path . '/Generated';
+
+    $this->ensureDirectoryExists($path);
+
     if(!is_dir($path)) {
       mkdir($path, 0755, true);
     }
@@ -138,6 +142,19 @@ class PackageIO implements PackageIOInterface
     // TODO remove this once composer issue #187 is fixed
     // @see https://github.com/composer/composer/issues/187
     //require_once $path . '/' . $file;
+  }
+
+  /**
+   * Ensures that the Generated/ folder exists
+   * @throws \RuntimeException
+   */
+  private function ensureDirectoryExists($path)
+  {
+    if(! is_dir($path)) {
+      if(! mkdir($path)) {
+        throw new \RuntimeException('Could not create "Generated" directory "' . $path . '"');
+      }
+    }
   }
 
 }

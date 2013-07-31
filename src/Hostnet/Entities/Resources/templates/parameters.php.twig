@@ -1,8 +1,9 @@
 {% for parameter in parameters %}
-{%- if parameter.isArray() %}array {% endif %}
+{{ type_hinter.typeHint(parameter) -}}
 {# TODO add typehint for class. Cant call parameter.class because that will trigger the autoloader #}
 ${{  parameter.name }}
 {%- if parameter.isOptional() %}
 {%- if parameter.allowsNull() %} = null{% else %} = {{ parameter.defaultValue }}{% endif %}
 {%- endif %}
+{% if not loop.last %}, {% endif %}
 {% endfor %}

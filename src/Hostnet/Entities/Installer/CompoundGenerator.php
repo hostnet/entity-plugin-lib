@@ -38,9 +38,9 @@ class CompoundGenerator
     foreach($this->entity_package->getPackageIO()->getEntities() as $file) {
       $class_name = strstr($file->getFilename(), '.', true);
       $traits = $this->recursivelyFindUseStatementsFor($this->entity_package, $class_name);
-      $generated_directory = $file->getRelativePath() . '/Generated';
-      $this->generateTrait($generated_directory, $class_name, $traits);
-      $this->generateInterface($generated_directory, $class_name, $traits);
+      $relative_path = $file->getRelativePath();
+      $this->generateTrait($relative_path, $class_name, $traits);
+      $this->generateInterface($relative_path, $class_name, $traits);
     }
   }
 
@@ -69,30 +69,30 @@ class CompoundGenerator
 
   /**
    * Generates Generated/<class_name>Traits.php
-   * @param string $generated_directory The relative path to the directory to generate the trait in
+   * @param string $relative_path The relative path to the directory to generate the trait in
    * @param string $class_name
    * @param array $traits
    */
-  private function generateTrait($generated_directory, $class_name, array $traits)
+  private function generateTrait($relative_path, $class_name, array $traits)
   {
     $this->writeIfVeryVerbose('    - Generating trait of traits for <info>' . $class_name. '</info>');
-    $namespace = $this->convertPathToNamespace($generated_directory);
+    $namespace = $this->convertPathToNamespace($relative_path);
     $data = $this->environment->render('traits.php.twig', array('class_name' => $class_name, 'namespace' => $namespace, 'use_statements' => $traits));
-    $this->entity_package->getPackageIO()->writeGeneratedFile($generated_directory, $class_name . 'Traits.php', $data);
+    $this->entity_package->getPackageIO()->writeGeneratedFile($relative_path, $class_name . 'Traits.php', $data);
   }
 
   /**
    * Generates Generated/<class_name>Interfaces.php
-   * @param string $generated_directory The relative path to the directory to generate the interface in
+   * @param string $relative_path The relative path to the directory to generate the interface in
    * @param string $class_name
    * @param array $traits
    */
-  private function generateInterface($generated_directory, $class_name, array $traits)
+  private function generateInterface($relative_path, $class_name, array $traits)
   {
     $this->writeIfVeryVerbose('    - Generating combined interface for <info>' . $class_name. '</info>');
-    $namespace = $this->convertPathToNamespace($generated_directory);
+    $namespace = $this->convertPathToNamespace($relative_path);
     $data = $this->environment->render('combined_interface.php.twig', array('class_name' => $class_name, 'namespace' => $namespace, 'use_statements' => $traits));
-    $this->entity_package->getPackageIO()->writeGeneratedFile($generated_directory, $class_name . 'Interface.php', $data);
+    $this->entity_package->getPackageIO()->writeGeneratedFile($relative_path, $class_name . 'Interface.php', $data);
   }
 
   /**
