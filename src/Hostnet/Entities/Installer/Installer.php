@@ -198,10 +198,6 @@ class Installer extends LibraryInstaller implements PackagePathResolver
   private function getTwigEnvironment()
   {
     if(!$this->twig_environment) {
-      // TODO remove this once composer issue #187 is fixed
-      // @see https://github.com/composer/composer/issues/187
-      require_once(__DIR__ . '/../../../../../../twig/twig/lib/Twig/Autoloader.php');
-      \Twig_Autoloader::register();
       $loader = new \Twig_Loader_Filesystem(__DIR__ . '/../Resources/templates/');
       $this->twig_environment = new \Twig_Environment($loader);
     }
