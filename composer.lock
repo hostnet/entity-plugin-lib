@@ -3,20 +3,71 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "71a05b5e4a71715f86bca320e1eade50",
+    "hash": "52978556892bc1825ca570c35e3d76d2",
     "packages": [
+        {
+            "name": "twig/twig",
+            "version": "v1.14.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/fabpot/Twig.git",
+                "reference": "ca445842fcea4f844d68203ffa2d00f5e3cdea64"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/fabpot/Twig/zipball/ca445842fcea4f844d68203ffa2d00f5e3cdea64",
+                "reference": "ca445842fcea4f844d68203ffa2d00f5e3cdea64",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.2.4"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.14-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "Twig_": "lib/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Fabien Potencier",
+                    "email": "fabien@symfony.com"
+                },
+                {
+                    "name": "Armin Ronacher",
+                    "email": "armin.ronacher@active-4.com"
+                }
+            ],
+            "description": "Twig, the flexible, fast, and secure template language for PHP",
+            "homepage": "http://twig.sensiolabs.org",
+            "keywords": [
+                "templating"
+            ],
+            "time": "2013-10-30 08:20:53"
+        }
+    ],
+    "packages-dev": [
         {
             "name": "composer/composer",
             "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/hostnet/composer.git",
-                "reference": "5a63f8665879f0c51a65781344723179576efae8"
+                "reference": "3da05c68f9561fa822c522b1815435ff990493ff"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/hostnet/composer/zipball/5a63f8665879f0c51a65781344723179576efae8",
-                "reference": "5a63f8665879f0c51a65781344723179576efae8",
+                "url": "https://api.github.com/repos/hostnet/composer/zipball/3da05c68f9561fa822c522b1815435ff990493ff",
+                "reference": "3da05c68f9561fa822c522b1815435ff990493ff",
                 "shasum": ""
             },
             "require": {
@@ -24,7 +75,7 @@
                 "php": ">=5.3.2",
                 "seld/jsonlint": "1.*",
                 "symfony/console": ">=2.3,<3.0",
-                "symfony/finder": ">=2.1,<3.0",
+                "symfony/finder": ">=2.2,<3.0",
                 "symfony/process": ">=2.1,<3.0"
             },
             "require-dev": {
@@ -71,20 +122,20 @@
                 "dependency",
                 "package"
             ],
-            "time": "2013-06-05 06:40:53"
+            "time": "2013-10-02 14:25:06"
         },
         {
             "name": "justinrainbow/json-schema",
             "version": "1.1.0",
             "source": {
                 "type": "git",
-                "url": "git://github.com/justinrainbow/json-schema.git",
-                "reference": "v1.1.0"
+                "url": "https://github.com/justinrainbow/json-schema.git",
+                "reference": "05ff6d8d79fe3ad190b0663d80d3f9deee79416c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/justinrainbow/json-schema/archive/v1.1.0.zip",
-                "reference": "v1.1.0",
+                "url": "https://api.github.com/repos/justinrainbow/json-schema/zipball/05ff6d8d79fe3ad190b0663d80d3f9deee79416c",
+                "reference": "05ff6d8d79fe3ad190b0663d80d3f9deee79416c",
                 "shasum": ""
             },
             "require": {
@@ -130,16 +181,16 @@
         },
         {
             "name": "seld/jsonlint",
-            "version": "1.1.1",
+            "version": "1.1.2",
             "source": {
                 "type": "git",
-                "url": "http://github.com/Seldaek/jsonlint",
-                "reference": "1.1.1"
+                "url": "https://github.com/Seldaek/jsonlint.git",
+                "reference": "7cd4c4965e17e6e4c07f26d566619a4c76f8c672"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Seldaek/jsonlint/zipball/1.1.1",
-                "reference": "1.1.1",
+                "url": "https://api.github.com/repos/Seldaek/jsonlint/zipball/7cd4c4965e17e6e4c07f26d566619a4c76f8c672",
+                "reference": "7cd4c4965e17e6e4c07f26d566619a4c76f8c672",
                 "shasum": ""
             },
             "require": {
@@ -173,28 +224,28 @@
                 "parser",
                 "validator"
             ],
-            "time": "2013-02-11 23:03:12"
+            "time": "2013-11-04 15:41:11"
         },
         {
             "name": "symfony/console",
-            "version": "dev-master",
+            "version": "v2.3.7",
             "target-dir": "Symfony/Component/Console",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/Console.git",
-                "reference": "28b4eced63a11275583345feb3c8269967819eca"
+                "reference": "00848d3e13cf512e77c7498c2b3b0192f61f4b18"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/Console/zipball/28b4eced63a11275583345feb3c8269967819eca",
-                "reference": "28b4eced63a11275583345feb3c8269967819eca",
+                "url": "https://api.github.com/repos/symfony/Console/zipball/00848d3e13cf512e77c7498c2b3b0192f61f4b18",
+                "reference": "00848d3e13cf512e77c7498c2b3b0192f61f4b18",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.3.3"
             },
             "require-dev": {
-                "symfony/event-dispatcher": ">=2.1,<3.0"
+                "symfony/event-dispatcher": "~2.1"
             },
             "suggest": {
                 "symfony/event-dispatcher": ""
@@ -202,7 +253,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.4-dev"
+                    "dev-master": "2.3-dev"
                 }
             },
             "autoload": {
@@ -226,21 +277,21 @@
             ],
             "description": "Symfony Console Component",
             "homepage": "http://symfony.com",
-            "time": "2013-06-04 15:09:18"
+            "time": "2013-11-13 21:27:40"
         },
         {
             "name": "symfony/finder",
-            "version": "dev-master",
+            "version": "v2.3.7",
             "target-dir": "Symfony/Component/Finder",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/Finder.git",
-                "reference": "b709a80b766b47761ae1d1e27a6fa6b4e62dcf08"
+                "reference": "a175521f680b178e63c5d0ab87c6b046c0990c3f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/Finder/zipball/b709a80b766b47761ae1d1e27a6fa6b4e62dcf08",
-                "reference": "b709a80b766b47761ae1d1e27a6fa6b4e62dcf08",
+                "url": "https://api.github.com/repos/symfony/Finder/zipball/a175521f680b178e63c5d0ab87c6b046c0990c3f",
+                "reference": "a175521f680b178e63c5d0ab87c6b046c0990c3f",
                 "shasum": ""
             },
             "require": {
@@ -249,7 +300,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.4-dev"
+                    "dev-master": "2.3-dev"
                 }
             },
             "autoload": {
@@ -273,21 +324,21 @@
             ],
             "description": "Symfony Finder Component",
             "homepage": "http://symfony.com",
-            "time": "2013-06-02 12:05:59"
+            "time": "2013-09-19 09:45:20"
         },
         {
             "name": "symfony/process",
-            "version": "dev-master",
+            "version": "v2.3.7",
             "target-dir": "Symfony/Component/Process",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/Process.git",
-                "reference": "75c810176f8e069714cef8696d7ecc3aa86e8168"
+                "reference": "82898108f79040314a7b3ba430a72c32c7f61d14"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/Process/zipball/75c810176f8e069714cef8696d7ecc3aa86e8168",
-                "reference": "75c810176f8e069714cef8696d7ecc3aa86e8168",
+                "url": "https://api.github.com/repos/symfony/Process/zipball/82898108f79040314a7b3ba430a72c32c7f61d14",
+                "reference": "82898108f79040314a7b3ba430a72c32c7f61d14",
                 "shasum": ""
             },
             "require": {
@@ -296,7 +347,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.4-dev"
+                    "dev-master": "2.3-dev"
                 }
             },
             "autoload": {
@@ -320,65 +371,13 @@
             ],
             "description": "Symfony Process Component",
             "homepage": "http://symfony.com",
-            "time": "2013-05-16 07:54:39"
-        },
-        {
-            "name": "twig/twig",
-            "version": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/fabpot/Twig.git",
-                "reference": "fca6a9562dc032a7ba3ab8278b731b72efa8bd9c"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/fabpot/Twig/zipball/fca6a9562dc032a7ba3ab8278b731b72efa8bd9c",
-                "reference": "fca6a9562dc032a7ba3ab8278b731b72efa8bd9c",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.2.4"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "1.13-dev"
-                }
-            },
-            "autoload": {
-                "psr-0": {
-                    "Twig_": "lib/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "BSD-3"
-            ],
-            "authors": [
-                {
-                    "name": "Fabien Potencier",
-                    "email": "fabien@symfony.com"
-                },
-                {
-                    "name": "Armin Ronacher",
-                    "email": "armin.ronacher@active-4.com"
-                }
-            ],
-            "description": "Twig, the flexible, fast, and secure template language for PHP",
-            "homepage": "http://twig.sensiolabs.org",
-            "keywords": [
-                "templating"
-            ],
-            "time": "2013-05-29 14:58:12"
+            "time": "2013-10-30 08:30:20"
         }
-    ],
-    "packages-dev": [
-
     ],
     "aliases": [
 
     ],
-    "minimum-stability": "dev",
+    "minimum-stability": "stable",
     "stability-flags": {
         "composer/composer": 20
     },

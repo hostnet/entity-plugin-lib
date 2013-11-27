@@ -37,17 +37,6 @@ class Installer extends LibraryInstaller implements PackagePathResolver
   const PACKAGE_TYPE = 'hostnet-entity';
 
   /**
-   * @param IOInterface $io
-   * @param Composer $composer
-   * @param string $type
-   */
-  public function __construct(IOInterface $io, Composer $composer, $type = 'library')
-  {
-    parent::__construct($io, $composer, $type);
-    $composer->getEventDispatcher()->bind(ScriptEvents::POST_AUTOLOAD_DUMP, array($this, 'postAutoloadDump'));
-  }
-
-  /**
    * @see \Composer\Installer\LibraryInstaller::supports()
    */
   public function supports($packageType)

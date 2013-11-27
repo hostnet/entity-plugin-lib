@@ -1,16 +1,17 @@
 {
     "name": "hostnet/entity-installer",
-    "type": "composer-installer",
+    "type": "composer-plugin",
     "description": "Installer for all the Hostnet Doctrine entity libraries",
     "license": "proprietary",
     "require": {
         "php": ">=5.4",
-        "composer/composer": "master@dev",
-        "twig/twig": ">=1.13"
+        "twig/twig": ">=1.13",
+        "composer-plugin-api": "1.0.0"
     },
     "require-dev": {
+        "composer/composer": "master@dev"
     },
-    "minimum-stability": "dev",
+    "minimum-stability": "stable",
     "repositories": [
         {
             "type":"composer",
@@ -26,6 +27,6 @@
         }
     },
     "extra": {
-        "class": "Hostnet\\Entities\\Installer\\Installer"
+        "class": "Hostnet\\Entities\\Installer\\Plugin"
     }
 }
