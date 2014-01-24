@@ -1,5 +1,5 @@
 {
-    "name": "hostnet/entity-installer",
+    "name": "hostnet/entity-plugin-lib",
     "type": "composer-plugin",
     "description": "Installer for all the Hostnet Doctrine entity libraries",
     "license": "proprietary",
