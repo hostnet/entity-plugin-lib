@@ -34,7 +34,7 @@ class CompoundGenerator
   {
     foreach ($this->entity_package->getPackageIO()->getEntities() as $package_class) {
         /* @var $package_class PackageClass */
-        $traits = $this->recursivelyFindUseStatementsFor($this->entity_package, $package_class->getName());
+        $traits = $this->recursivelyFindUseStatementsFor($this->entity_package, $package_class);
         $this->generateTrait($package_class, $traits);
         $this->generateInterface($package_class, $traits);
     }
@@ -48,14 +48,14 @@ class CompoundGenerator
    * @param string $class_name
    * @return array[]UseStatement
    */
-  private function recursivelyFindUseStatementsFor(EntityPackage $entity_package, $class_name)
+  private function recursivelyFindUseStatementsFor(EntityPackage $entity_package, PackageClass $package_class)
   {
     $result = array();
     foreach($entity_package->getDependentPackages() as $dependent_package) {
       /* @var $package EntityPackage */
-      $result = array_merge($result, $this->recursivelyFindUseStatementsFor($dependent_package, $class_name));
+      $result = array_merge($result, $this->recursivelyFindUseStatementsFor($dependent_package, $package_class));
     }
-    $package_class = $entity_package->getPackageIO()->getEntityOrEntityTrait($class_name);
+    $package_class = $entity_package->getPackageIO()->getEntityOrEntityTrait($package_class->getShortName());
     if($package_class) {
       $result[] = new UseStatement($package_class->getNamespaceName(), $package_class);
     }
@@ -70,11 +70,11 @@ class CompoundGenerator
      */
     private function generateTrait(PackageClass $package_class, array $traits)
     {
-        $class_name = $package_class->getName();
-        $this->writeIfVeryVerbose('    - Generating trait of traits for <info>' . $class_name. '</info>');
+        $short_name = $package_class->getShortName();
+        $this->writeIfVeryVerbose('    - Generating trait of traits for <info>' . $package_class->getName(). '</info>');
         $generated_namespace = $package_class->getGeneratedNamespaceName();
-        $data = $this->environment->render('traits.php.twig', array('class_name' => $class_name, 'namespace' => $generated_namespace, 'use_statements' => $traits));
-        $this->entity_package->getPackageIO()->writeGeneratedFile($package_class->getGeneratedDirectory(), $class_name . 'Traits.php', $data);
+        $data = $this->environment->render('traits.php.twig', array('class_name' => $short_name, 'namespace' => $generated_namespace, 'use_statements' => $traits));
+        $this->entity_package->getPackageIO()->writeGeneratedFile($package_class->getGeneratedDirectory(), $short_name . 'Traits.php', $data);
     }
 
   /**
@@ -85,11 +85,11 @@ class CompoundGenerator
    */
   private function generateInterface(PackageClass $package_class, array $traits)
   {
-    $class_name = $package_class->getName();
-    $this->writeIfVeryVerbose('    - Generating combined interface for <info>' . $class_name. '</info>');
+    $short_name = $package_class->getShortName();
+    $this->writeIfVeryVerbose('    - Generating combined interface for <info>' . $package_class->getName(). '</info>');
     $generated_namespace = $package_class->getGeneratedNamespaceName();
-    $data = $this->environment->render('combined_interface.php.twig', array('class_name' => $class_name, 'namespace' => $generated_namespace, 'use_statements' => $traits));
-    $this->entity_package->getPackageIO()->writeGeneratedFile($package_class->getGeneratedDirectory(), $class_name . 'Interface.php', $data);
+    $data = $this->environment->render('combined_interface.php.twig', array('class_name' => $short_name, 'namespace' => $generated_namespace, 'use_statements' => $traits));
+    $this->entity_package->getPackageIO()->writeGeneratedFile($package_class->getGeneratedDirectory(), $short_name . 'Interface.php', $data);
   }
 
   /**
