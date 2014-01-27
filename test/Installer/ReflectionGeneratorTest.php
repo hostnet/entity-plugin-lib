@@ -25,7 +25,7 @@ class ReflectionGeneratorTest extends PHPUnit_Framework_TestCase
   {
     require_once(__DIR__ . '/EdgeCases/'.$classname.'.php');
     $io = new NullIO();
-    $loader = new \Twig_Loader_Filesystem(__DIR__ . '/../../src/Hostnet/Entities/Resources/templates/');
+    $loader = new \Twig_Loader_Filesystem(__DIR__ . '/../../src/Resources/templates/');
     $environment = new \Twig_Environment($loader);
 
     $package_io = $this->getMock('Hostnet\Entities\Installer\PackageIOInterface');
