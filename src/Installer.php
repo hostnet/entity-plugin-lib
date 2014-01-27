@@ -134,12 +134,12 @@ class Installer extends LibraryInstaller implements PackagePathResolver
       /* @var $entity_package EntityPackage */
       $this->writeIfVerbose('  - Preparing package <info>' . $entity_package->getPackage()->getName() . '</info>');
       foreach($entity_package->getPackageIO()->getEntities() as $entity) {
-        $this->writeIfVeryVerbose('    - Preparing interface and abstract trait for <info>'.$entity-> getFilename().'</info>');
+        $this->writeIfVeryVerbose('    - Preparing interface and abstract trait for <info>'.$entity->getClass().'</info>');
         $generator = new EmptyGenerator($this->io, $this->getTwigEnvironment(), $entity_package->getPackageIO(), $entity);
         $generator->generate();
       }
       foreach($entity_package->getPackageIO()->getEntityTraits() as $entity) {
-        $this->writeIfVeryVerbose('    - Preparing interface and abstract trait for <info>'.$entity-> getFilename().'</info>');
+        $this->writeIfVeryVerbose('    - Preparing interface and abstract trait for <info>'.$entity-> getClass().'</info>');
         $generator = new EmptyGenerator($this->io, $this->getTwigEnvironment(), $entity_package->getPackageIO(), $entity);
         $generator->generate();
       }
