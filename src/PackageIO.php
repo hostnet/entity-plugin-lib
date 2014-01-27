@@ -32,35 +32,33 @@ class PackageIO implements PackageIOInterface
     $this->path = $path;
     $class_map = $class_mapper->createClassMap($path);
     foreach($class_map as $class => $file) {
-      $file = new \SplFileInfo($file);
+      $package_class = new PackageClass($class, $file);
       // TODO strpos and then use only the last part as values of generated_files. Maybe even keys?
       if(strstr($class, '\\Generated\\')) {
-        $this->generated_files[] = $file;
+        $this->generated_files[] = $package_class;
       } else if(strpos($class, '\\Entity\\')) {
-        $this->addEntity($file);
+        $this->addEntity($package_class);
       } else if(strpos($class, '\\Service\\')) {
-        $this->addService($file);
+        $this->addService($package_class);
       }
     }
   }
 
-  private function addEntity(\SplFileInfo $file)
+  private function addEntity(PackageClass $class)
   {
-    $basename = $file->getBasename();
-    if(strpos($basename, 'Trait.php')) {
-      $this->entity_traits[] = $file;
-    } else if(strpos($basename, '.php')) {
-        $this->entities[] = $file;
+    if ($class->isTrait()) {
+        $this->entity_traits[] = $class;
+    } else {
+        $this->entities[] = $class;
     }
   }
 
-  private function addService(\SplFileInfo $file)
+  private function addService(PackageClass $class)
   {
-      $basename = $file->getBasename();
-      if(strpos($basename, 'ServiceTrait.php')) {
-          $this->service_traits[] = $file;
-      } else if(strpos($basename, 'Service.php')) {
-          $this->services[] = $file;
+      if ($class->isTrait()) {
+          $this->service_traits[] = $class;
+      } else {
+          $this->services[] = $class;
       }
   }
 
@@ -77,19 +75,18 @@ class PackageIO implements PackageIOInterface
    */
   public function getEntityOrEntityTrait($name)
   {
-    $looking_for = $name .'.php';
-    foreach($this->entities as $file) {
-      /* @var $file \SplFileInfo */
-      if($file->getBasename() == $looking_for) {
-        return $file;
+    foreach ($this->entities as $class) {
+      /* @var $class PackageClass */
+      if ($class->getShortName() == $name) {
+        return $class;
       }
     }
     $looking_for = $name .'Trait.php';
-    foreach($this->entity_traits as $file) {
-      /* @var $file \SplFileInfo */
-      if($file->getBasename() == $looking_for) {
-        return $file;
-      }
+    foreach ($this->entity_traits as $class) {
+        /* @var $class PackageClass */
+        if ($class->getShortName() == $name) {
+            return $class;
+        }
     }
   }
 
@@ -125,11 +122,8 @@ class PackageIO implements PackageIOInterface
   /**
    * @see \Hostnet\Component\EntityPlugin\PackageIOInterface::writeGeneratedFile()
    */
-  public function writeGeneratedFile($directory, $file, $data)
+  public function writeGeneratedFile($path, $file, $data)
   {
-    $path = $this->path . '/' . $directory;
-    $path = $path . '/Generated';
-
     $this->ensureDirectoryExists($path);
 
     if(!is_dir($path)) {

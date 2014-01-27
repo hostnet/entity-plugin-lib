@@ -3,7 +3,6 @@
 namespace Hostnet\Component\EntityPlugin;
 
 use Composer\IO\IOInterface;
-use Symfony\Component\Finder\SplFileInfo;
 
 /**
  * A simple, light-weight generator that can be used runtime during development
@@ -15,7 +14,7 @@ class ReflectionGenerator
   private $io;
   private $environment;
   private $package_io;
-  private $file;
+  private $package_class;
 
   /**
    *
@@ -24,14 +23,14 @@ class ReflectionGenerator
    * @param IOInterface $io
    * @param \Twig_Environment $environment
    * @param PackageIOInterface $package_io
-   * @param SplFileInfo $file
+   * @param PackageClass $package_class
    */
-  public function __construct(IOInterface $io,\Twig_Environment $environment, PackageIOInterface $package_io, SplFileInfo $file)
+  public function __construct(IOInterface $io,\Twig_Environment $environment, PackageIOInterface $package_io, PackageClass $package_class)
   {
     $this->io = $io;
     $this->environment = $environment;
     $this->package_io = $package_io;
-    $this->file = $file;
+    $this->package_class = $package_class;
   }
 
   /**
@@ -40,20 +39,19 @@ class ReflectionGenerator
    */
   public function generate()
   {
-    $namespace = str_replace("/", "\\", $this->file->getRelativePath());
-    $trait_or_class_name = $this->file->getBasename('.' . $this->file->getExtension());
+    $trait_or_class_name = $this->package_class->getShortName();
 
     $interface_name = $this->getInterfaceName($trait_or_class_name);
-    $generated_namespace = $namespace . '\Generated';
+    $generated_namespace = $this->package_class->getGeneratedNamespaceName();
     $params = array(
                     'trait_or_class_name' => $trait_or_class_name,
                     'name' => $interface_name,
                     'namespace' => $generated_namespace,
                     'type_hinter' => new TypeHinter(),
-                    'methods' => $this->getMethods($namespace, $trait_or_class_name)
+                    'methods' => $this->getMethods($this->package_class->getNamespaceName(), $trait_or_class_name)
     );
     $interface = $this->environment->render('trait_interface.php.twig', $params);
-    $path = $this->file->getRelativePath();
+    $path = $this->package_class->getGeneratedDirectory();
     $this->package_io->writeGeneratedFile($path, $interface_name . '.php', $interface);
 
     $params['name'] = $this->getAbstractTraitName($trait_or_class_name);
@@ -63,16 +61,11 @@ class ReflectionGenerator
 
   /**
    * Which methods do we have to generate?
-   * @param string $namespace
-   * @param string $trait_or_class_name
    * @return \ReflectionMethod[]
    */
-  protected function getMethods($namespace, $trait_or_class_name)
+  protected function getMethods()
   {
-    // TODO remove this once composer issue #187 is fixed
-    // @see https://github.com/composer/composer/issues/187
-    //require_once ($this->file->getPathname());
-    $class = new \ReflectionClass($namespace . '\\' . $trait_or_class_name);
+    $class = new \ReflectionClass($this->package_class->getName());
     $methods = $class->getMethods();
     foreach($methods as $key => $method) {
       if($method->name === '__construct') {
@@ -84,7 +77,7 @@ class ReflectionGenerator
 
   private function getInterfaceName($trait_or_class_name)
   {
-    if(strpos($trait_or_class_name, 'Trait') !== false) {
+    if($this->package_class->isTrait()) {
       return $trait_or_class_name . 'Interface';
     } else {
       return $trait_or_class_name . 'TraitInterface';
@@ -93,7 +86,7 @@ class ReflectionGenerator
 
   private function getAbstractTraitName($trait_or_class_name)
   {
-    if(strpos($trait_or_class_name, 'Trait') !== false) {
+    if($this->package_class->isTrait()) {
       return 'Abstract' . $trait_or_class_name;
     } else {
       return 'Abstract' . $trait_or_class_name . 'Trait';

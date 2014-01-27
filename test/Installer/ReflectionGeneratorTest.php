@@ -1,11 +1,8 @@
 <?php
-use Hostnet\Component\EntityPlugin\ReflectionGenerator;
-
-use Symfony\Component\Finder\SplFileInfo;
-
-use Hostnet\Component\EntityPlugin\PackageIOInterface;
-
 use Composer\IO\NullIO;
+use Hostnet\Component\EntityPlugin\PackageClass;
+use Hostnet\Component\EntityPlugin\PackageIOInterface;
+use Hostnet\Component\EntityPlugin\ReflectionGenerator;
 
 /**
  * More a functiononal test then a unit-test
@@ -17,13 +14,11 @@ class ReflectionGeneratorTest extends PHPUnit_Framework_TestCase
 {
   /**
    * @dataProvider generateProvider
-   * @param PackageIOInterface $package_io
-   * @param SplFileInfo $file
-   * @param string $expected
+   * @param PackageClass $package_class
    */
-  public function testGenerate($classname, SplFileInfo $file)
+  public function testGenerate(PackageClass $package_class)
   {
-    require_once(__DIR__ . '/EdgeCases/'.$classname.'.php');
+    require_once(__DIR__ . '/EdgeCases/'.$package_class->getShortName().'.php');
     $io = new NullIO();
     $loader = new \Twig_Loader_Filesystem(__DIR__ . '/../../src/Resources/templates/');
     $environment = new \Twig_Environment($loader);
@@ -32,40 +27,29 @@ class ReflectionGeneratorTest extends PHPUnit_Framework_TestCase
 
     $that = $this;
     $package_io->expects($this->exactly(2))->method('writeGeneratedFile')->will($this->returnCallback(
-        function($directory, $file, $data) use($that, $classname) {
-          $that->assertEquals('Hostnet/EdgeCases/Entity', $directory);
-          if($file === $classname.'TraitInterface.php') {
-            $contents = file_get_contents(__DIR__ . '/EdgeCases/'.$classname.'TraitInterface.expected.php');
-          } else if($file === 'Abstract'.$classname.'Trait.php') {
-            $contents = file_get_contents(__DIR__ . '/EdgeCases/Abstract'.$classname.'Trait.expected.php');
+        function($directory, $file, $data) use($that, $package_class) {
+          $that->assertEquals($package_class->getGeneratedDirectory(), $directory);
+          $short_name = $package_class->getShortName();
+          if($file === $short_name.'TraitInterface.php') {
+            $contents = file_get_contents(__DIR__ . '/EdgeCases/'.$short_name.'TraitInterface.expected.php');
+          } else if($file === 'Abstract'.$short_name.'Trait.php') {
+            $contents = file_get_contents(__DIR__ . '/EdgeCases/Abstract'.$short_name.'Trait.expected.php');
           } else {
             $this->fail('Unexpected file '. $file);
           }
           $that->assertEquals($contents, $data);
     }));
 
-    $generator = new ReflectionGenerator($io, $environment, $package_io, $file);
+    $generator = new ReflectionGenerator($io, $environment, $package_io, $package_class);
     $this->assertNull($generator->generate());
   }
 
   public function generateProvider()
   {
-    $file = $this->getMockBuilder('Symfony\Component\Finder\SplFileInfo')->disableOriginalConstructor()->getMock();
-    $file->expects($this->any())->method('getRelativePath')->will($this->returnValue('Hostnet/EdgeCases/Entity'));
-    $file->expects($this->any())->method('getBasename')->will($this->returnValue('ConstructShouldNotBePresent'));
-
-    $multiple_arguments_file = $this->getMockBuilder('Symfony\Component\Finder\SplFileInfo')->disableOriginalConstructor()->getMock();
-    $multiple_arguments_file->expects($this->any())->method('getRelativePath')->will($this->returnValue('Hostnet/EdgeCases/Entity'));
-    $multiple_arguments_file->expects($this->any())->method('getBasename')->will($this->returnValue('MultipleArguments'));
-
-    $typed_parameters_file = $this->getMockBuilder('Symfony\Component\Finder\SplFileInfo')->disableOriginalConstructor()->getMock();
-    $typed_parameters_file->expects($this->any())->method('getRelativePath')->will($this->returnValue('Hostnet/EdgeCases/Entity'));
-    $typed_parameters_file->expects($this->any())->method('getBasename')->will($this->returnValue('TypedParameters'));
-
     return array(
-        array('ConstructShouldNotBePresent', $file),
-        array('MultipleArguments', $multiple_arguments_file),
-        array('TypedParameters', $typed_parameters_file)
+        array(new PackageClass('Hostnet\EdgeCases\Entity\ConstructShouldNotBePresent', __DIR__ . '/EdgeCases/ConstructShouldNotBePresent.php')),
+        array(new PackageClass('Hostnet\EdgeCases\Entity\MultipleArguments',  __DIR__ . '/EdgeCases/MultipleArguments.php')),
+        array(new PackageClass('Hostnet\EdgeCases\Entity\TypedParameters', __DIR__ . '/EdgeCases/TypedParameters.php'))
     );
   }
 

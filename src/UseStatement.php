@@ -1,8 +1,6 @@
 <?php
 namespace Hostnet\Component\EntityPlugin;
 
-use Symfony\Component\Finder\SplFileInfo;
-
 /**
  * Represents a use statement
  * @author Nico Schoenmaker <nschoenmaker@hostnet.nl>
@@ -11,16 +9,16 @@ class UseStatement
 {
   private $namespace;
 
-  private $file;
+  private $package_class;
 
   /**
    * @param string $namespace
-   * @param SplFileInfo $file
+   * @param PackageClass $package_class
    */
-  public function __construct($namespace, SplFileInfo $file)
+  public function __construct($namespace, PackageClass $package_class)
   {
     $this->namespace = $namespace;
-    $this->file = $file;
+    $this->package_class = $package_class;
   }
 
   /**
@@ -28,7 +26,7 @@ class UseStatement
    */
   public function isTrait()
   {
-    return strpos($this->file->getFilename(), 'Trait.php') !== false;
+      return $this->package_class->isTrait();
   }
 
   /**
