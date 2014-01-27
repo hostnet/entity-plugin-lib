@@ -12,38 +12,42 @@ class PackageOITest extends PHPUnit_Framework_TestCase
    * @param array $service_traits
    * @param array $generated_files
    */
-  public function test__construct(\Iterator $iterator, array $entities = array(), array $services = array(), array $entity_traits = array(), array $service_traits = array(), array $generated_files = array())
+  public function test__construct(array $class_map, array $entities = array(), array $services = array(), array $entity_traits = array(), array $service_traits = array(), array $generated_files = array())
   {
-    $finder = $this->getMock('Symfony\Component\Finder\Finder', array('getIterator'));
-    $finder->expects($this->once())->method('getIterator')->will($this->returnValue($iterator));
-    $io = new PackageIO($finder, __DIR__);
-    $this->assertEquals(array_values($entities), $io->getEntities());
-    $this->assertEquals($services, $io->getServices());
+    $class_mapper = $this->getMock('Hostnet\Component\EntityPlugin\ClassMapperInterface', array('createClassMap'));
+    $class_mapper->expects($this->once())->method('createClassMap')->will($this->returnValue($class_map));
+    $io = new PackageIO(__DIR__, $class_mapper);
+    $this->assertEquals(array_values($entities), $io->getEntities(), 'Entities');
+    $this->assertEquals($services, $io->getServices(), 'Services');
     foreach(array_merge($entities, $entity_traits) as $name => $entity_trait) {
-      $this->assertEquals($entity_trait, $io->getEntityOrEntityTrait($name));
+      $this->assertEquals($entity_trait, $io->getEntityOrEntityTrait($name), 'Entity or traits');
     }
-    $this->assertEquals(array_values($entity_traits), $io->getEntityTraits());
-    $this->assertEquals($service_traits, $io->getServiceTraits());
-    $this->assertEquals($generated_files, $io->getGeneratedFiles());
+    $this->assertEquals(array_values($entity_traits), $io->getEntityTraits(), 'Entity traits');
+    $this->assertEquals($service_traits, $io->getServiceTraits(), 'Service traits');
+    $this->assertEquals($generated_files, $io->getGeneratedFiles(), 'Generated files');
   }
 
   public function __constructProvider()
   {
-    $irrelevant_file = $this->mockFileInfo('foo', 'meh');
-    $client_entity = $this->mockFileInfo('Foo/Entity', 'Client.php');
-    $client_trait = $this->mockFileInfo('Foo/Entity', 'ClientTrait.php');
-    $client_repository = $this->mockFileInfo('Foo/Service', 'ClientService.php');
-    $client_repository_trait = $this->mockFileInfo('Foo/Service', 'ClientServiceTrait.php');
-    $one_entity = new ArrayIterator(array($client_entity));
+    $irrelevant_file = ['Hostnet\Component\Foo' => 'foo.php'];
+    $client_entity = ['Foo\Client\Entity\Client' => 'src/Bar/Client.php'];
+    $client_trait = ['Foo\Entity\ClientTrait' => 'ClientTrait.php'];
+    $client_service = ['Foo\Service\ClientService' => 'ClientService.php'];
+    $client_service_trait = ['Foo\Service\ServiceTrait' => 'ClientServiceTrait.php'];
 
-    $one_of_all = new ArrayIterator(array($irrelevant_file, $client_entity, $client_trait, $client_repository, $client_repository_trait));
+    $one_of_all = array_merge($irrelevant_file, $client_trait, $client_service, $client_service_trait, $client_entity);
 
-    return array(
-        array(new ArrayIterator(array())),
-        array(new ArrayIterator(array($irrelevant_file))),
-        array($one_entity, array('Client' => $client_entity)),
-        array($one_of_all, array('Client' => $client_entity), array($client_repository), array('Client' => $client_trait), array($client_repository_trait))
-        );
+    $client_file = new \SplFileInfo('src/Bar/Client.php');
+    $client_trait_file = new \SplFileInfo('src/Bar/ClientTrait.php');
+    $client_service_file = new \SplFileInfo('src/Bar/Client.php');
+    $client_service_trait_file = new \SplFileInfo('src/Bar/Client.php');
+
+    return [
+        [[]],
+        [$irrelevant_file],
+        array($client_entity, array('Client' => $client_file)),
+        array($one_of_all, array('Client' => $client_file), array($client_service_file), array('Client' => $client_trait_file), array($client_service_trait_file))
+    ];
   }
 
   private function mockFileInfo($relative_path, $basename)

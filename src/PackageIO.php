@@ -1,9 +1,7 @@
 <?php
 namespace Hostnet\Component\EntityPlugin;
 
-use Symfony\Component\Finder\SplFileInfo;
-
-use Symfony\Component\Finder\Finder;
+use Composer\Autoload\ClassMapGenerator;
 
 /**
  * Concrete implementation of the PackageIOInterface
@@ -26,28 +24,27 @@ class PackageIO implements PackageIOInterface
 
   /**
    * @todo don't do the work in the constructor, but only when asked.
-   * @param Finder $finder Used to find all files in repo
    * @param String $path
+   * @param ClassMapperInterface $class_mapper To map the classes
    */
-  public function __construct(Finder $finder, $path)
+  public function __construct($path, ClassMapperInterface $class_mapper)
   {
     $this->path = $path;
-    $files = $finder->files()->in($path)->name('*.php');
-    foreach($files as $file) {
-      /* @var $file \Symfony\Component\Finder\SplFileInfo */
-      $namespace = str_replace("/", "\\", $file->getRelativePath());
+    $class_map = $class_mapper->createClassMap($path);
+    foreach($class_map as $class => $file) {
+      $file = new \SplFileInfo($file);
       // TODO strpos and then use only the last part as values of generated_files. Maybe even keys?
-      if(strstr($namespace, '\\Generated')) {
+      if(strstr($class, '\\Generated\\')) {
         $this->generated_files[] = $file;
-      } else if(strpos($namespace, '\\Entity')) {
+      } else if(strpos($class, '\\Entity\\')) {
         $this->addEntity($file);
-      } else if(strpos($namespace, '\\Service')) {
+      } else if(strpos($class, '\\Service\\')) {
         $this->addService($file);
       }
     }
   }
 
-  private function addEntity(SplFileInfo $file)
+  private function addEntity(\SplFileInfo $file)
   {
     $basename = $file->getBasename();
     if(strpos($basename, 'Trait.php')) {
@@ -57,7 +54,7 @@ class PackageIO implements PackageIOInterface
     }
   }
 
-  private function addService(SplFileInfo $file)
+  private function addService(\SplFileInfo $file)
   {
       $basename = $file->getBasename();
       if(strpos($basename, 'ServiceTrait.php')) {
@@ -82,14 +79,14 @@ class PackageIO implements PackageIOInterface
   {
     $looking_for = $name .'.php';
     foreach($this->entities as $file) {
-      /* @var $file \Symfony\Component\Finder\SplFileInfo */
+      /* @var $file \SplFileInfo */
       if($file->getBasename() == $looking_for) {
         return $file;
       }
     }
     $looking_for = $name .'Trait.php';
     foreach($this->entity_traits as $file) {
-      /* @var $file \Symfony\Component\Finder\SplFileInfo */
+      /* @var $file \SplFileInfo */
       if($file->getBasename() == $looking_for) {
         return $file;
       }
@@ -139,9 +136,6 @@ class PackageIO implements PackageIOInterface
       mkdir($path, 0755, true);
     }
     file_put_contents($path . '/' . $file, $data);
-    // TODO remove this once composer issue #187 is fixed
-    // @see https://github.com/composer/composer/issues/187
-    //require_once $path . '/' . $file;
   }
 
   /**
