@@ -18,8 +18,8 @@ class EmptyGenerator extends ReflectionGenerator
   /**
    * @see \Hostnet\Component\EntityPlugin\ReflectionGenerator::getMethods()
    */
-  protected function getMethods($namespace, $trait_or_class_name)
+  protected function getMethods()
   {
-    return array();
+    return [];
   }
 }
