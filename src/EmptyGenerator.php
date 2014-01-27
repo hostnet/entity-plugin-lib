@@ -1,5 +1,5 @@
 <?php
-namespace Hostnet\Entities\Installer;
+namespace Hostnet\Component\EntityPlugin;
 
 /**
  * Generates the Abstract*Trait and *TraitInterface
@@ -16,7 +16,7 @@ namespace Hostnet\Entities\Installer;
 class EmptyGenerator extends ReflectionGenerator
 {
   /**
-   * @see \Hostnet\Entities\Installer\ReflectionGenerator::getMethods()
+   * @see \Hostnet\Component\EntityPlugin\ReflectionGenerator::getMethods()
    */
   protected function getMethods($namespace, $trait_or_class_name)
   {

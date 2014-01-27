@@ -1,5 +1,5 @@
 <?php
-namespace Hostnet\Entities\Installer;
+namespace Hostnet\Component\EntityPlugin;
 
 use Symfony\Component\Finder\SplFileInfo;
 

@@ -1,5 +1,5 @@
 <?php
-namespace Hostnet\Entities\Installer;
+namespace Hostnet\Component\EntityPlugin;
 
 use Composer\Package\RootPackageInterface;
 
@@ -45,7 +45,7 @@ class Installer extends LibraryInstaller implements PackagePathResolver
   }
 
   /**
-   * @see \Hostnet\Entities\Installer\PackagePathResolver::getSourcePath()
+   * @see \Hostnet\Component\EntityPlugin\PackagePathResolver::getSourcePath()
    */
   public function getSourcePath(PackageInterface $package)
   {
@@ -198,7 +198,7 @@ class Installer extends LibraryInstaller implements PackagePathResolver
   private function getTwigEnvironment()
   {
     if(!$this->twig_environment) {
-      $loader = new \Twig_Loader_Filesystem(__DIR__ . '/../Resources/templates/');
+      $loader = new \Twig_Loader_Filesystem(__DIR__ . '/Resources/templates/');
       $this->twig_environment = new \Twig_Environment($loader);
     }
     return $this->twig_environment;

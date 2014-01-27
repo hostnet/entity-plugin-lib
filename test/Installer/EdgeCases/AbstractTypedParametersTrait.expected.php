@@ -23,5 +23,5 @@ trait AbstractTypedParametersTrait
     abstract public function anArray(array $foo);
     /**
      */
-    abstract public function aNamespacedArgument(\Hostnet\Entities\Installer\ReflectionGenerator $generator);
+    abstract public function aNamespacedArgument(\Hostnet\Component\EntityPlugin\ReflectionGenerator $generator);
 }

@@ -2,9 +2,9 @@
 
 use Composer\Package\Link;
 
-use Hostnet\Entities\Installer\EntityPackage;
+use Hostnet\Component\EntityPlugin\EntityPackage;
 
-use Hostnet\Entities\Installer\EntityPackageBuilder;
+use Hostnet\Component\EntityPlugin\EntityPackageBuilder;
 
 use Composer\Package\Package;
 
@@ -15,14 +15,14 @@ class EntityPackageBuilderTest extends PHPUnit_Framework_TestCase
    */
   public function testAddsDependencies(array $packages, array $expected_required_packages, array $expected_dependent_packages)
   {
-    $mock = $this->getMock('Hostnet\Entities\Installer\PackagePathResolver');
+    $mock = $this->getMock('Hostnet\Component\EntityPlugin\PackagePathResolver');
     $mock->expects($this->any())->method('getSourcePath')->will($this->returnValue(__DIR__));
     $builder = new EntityPackageBuilder($mock, $packages);
     $entity_packages = $builder->getEntityPackages();
     foreach($expected_required_packages as $package_name => $required_packages) {
       $actual_required = array();
       foreach($entity_packages[$package_name]->getRequiredPackages() as $requirement) {
-        $this->assertInstanceOf('Hostnet\Entities\Installer\EntityPackage', $requirement);
+        $this->assertInstanceOf('Hostnet\Component\EntityPlugin\EntityPackage', $requirement);
         $actual_required[] = $requirement->getPackage();
       }
       $this->assertEquals($required_packages, $actual_required);
@@ -31,7 +31,7 @@ class EntityPackageBuilderTest extends PHPUnit_Framework_TestCase
     foreach($expected_dependent_packages as $package_name => $dependent_packages) {
       $actual_dependant = array();
       foreach($entity_packages[$package_name]->getDependentPackages() as $dep) {
-        $this->assertInstanceOf('Hostnet\Entities\Installer\EntityPackage', $dep);
+        $this->assertInstanceOf('Hostnet\Component\EntityPlugin\EntityPackage', $dep);
         $actual_dependant[] = $dep->getPackage();
       }
       $this->assertEquals($dependent_packages, $actual_dependant);
