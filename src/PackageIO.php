@@ -1,5 +1,5 @@
 <?php
-namespace Hostnet\Entities\Installer;
+namespace Hostnet\Component\EntityPlugin;
 
 use Symfony\Component\Finder\SplFileInfo;
 
@@ -68,7 +68,7 @@ class PackageIO implements PackageIOInterface
   }
 
   /**
-   * @see \Hostnet\Entities\Installer\PackageIOInterface::getEntities()
+   * @see \Hostnet\Component\EntityPlugin\PackageIOInterface::getEntities()
    */
   public function getEntities()
   {
@@ -76,7 +76,7 @@ class PackageIO implements PackageIOInterface
   }
 
   /**
-   * @see \Hostnet\Entities\Installer\PackageIOInterface::getEntityOrEntityTrait()
+   * @see \Hostnet\Component\EntityPlugin\PackageIOInterface::getEntityOrEntityTrait()
    */
   public function getEntityOrEntityTrait($name)
   {
@@ -102,7 +102,7 @@ class PackageIO implements PackageIOInterface
   }
 
   /**
-   * @see \Hostnet\Entities\Installer\PackageIOInterface::getServices()
+   * @see \Hostnet\Component\EntityPlugin\PackageIOInterface::getServices()
    */
   public function getServices()
   {
@@ -110,7 +110,7 @@ class PackageIO implements PackageIOInterface
   }
 
   /**
-   * @see \Hostnet\Entities\Installer\PackageIOInterface::getServiceTraits()
+   * @see \Hostnet\Component\EntityPlugin\PackageIOInterface::getServiceTraits()
    */
   public function getServiceTraits()
   {
@@ -118,7 +118,7 @@ class PackageIO implements PackageIOInterface
   }
 
   /**
-   * @see \Hostnet\Entities\Installer\PackageIOInterface::getGeneratedFiles()
+   * @see \Hostnet\Component\EntityPlugin\PackageIOInterface::getGeneratedFiles()
    */
   public function getGeneratedFiles()
   {
@@ -126,7 +126,7 @@ class PackageIO implements PackageIOInterface
   }
 
   /**
-   * @see \Hostnet\Entities\Installer\PackageIOInterface::writeGeneratedFile()
+   * @see \Hostnet\Component\EntityPlugin\PackageIOInterface::writeGeneratedFile()
    */
   public function writeGeneratedFile($directory, $file, $data)
   {

@@ -11,7 +11,7 @@ use Composer\IO\NullIO;
 
 use Composer\Composer;
 
-use Hostnet\Entities\Installer\Installer;
+use Hostnet\Component\EntityPlugin\Installer;
 
 class InstallerTest extends PHPUnit_Framework_TestCase
 {

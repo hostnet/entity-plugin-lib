@@ -1,5 +1,5 @@
 <?php
-use Hostnet\Entities\Installer\PackageIO;
+use Hostnet\Component\EntityPlugin\PackageIO;
 
 class PackageOITest extends PHPUnit_Framework_TestCase
 {

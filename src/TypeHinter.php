@@ -1,5 +1,5 @@
 <?php
-namespace Hostnet\Entities\Installer;
+namespace Hostnet\Component\EntityPlugin;
 
 /**
  * Ugly hack to circumvent PHP autoloading the class that is typehinted
@@ -7,7 +7,7 @@ namespace Hostnet\Entities\Installer;
  * Examples of \ReflectionParameter->__toString():
  * Parameter #0 [ <required> DateTime $date ]
  * Parameter #0 [ <optional> DateTime or NULL $date = NULL ]
- * Parameter #0 [ <required> Hostnet\Entities\Installer\ReflectionGenerator $generator ]
+ * Parameter #0 [ <required> Hostnet\Component\EntityPlugin\ReflectionGenerator $generator ]
  */
 class TypeHinter
 {

@@ -1,7 +1,7 @@
 <?php
 namespace Hostnet\EdgeCases\Entity;
 
-use Hostnet\Entities\Installer\ReflectionGenerator;
+use Hostnet\Component\EntityPlugin\ReflectionGenerator;
 
 class TypedParameters
 {

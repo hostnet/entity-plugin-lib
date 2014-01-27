@@ -1,5 +1,5 @@
 <?php
-use Hostnet\Entities\Installer\UseStatement;
+use Hostnet\Component\EntityPlugin\UseStatement;
 
 class UseStatementTest extends PHPUnit_Framework_TestCase
 {

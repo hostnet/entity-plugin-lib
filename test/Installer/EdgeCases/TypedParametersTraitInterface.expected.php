@@ -19,5 +19,5 @@ interface TypedParametersTraitInterface
     public function anArray(array $foo);
     /**
      */
-    public function aNamespacedArgument(\Hostnet\Entities\Installer\ReflectionGenerator $generator);
+    public function aNamespacedArgument(\Hostnet\Component\EntityPlugin\ReflectionGenerator $generator);
 }

@@ -20,7 +20,7 @@
         }
     ],
     "autoload": {
-        "psr-4": { "Hostnet\\Entities\\": "src/" }
+        "psr-4": { "Hostnet\\Component\\EntityPlugin\\": "src/" }
     },
     "config": {
         "github-oauth": {
@@ -28,6 +28,6 @@
         }
     },
     "extra": {
-        "class": "Hostnet\\Entities\\Installer\\Plugin"
+        "class": "Hostnet\\Component\\EntityPlugin\\Plugin"
     }
 }

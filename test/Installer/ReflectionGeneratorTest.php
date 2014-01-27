@@ -1,9 +1,9 @@
 <?php
-use Hostnet\Entities\Installer\ReflectionGenerator;
+use Hostnet\Component\EntityPlugin\ReflectionGenerator;
 
 use Symfony\Component\Finder\SplFileInfo;
 
-use Hostnet\Entities\Installer\PackageIOInterface;
+use Hostnet\Component\EntityPlugin\PackageIOInterface;
 
 use Composer\IO\NullIO;
 
@@ -28,7 +28,7 @@ class ReflectionGeneratorTest extends PHPUnit_Framework_TestCase
     $loader = new \Twig_Loader_Filesystem(__DIR__ . '/../../src/Resources/templates/');
     $environment = new \Twig_Environment($loader);
 
-    $package_io = $this->getMock('Hostnet\Entities\Installer\PackageIOInterface');
+    $package_io = $this->getMock('Hostnet\Component\EntityPlugin\PackageIOInterface');
 
     $that = $this;
     $package_io->expects($this->exactly(2))->method('writeGeneratedFile')->will($this->returnCallback(
