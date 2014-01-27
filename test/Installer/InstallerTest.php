@@ -1,5 +1,5 @@
 <?php
-use Composer\Script\EventDispatcher;
+use Composer\EventDispatcher\EventDispatcher;
 
 use Composer\Repository\WritableArrayRepository;
 
