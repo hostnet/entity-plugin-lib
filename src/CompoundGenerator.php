@@ -2,9 +2,6 @@
 namespace Hostnet\Component\EntityPlugin;
 
 use Composer\IO\IOInterface;
-
-use Symfony\Component\Finder\SplFileInfo;
-
 use Composer\Package\PackageInterface;
 
 /**
@@ -35,12 +32,11 @@ class CompoundGenerator
    */
   public function generate()
   {
-    foreach($this->entity_package->getPackageIO()->getEntities() as $file) {
-      $class_name = strstr($file->getFilename(), '.', true);
-      $traits = $this->recursivelyFindUseStatementsFor($this->entity_package, $class_name);
-      $relative_path = $file->getRelativePath();
-      $this->generateTrait($relative_path, $class_name, $traits);
-      $this->generateInterface($relative_path, $class_name, $traits);
+    foreach ($this->entity_package->getPackageIO()->getEntities() as $package_class) {
+        /* @var $package_class PackageClass */
+        $traits = $this->recursivelyFindUseStatementsFor($this->entity_package, $package_class->getName());
+        $this->generateTrait($package_class, $traits);
+        $this->generateInterface($package_class, $traits);
     }
   }
 
@@ -59,28 +55,27 @@ class CompoundGenerator
       /* @var $package EntityPackage */
       $result = array_merge($result, $this->recursivelyFindUseStatementsFor($dependent_package, $class_name));
     }
-    $file = $entity_package->getPackageIO()->getEntityOrEntityTrait($class_name);
-    if($file) {
-      $namespace = $this->convertPathToNamespace($file->getRelativePath());
-      $result[] = new UseStatement($namespace, $file);
+    $package_class = $entity_package->getPackageIO()->getEntityOrEntityTrait($class_name);
+    if($package_class) {
+      $result[] = new UseStatement($package_class->getNamespaceName(), $package_class);
     }
     return $result;
   }
 
-  /**
-   * Generates Generated/<class_name>Traits.php
-   * @param string $relative_path The relative path to the directory to generate the trait in
-   * @param string $class_name
-   * @param array $traits
-   */
-  private function generateTrait($relative_path, $class_name, array $traits)
-  {
-    $this->writeIfVeryVerbose('    - Generating trait of traits for <info>' . $class_name. '</info>');
-    $namespace = $this->convertPathToNamespace($relative_path);
-    $generated_namespace = $namespace . '\Generated';
-    $data = $this->environment->render('traits.php.twig', array('class_name' => $class_name, 'namespace' => $generated_namespace, 'use_statements' => $traits));
-    $this->entity_package->getPackageIO()->writeGeneratedFile($relative_path, $class_name . 'Traits.php', $data);
-  }
+    /**
+     * Generates Generated/<class_name>Traits.php
+     * @param string $relative_path The relative path to the directory to generate the trait in
+     * @param string $class_name
+     * @param array $traits
+     */
+    private function generateTrait(PackageClass $package_class, array $traits)
+    {
+        $class_name = $package_class->getName();
+        $this->writeIfVeryVerbose('    - Generating trait of traits for <info>' . $class_name. '</info>');
+        $generated_namespace = $package_class->getGeneratedNamespaceName();
+        $data = $this->environment->render('traits.php.twig', array('class_name' => $class_name, 'namespace' => $generated_namespace, 'use_statements' => $traits));
+        $this->entity_package->getPackageIO()->writeGeneratedFile($package_class->getGeneratedDirectory(), $class_name . 'Traits.php', $data);
+    }
 
   /**
    * Generates Generated/<class_name>Interfaces.php
@@ -88,13 +83,13 @@ class CompoundGenerator
    * @param string $class_name
    * @param array $traits
    */
-  private function generateInterface($relative_path, $class_name, array $traits)
+  private function generateInterface(PackageClass $package_class, array $traits)
   {
+    $class_name = $package_class->getName();
     $this->writeIfVeryVerbose('    - Generating combined interface for <info>' . $class_name. '</info>');
-    $namespace = $this->convertPathToNamespace($relative_path);
-    $generated_namespace = $namespace . '\Generated';
+    $generated_namespace = $package_class->getGeneratedNamespaceName();
     $data = $this->environment->render('combined_interface.php.twig', array('class_name' => $class_name, 'namespace' => $generated_namespace, 'use_statements' => $traits));
-    $this->entity_package->getPackageIO()->writeGeneratedFile($relative_path, $class_name . 'Interface.php', $data);
+    $this->entity_package->getPackageIO()->writeGeneratedFile($package_class->getGeneratedDirectory(), $class_name . 'Interface.php', $data);
   }
 
   /**

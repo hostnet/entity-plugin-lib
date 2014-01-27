@@ -1,25 +1,15 @@
 <?php
 namespace Hostnet\Component\EntityPlugin;
 
-use Composer\Package\RootPackageInterface;
-
-use Composer\Package\RootPackage;
-
-use Composer\Package\Package;
-
-use Composer\Script\ScriptEvents;
-
-use Composer\Repository\InstalledRepositoryInterface;
-
-use Composer\IO\IOInterface;
-
 use Composer\Composer;
-
-use Symfony\Component\Finder\Finder;
-
-use Composer\Package\PackageInterface;
-
 use Composer\Installer\LibraryInstaller;
+use Composer\IO\IOInterface;
+use Composer\Package\Package;
+use Composer\Package\PackageInterface;
+use Composer\Package\RootPackage;
+use Composer\Package\RootPackageInterface;
+use Composer\Repository\InstalledRepositoryInterface;
+use Composer\Script\ScriptEvents;
 
 /**
  * Custom installer to generate the various traits and interfaces for that package
@@ -166,12 +156,12 @@ class Installer extends LibraryInstaller implements PackagePathResolver
       /* @var $entity_package EntityPackage */
       $this->writeIfVerbose('  - Generating for package <info>' . $entity_package->getPackage()->getName() . '</info>');
       foreach($entity_package->getPackageIO()->getEntities() as $entity) {
-        $this->writeIfVeryVerbose('    - Generating interface and abstract trait for <info>'.$entity-> getFilename().'</info>');
+        $this->writeIfVeryVerbose('    - Generating interface and abstract trait for <info>'.$entity->getName().'</info>');
         $generator = new ReflectionGenerator($this->io, $this->getTwigEnvironment(), $entity_package->getPackageIO(), $entity);
         $generator->generate();
       }
       foreach($entity_package->getPackageIO()->getEntityTraits() as $entity) {
-        $this->writeIfVeryVerbose('    - Generating interface and abstract trait for <info>'.$entity-> getFilename().'</info>');
+        $this->writeIfVeryVerbose('    - Generating interface and abstract trait for <info>'.$entity->getName().'</info>');
         $generator = new ReflectionGenerator($this->io, $this->getTwigEnvironment(), $entity_package->getPackageIO(), $entity);
         $generator->generate();
       }

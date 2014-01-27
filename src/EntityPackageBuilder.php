@@ -1,8 +1,6 @@
 <?php
 namespace Hostnet\Component\EntityPlugin;
 
-use Symfony\Component\Finder\Finder;
-
 use Composer\Package\PackageInterface;
 
 /**

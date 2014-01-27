@@ -1,4 +1,6 @@
 <?php
+use Hostnet\Component\EntityPlugin\PackageClass;
+
 use Hostnet\Component\EntityPlugin\UseStatement;
 
 class UseStatementTest extends PHPUnit_Framework_TestCase
@@ -7,20 +9,19 @@ class UseStatementTest extends PHPUnit_Framework_TestCase
   /**
    * @dataProvider isTraitProvider
    */
-  public function testIsTrait($file, $expected)
+  public function testIsTrait($class, $expected)
   {
-    $file = $this->getMockBuilder('Symfony\Component\Finder\SplFileInfo')->disableOriginalConstructor()->getMock();
-    $file->expects($this->once())->method('getFilename')->will($this->returnValue($file));
-    $use_statement = new UseStatement('Meh', $file);
+    $package_class = new PackageClass($class, __DIR__);
+    $use_statement = new UseStatement('Meh', $package_class);
     $this->assertEquals($expected, $use_statement->isTrait());
   }
 
   public function isTraitProvider()
   {
     return array(
-        array('Bla.php', false),
-        array('TraitThis.php', false),
-        array('ClientTrait.php', false)
+        array('Bla', false),
+        array('Foo\BarTraitThis', false),
+        array('ClientTrait', true)
         );
   }
 
@@ -29,8 +30,8 @@ class UseStatementTest extends PHPUnit_Framework_TestCase
    */
   public function testGetAlias($namespace, $expected)
   {
-    $file = $this->getMockBuilder('Symfony\Component\Finder\SplFileInfo')->disableOriginalConstructor()->getMock();
-    $use_statement = new UseStatement($namespace, $file);
+    $package_class = new PackageClass('Meh', __DIR__);
+    $use_statement = new UseStatement($namespace, $package_class);
     $this->assertEquals($expected, $use_statement->getAlias());
   }
 
