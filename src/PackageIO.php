@@ -81,10 +81,10 @@ class PackageIO implements PackageIOInterface
         return $class;
       }
     }
-    $looking_for = $name .'Trait.php';
+    $looking_for = $name .'Trait';
     foreach ($this->entity_traits as $class) {
         /* @var $class PackageClass */
-        if ($class->getShortName() == $name) {
+        if ($class->getShortName() == $looking_for) {
             return $class;
         }
     }
