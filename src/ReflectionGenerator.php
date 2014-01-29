@@ -34,7 +34,7 @@ class ReflectionGenerator
   }
 
   /**
-   * Generates the interface and the abstract trait
+   * Generates the interface
    * @throws \RuntimeException
    */
   public function generate()
@@ -53,10 +53,6 @@ class ReflectionGenerator
     $interface = $this->environment->render('trait_interface.php.twig', $params);
     $path = $this->package_class->getGeneratedDirectory();
     $this->package_io->writeGeneratedFile($path, $interface_name . '.php', $interface);
-
-    $params['name'] = $this->getAbstractTraitName($trait_or_class_name);
-    $abstract_trait = $this->environment->render('abstract_trait.php.twig', $params);
-    $this->package_io->writeGeneratedFile($path, $params['name'] . '.php', $abstract_trait);
   }
 
   /**
@@ -81,15 +77,6 @@ class ReflectionGenerator
       return $trait_or_class_name . 'Interface';
     } else {
       return $trait_or_class_name . 'TraitInterface';
-    }
-  }
-
-  private function getAbstractTraitName($trait_or_class_name)
-  {
-    if($this->package_class->isTrait()) {
-      return 'Abstract' . $trait_or_class_name;
-    } else {
-      return 'Abstract' . $trait_or_class_name . 'Trait';
     }
   }
 

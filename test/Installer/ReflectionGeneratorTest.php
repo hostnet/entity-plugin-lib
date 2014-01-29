@@ -26,14 +26,12 @@ class ReflectionGeneratorTest extends PHPUnit_Framework_TestCase
     $package_io = $this->getMock('Hostnet\Component\EntityPlugin\PackageIOInterface');
 
     $that = $this;
-    $package_io->expects($this->exactly(2))->method('writeGeneratedFile')->will($this->returnCallback(
+    $package_io->expects($this->once())->method('writeGeneratedFile')->will($this->returnCallback(
         function($directory, $file, $data) use($that, $package_class) {
           $that->assertEquals($package_class->getGeneratedDirectory(), $directory);
           $short_name = $package_class->getShortName();
           if($file === $short_name.'TraitInterface.php') {
             $contents = file_get_contents(__DIR__ . '/EdgeCases/'.$short_name.'TraitInterface.expected.php');
-          } else if($file === 'Abstract'.$short_name.'Trait.php') {
-            $contents = file_get_contents(__DIR__ . '/EdgeCases/Abstract'.$short_name.'Trait.expected.php');
           } else {
             $this->fail('Unexpected file '. $file);
           }
