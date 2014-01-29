@@ -47,8 +47,9 @@ class PackageOITest extends PHPUnit_Framework_TestCase
     return [
         [[]],
         [$irrelevant_file],
-        array($client_entity, array('Client' => $client_file)),
-        array($one_of_all, array('Client' => $client_file), array($client_service_file), array('Client' => $client_trait_file), array($client_service_trait_file))
+        [$client_entity, ['Client' => $client_file]],
+        [$client_trait, [], [], ['Client' => $client_trait_file]],
+        [$one_of_all, ['Client' => $client_file], [$client_service_file], ['Client' => $client_trait_file], [$client_service_trait_file]]
     ];
   }
 }
