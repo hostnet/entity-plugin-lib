@@ -8,66 +8,70 @@ use Composer\Package\PackageInterface;
  * - The packages it requires
  * - The packages that require it
  * - The files in that package
+ *
  * @author Nico Schoenmaker <nschoenmaker@hostnet.nl>
  */
 class EntityPackage
 {
-  private $package;
 
-  private $package_io;
+    private $package;
 
-  private $required_packages = array();
+    private $package_io;
 
-  private $dependent_packages = array();
+    private $required_packages = array();
 
-  public function __construct(PackageInterface $package, PackageIOInterface $package_io)
-  {
-    $this->package = $package;
-    $this->package_io = $package_io;
-  }
+    private $dependent_packages = array();
 
-  /**
-   * @return PackageInterface
-   */
-  public function getPackage()
-  {
-    return $this->package;
-  }
+    public function __construct(PackageInterface $package, PackageIOInterface $package_io)
+    {
+        $this->package    = $package;
+        $this->package_io = $package_io;
+    }
 
-  /**
-   * @return PackageIOInterface
-   */
-  public function getPackageIO()
-  {
-    return $this->package_io;
-  }
+    /**
+     *
+     * @return PackageInterface
+     */
+    public function getPackage()
+    {
+        return $this->package;
+    }
 
-  /**
-   * @return array An array of package links defining required packages
-   */
-  public function getRequires()
-  {
-    return $this->package->getRequires();
-  }
+    /**
+     *
+     * @return PackageIOInterface
+     */
+    public function getPackageIO()
+    {
+        return $this->package_io;
+    }
 
-  public function addRequiredPackage(EntityPackage $package)
-  {
-    $this->required_packages[] = $package;
-  }
+    /**
+     *
+     * @return array An array of package links defining required packages
+     */
+    public function getRequires()
+    {
+        return $this->package->getRequires();
+    }
 
-  public function getRequiredPackages()
-  {
-    return $this->required_packages;
-  }
+    public function addRequiredPackage(EntityPackage $package)
+    {
+        $this->required_packages[] = $package;
+    }
 
-  public function addDependentPackage(EntityPackage $package)
-  {
-    $this->dependent_packages[] = $package;
-  }
+    public function getRequiredPackages()
+    {
+        return $this->required_packages;
+    }
 
-  public function getDependentPackages()
-  {
-    return $this->dependent_packages;
-  }
+    public function addDependentPackage(EntityPackage $package)
+    {
+        $this->dependent_packages[] = $package;
+    }
 
+    public function getDependentPackages()
+    {
+        return $this->dependent_packages;
+    }
 }

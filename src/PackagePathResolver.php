@@ -10,9 +10,11 @@ use Composer\Package\PackageInterface;
  */
 interface PackagePathResolver
 {
-  /**
-   * Get the path containing the actual source of the application
-   * @param PackageInterface $package
-   */
-  public function getSourcePath(PackageInterface $package);
+
+    /**
+     * Get the path containing the actual source of the application
+     *
+     * @param PackageInterface $package 
+     */
+    public function getSourcePath(PackageInterface $package);
 }

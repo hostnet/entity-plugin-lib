@@ -6,21 +6,24 @@ namespace Hostnet\Component\EntityPlugin;
  */
 class PackageClass
 {
+
     private $class;
 
     private $path;
 
     /**
+     *
      * @param string $class
      * @param string $path
      */
     public function __construct($class, $path)
     {
         $this->class = $class;
-        $this->path = $path;
+        $this->path  = $path;
     }
 
     /**
+     *
      * @see \ReflectionClass::getName()
      */
     public function getName()
@@ -29,6 +32,7 @@ class PackageClass
     }
 
     /**
+     *
      * @see \ReflectionClass::getShortName()
      */
     public function getShortName()
@@ -38,16 +42,18 @@ class PackageClass
     }
 
     /**
+     *
      * @return string The folder in which to generate the files
      */
     public function getGeneratedDirectory()
     {
-        $pos = strrpos($this->path, '/');
+        $pos  = strrpos($this->path, '/');
         $path = substr($this->path, 0, $pos);
         return $path . '/Generated/';
     }
 
     /**
+     *
      * @see \ReflectionClass::getNamespaceName()
      * @return string The namespace name of the to-be-generated classes
      */
@@ -63,15 +69,20 @@ class PackageClass
     }
 
     /**
+     *
      * @return boolean
      */
     public function isTrait()
     {
-      return $this->endsWith($this->getShortName(), 'Trait');
+        return $this->endsWith($this->getShortName(), 'Trait');
     }
 
     private function endsWith($haystack, $needle)
     {
-      return $needle === "" || substr($haystack, -strlen($needle)) === $needle;
+        if ($needle === '' || substr($haystack, - strlen($needle)) === $needle) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }

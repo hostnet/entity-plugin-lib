@@ -10,7 +10,8 @@
     },
     "require-dev": {
         "composer/composer": "master@dev",
-        "phpunit/phpunit": "*"
+        "phpunit/phpunit": "*",
+        "squizlabs/php_codesniffer": "1.*"
     },
     "minimum-stability": "stable",
     "repositories": [

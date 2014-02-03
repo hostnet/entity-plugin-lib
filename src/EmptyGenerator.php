@@ -11,15 +11,18 @@ namespace Hostnet\Component\EntityPlugin;
  * AdvancedClient\Entity\ClientTrait uses Client\Entity\Generated\AbstractClientTrait
  * Client\Entity\Generated\AbstractClientTrait is generated based on reflection of Client\Entity\Client
  * This is a circle. There are others. Thus we generate empty files first where we have to.
+ *
  * @author Nico Schoenmaker <nschoenmaker@hostnet.nl>
  */
 class EmptyGenerator extends ReflectionGenerator
 {
-  /**
-   * @see \Hostnet\Component\EntityPlugin\ReflectionGenerator::getMethods()
-   */
-  protected function getMethods()
-  {
-    return [];
-  }
+
+    /**
+     *
+     * @see \Hostnet\Component\EntityPlugin\ReflectionGenerator::getMethods()
+     */
+    protected function getMethods()
+    {
+        return [];
+    }
 }

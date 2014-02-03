@@ -1,0 +1,97 @@
+<?xml version="1.0"?>
+<ruleset name="Hostnet">
+  <description>A custom coding standard</description>
+  <exclude-pattern>*/tests/*</exclude-pattern>
+  <exclude-pattern>*/Generated/*</exclude-pattern>
+  <exclude-pattern>*/EdgeCases/*</exclude-pattern>
+
+  <rule ref="Generic.Classes.DuplicateClassName"/>
+
+  <rule ref="Generic.CodeAnalysis.EmptyStatement"/>
+  <rule ref="Generic.CodeAnalysis.ForLoopShouldBeWhileLoop"/>
+  <rule ref="Generic.CodeAnalysis.ForLoopWithTestFunctionCall"/>
+  <rule ref="Generic.CodeAnalysis.JumbledIncrementer"/>
+  <rule ref="Generic.CodeAnalysis.UnconditionalIfStatement"/>
+  <rule ref="Generic.CodeAnalysis.UnnecessaryFinalModifier"/>
+  <rule ref="Generic.CodeAnalysis.UnusedFunctionParameter"/>
+  <rule ref="Generic.CodeAnalysis.UselessOverridingMethod"/>
+
+  <rule ref="Generic.Commenting.Fixme"/>
+  <rule ref="Generic.Commenting.Todo"/>
+
+  <rule ref="Generic.ControlStructures.InlineControlStructure"/>
+
+  <rule ref="Generic.Files.InlineHTML"/>
+  <rule ref="Generic.Files.OneClassPerFile"/>
+  <rule ref="Generic.Files.OneInterfacePerFile"/>
+
+  <rule ref="Generic.Formatting.DisallowMultipleStatements"/>
+  <rule ref="Generic.Formatting.MultipleStatementAlignment"/>
+
+  <rule ref="Generic.Functions.CallTimePassByReference"/>
+  <rule ref="Generic.Metrics.CyclomaticComplexity"/>
+  <rule ref="Generic.Metrics.NestingLevel"/>
+
+  <rule ref="Generic.NamingConventions.ConstructorName"/>
+  <rule ref="Generic.NamingConventions.UpperCaseConstantName"/>
+
+  <rule ref="Generic.PHP.CharacterBeforePHPOpeningTag"/>
+  <rule ref="Generic.PHP.DeprecatedFunctions"/>
+  <rule ref="Generic.PHP.ForbiddenFunctions"/>
+  <rule ref="Generic.PHP.LowerCaseConstant"/>
+  <rule ref="Generic.PHP.LowerCaseKeyword"/>
+  <rule ref="Generic.PHP.NoSilencedErrors"/>
+  <rule ref="Generic.PHP.SAPIUsage"/>
+
+  <rule ref="Generic.Strings.UnnecessaryStringConcat"/>
+  <rule ref="Generic.WhiteSpace.DisallowTabIndent"/>
+  <rule ref="Generic.WhiteSpace.ScopeIndent"/>
+
+  <rule ref="PEAR.ControlStructures.MultiLineCondition"/>
+
+  <rule ref="PEAR.Files.IncludingFile"/>
+
+  <rule ref="PEAR.Functions.ValidDefaultValue"/>
+
+  <rule ref="Squiz.Classes.ClassFileName"/>
+  <rule ref="Squiz.Classes.DuplicateProperty"/>
+  <rule ref="Squiz.Classes.LowercaseClassKeywords"/>
+  <rule ref="Squiz.Classes.SelfMemberReference"/>
+  <rule ref="Squiz.Classes.ValidClassName"/>
+
+  <rule ref="Squiz.CodeAnalysis.EmptyStatement"/>
+  <!--<rule ref="Squiz.Commenting.BlockComment"/>-->
+  <!-- <rule ref="Squiz.Commenting.ClassComment"/> -->
+  <!-- <rule ref="Squiz.Commenting.FunctionComment"/> -->
+
+  <rule ref="Squiz.PHP.CommentedOutCode">
+      <properties>
+          <property name="maxPercentage" value="75"/>
+      </properties>
+  </rule>
+  <rule ref="Squiz.PHP.DisallowBooleanStatement"/>
+  <rule ref="Squiz.PHP.DisallowInlineIf"/>
+  <rule ref="Squiz.PHP.DisallowMultipleAssignments"/>
+  <rule ref="Squiz.PHP.DisallowObEndFlush"/>
+  <rule ref="Squiz.PHP.EmbeddedPhp"/>
+  <rule ref="Squiz.PHP.Eval"/>
+  <rule ref="Squiz.PHP.ForbiddenFunctions"/>
+  <rule ref="Squiz.PHP.GlobalKeyword"/>
+  <rule ref="Squiz.PHP.InnerFunctions"/>
+  <rule ref="Squiz.PHP.LowercasePHPFunctions"/>
+  <rule ref="Squiz.PHP.NonExecutableCode"/>
+
+  <rule ref="Squiz.Scope.MemberVarScope"/>
+  <rule ref="Squiz.Scope.MethodScope"/>
+  <rule ref="Squiz.Scope.StaticThisUsage"/>
+
+  <!--<rule ref="Squiz.Strings.ConcatenationSpacing"/>-->
+  <rule ref="Squiz.Strings.DoubleQuoteUsage"/>
+  <rule ref="Squiz.Strings.EchoedStrings"/>
+
+  <rule ref="Squiz.Operators.ValidLogicalOperators"/>
+
+  <rule ref="Zend.Debug.CodeAnalyzer"/>
+
+  <rule ref="PSR2"/>
+</ruleset>

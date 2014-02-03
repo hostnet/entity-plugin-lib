@@ -12,15 +12,15 @@ namespace Hostnet\Component\EntityPlugin;
 class TypeHinter
 {
 
-  public function getTypeHint(\ReflectionParameter $parameter)
-  {
-    if($parameter->isArray()) {
-      return 'array ';
+    public function getTypeHint(\ReflectionParameter $parameter)
+    {
+        if ($parameter->isArray()) {
+            return 'array ';
+        }
+        preg_match('/\[\s\<\w+?>\s([\\\\\w]+)/s', $parameter->__toString(), $matches);
+        if (isset($matches[1])) {
+            return '\\' . $matches[1] . ' ';
+        }
+        return '';
     }
-    preg_match('/\[\s\<\w+?>\s([\\\\\w]+)/s', $parameter->__toString(), $matches);
-    if(isset($matches[1])) {
-      return '\\' . $matches[1] . ' ';
-    }
-    return '';
-  }
 }
