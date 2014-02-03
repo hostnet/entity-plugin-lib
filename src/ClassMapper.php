@@ -8,7 +8,9 @@ use Composer\Autoload\ClassMapGenerator;
  */
 class ClassMapper implements ClassMapperInterface
 {
+
     /**
+     *
      * @see \Hostnet\Component\EntityPlugin\ClassMapperInterface::createClassMap()
      */
     public function createClassMap($path)

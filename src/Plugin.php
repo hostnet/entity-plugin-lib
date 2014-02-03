@@ -9,25 +9,30 @@ use Composer\Script\ScriptEvents;
 
 class Plugin implements PluginInterface, EventSubscriberInterface
 {
-  private $installer;
 
-  public function activate(Composer $composer, IOInterface $io)
-  {
-    $this->installer = new Installer($io, $composer);
-    $composer->getInstallationManager()->addInstaller($this->installer);
-  }
+    private $installer;
 
-  public static function getSubscribedEvents()
-  {
-    return array(ScriptEvents::POST_AUTOLOAD_DUMP => array('onPostAutoloadDump', 0));
-  }
+    public function activate(Composer $composer, IOInterface $io)
+    {
+        $this->installer = new Installer($io, $composer);
+        $composer->getInstallationManager()->addInstaller($this->installer);
+    }
 
-  /**
-   * Gets called on the POST_AUTOLOAD_DUMP event
-   */
-  public function onPostAutoloadDump()
-  {
-    $this->installer->postAutoloadDump();
-  }
+    public static function getSubscribedEvents()
+    {
+        return array(
+            ScriptEvents::POST_AUTOLOAD_DUMP => array(
+                'onPostAutoloadDump',
+                0
+            )
+        );
+    }
 
+    /**
+     * Gets called on the POST_AUTOLOAD_DUMP event
+     */
+    public function onPostAutoloadDump()
+    {
+        $this->installer->postAutoloadDump();
+    }
 }
