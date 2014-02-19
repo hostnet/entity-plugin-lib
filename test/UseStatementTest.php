@@ -32,6 +32,14 @@ class UseStatementTest extends \PHPUnit_Framework_TestCase
         );
     }
 
+    public function testGetNamespace()
+    {
+        $package_class = new PackageClass('Blah', __DIR__);
+        $namespace = 'Hostnet\Foo\Entity\Bar';
+        $use_statement = new UseStatement($namespace, $package_class);
+        $this->assertEquals($namespace, $use_statement->getNamespace());
+    }
+
     /**
      * @dataProvider getAliasProvider
      */

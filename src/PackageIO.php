@@ -132,6 +132,8 @@ class PackageIO implements PackageIOInterface
         return $this->generated_files;
     }
 
+    // @codeCoverageIgnoreStart
+
     /**
      *
      * @see \Hostnet\Component\EntityPlugin\PackageIOInterface::writeGeneratedFile()
@@ -159,4 +161,6 @@ class PackageIO implements PackageIOInterface
             }
         }
     }
+
+    // @codeCoverageIgnoreEnd
 }
