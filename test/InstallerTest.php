@@ -34,7 +34,7 @@ class InstallerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(1, $installer->initialize_vendor_dir_called);
     }
 
-    public function getSourcePath()
+    public function testGetSourcePath()
     {
         $installer = new Installer($this->mockIO(), $this->mockComposer());
 
