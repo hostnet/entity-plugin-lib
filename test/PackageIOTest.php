@@ -49,6 +49,12 @@ class PackageIOTest extends \PHPUnit_Framework_TestCase
         $client_trait         = ['Foo\Entity\ClientTrait' => 'src/Bar/ClientTrait.php'];
         $client_service       = ['Foo\Service\ClientService' => 'src/Bar/ClientService.php'];
         $client_service_trait = ['Foo\Service\ClientServiceTrait' => 'src/Bar/ClientServiceTrait.php'];
+        $ignored_files        = [
+            'Hostnet\Entity\FooInterface' => 'FooInterface.php',
+            'Hostnet\Entity\FooException' => 'FooException.php',
+            'Hostnet\Service\FooInterface' => 'FooInterface.php',
+            'Hostnet\Service\FooException' => 'FooException.php'
+        ];
 
         $one_of_all = array_merge(
             $irrelevant_file,
@@ -72,6 +78,9 @@ class PackageIOTest extends \PHPUnit_Framework_TestCase
             ],
             [
                 $irrelevant_file
+            ],
+            [
+                $ignored_files
             ],
             [
                 $client_entity,
