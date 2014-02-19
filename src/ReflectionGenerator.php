@@ -78,6 +78,7 @@ class ReflectionGenerator
 
         foreach ($methods as $key => $method) {
             if ($method->name === '__construct') {
+                // The interface should not contain the constructor
                 unset($methods[$key]);
             }
         }
@@ -87,10 +88,6 @@ class ReflectionGenerator
 
     private function getInterfaceName($trait_or_class_name)
     {
-        if ($this->package_class->isTrait()) {
-            return $trait_or_class_name . 'Interface';
-        } else {
-            return $trait_or_class_name . 'TraitInterface';
-        }
+        return $trait_or_class_name . 'TraitInterface';
     }
 }

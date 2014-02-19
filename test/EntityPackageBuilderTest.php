@@ -12,8 +12,8 @@ class EntityPackageBuilderTest extends \PHPUnit_Framework_TestCase
      */
     public function testAddsDependencies(
         array $packages,
-        array $expected_required_packages,
-        array $expected_dependent_packages
+        array $expected_required_packages = array(),
+        array $expected_dependent_packages = array()
     ) {
         $mock = $this->getMock('Hostnet\Component\EntityPlugin\PackagePathResolver');
         $mock->expects($this->any())
@@ -44,6 +44,11 @@ class EntityPackageBuilderTest extends \PHPUnit_Framework_TestCase
 
     public function addsDependenciesProvider()
     {
+        $requires_external = new Package('hostnet/requires-external', 1, 1);
+        $requires_external->setRequires(array(
+            new Link('hostnet/requires-external', 'hostnet/not-linked')
+        ));
+
         $foo = new Package('hostnet/foo', 1, 1);
         $bar = new Package('hostnet/bar', 1, 1);
         $bar->setRequires(array(
@@ -53,8 +58,9 @@ class EntityPackageBuilderTest extends \PHPUnit_Framework_TestCase
         return array(
             array(
                 array(),
-                array(),
-                array()
+            ),
+            array(
+                array($requires_external)
             ),
             array(
                 array(

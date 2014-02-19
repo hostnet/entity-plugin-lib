@@ -22,15 +22,7 @@ class PackageIOTest extends \PHPUnit_Framework_TestCase
         array $service_traits = array(),
         array $generated_files = array()
     ) {
-        $class_mapper = $this->getMock(
-            'Hostnet\Component\EntityPlugin\ClassMapperInterface',
-            array(
-                'createClassMap'
-            )
-        );
-        $class_mapper->expects($this->once())
-            ->method('createClassMap')
-            ->will($this->returnValue($class_map));
+        $class_mapper = $this->mockClassMapper($class_map);
         $io = new PackageIO(__DIR__, $class_mapper);
         $this->assertEquals(array_values($entities), $io->getEntities(), 'Entities');
         $this->assertEquals($services, $io->getServices(), 'Services');
@@ -112,5 +104,25 @@ class PackageIOTest extends \PHPUnit_Framework_TestCase
                 ]
             ]
         ];
+    }
+
+    public function testGetEntityOrEntityTrait()
+    {
+        $io = new PackageIO(__DIR__, $this->mockClassMapper());
+        $this->assertNull($io->getEntityOrEntityTrait('DoesNotExist'));
+    }
+
+    private function mockClassMapper(array $class_map = array())
+    {
+        $class_mapper = $this->getMock(
+            'Hostnet\Component\EntityPlugin\ClassMapperInterface',
+            array(
+                'createClassMap'
+            )
+        );
+        $class_mapper->expects($this->once())
+            ->method('createClassMap')
+            ->will($this->returnValue($class_map));
+        return $class_mapper;
     }
 }

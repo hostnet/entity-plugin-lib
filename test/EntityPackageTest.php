@@ -17,6 +17,16 @@ class EntityPackageTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($package, $entity_package->getPackage());
     }
 
+    public function testGetPackageIO()
+    {
+      $package_io = $this->getMock('Hostnet\Component\EntityPlugin\PackageIOInterface');
+      $entity_package = new EntityPackage(
+          new Package('hostnet/foo', 1.0, 1.0),
+          $package_io
+      );
+      $this->assertEquals($package_io, $entity_package->getPackageIO());
+    }
+
     public function testGetRequires()
     {
         $package        = new Package('hostnet/foo', 1.0, 1.0);
