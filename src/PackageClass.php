@@ -69,12 +69,30 @@ class PackageClass
     }
 
     /**
-     *
+     * Is this a trait? Assumes you have your naming in order.
      * @return boolean
      */
     public function isTrait()
     {
         return $this->endsWith($this->getShortName(), 'Trait');
+    }
+
+    /**
+     * Is this an interface? Assumes you have your naming in order.
+     * @return boolean
+     */
+    public function isInterface()
+    {
+        return $this->endsWith($this->getShortName(), 'Interface');
+    }
+
+    /**
+     * Is this an excepiton? Assumes you have your naming in order.
+     * @return boolean
+     */
+    public function isException()
+    {
+        return $this->endsWith($this->getShortName(), 'Exception');
     }
 
     private function endsWith($haystack, $needle)

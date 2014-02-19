@@ -30,4 +30,37 @@ class PackageClassTest extends \PHPUnit_Framework_TestCase
         $package_class = new PackageClass($class, new \SplFileInfo(__FILE__));
         $this->assertEquals('Hostnet\\Component\\EntityPlugin\\Generated', $package_class->getGeneratedNamespaceName());
     }
+
+    public function testIsTrait()
+    {
+        $class         = 'Hostnet\\Component\\EntityPlugin\\Foo';
+        $package_class = new PackageClass($class, new \SplFileInfo(__FILE__));
+        $this->assertFalse($package_class->isTrait());
+
+        $class         = 'Hostnet\\Component\\EntityPlugin\\FooTrait';
+        $package_class = new PackageClass($class, new \SplFileInfo(__FILE__));
+        $this->assertTrue($package_class->isTrait());
+    }
+
+    public function testIsInterface()
+    {
+      $class         = 'Hostnet\\Component\\EntityPlugin\\Foo';
+      $package_class = new PackageClass($class, new \SplFileInfo(__FILE__));
+      $this->assertFalse($package_class->isInterface());
+
+      $class         = 'Hostnet\\Component\\EntityPlugin\\FooInterface';
+      $package_class = new PackageClass($class, new \SplFileInfo(__FILE__));
+      $this->assertTrue($package_class->isInterface());
+    }
+
+    public function testIsException()
+    {
+      $class         = 'Hostnet\\Component\\EntityPlugin\\Foo';
+      $package_class = new PackageClass($class, new \SplFileInfo(__FILE__));
+      $this->assertFalse($package_class->isException());
+
+      $class         = 'Hostnet\\Component\\EntityPlugin\\FooException';
+      $package_class = new PackageClass($class, new \SplFileInfo(__FILE__));
+      $this->assertTrue($package_class->isException());
+    }
 }
