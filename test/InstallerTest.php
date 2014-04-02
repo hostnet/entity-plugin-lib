@@ -11,14 +11,6 @@ use Composer\Repository\WritableArrayRepository;
 
 class InstallerTest extends \PHPUnit_Framework_TestCase
 {
-
-    public function testSupports()
-    {
-        $installer = new Installer($this->mockIO(), $this->mockComposer());
-        $this->assertFalse($installer->supports('library'));
-        $this->assertTrue($installer->supports('hostnet-entity'));
-    }
-
     public function testGetInstallPath()
     {
         $installer = new Installer($this->mockIO(), $this->mockComposer());
@@ -40,6 +32,8 @@ class InstallerTest extends \PHPUnit_Framework_TestCase
 
         $root_package = new RootPackage('hostnet/root-package', 1, 1);
         $this->assertEquals('./src', $installer->getSourcePath($root_package));
+        $root_package->setExtra(['entity-bundle-dir' => 'src/Hostnet/FooBundle']);
+        $this->assertEquals('./src/Hostnet/FooBundle', $installer->getSourcePath($root_package));
     }
 
     private function mockComposer()

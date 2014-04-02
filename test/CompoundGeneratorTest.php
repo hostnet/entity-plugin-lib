@@ -1,16 +1,13 @@
 <?php
+namespace Hostnet\Component\EntityPlugin;
 
 use Composer\Package\Package;
-use Hostnet\Component\EntityPlugin\CompoundGenerator;
-use Hostnet\Component\EntityPlugin\EntityPackage;
-use Hostnet\Component\EntityPlugin\PackageClass;
-use Hostnet\Component\EntityPlugin\PackageIOInterface;
 
 /**
  * More of a functional-like test to check the outputted html.
  * @author Nico Schoenmaker <nschoenmaker@hostnet.nl>
  */
-class CompoundGeneratorTest extends PHPUnit_Framework_TestCase
+class CompoundGeneratorTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @dataProvider generateProvider
@@ -74,20 +71,20 @@ class CompoundGeneratorTest extends PHPUnit_Framework_TestCase
 
         $package_io->expects($this->exactly(count($writes)))
             ->method('writeGeneratedFile')
-            ->will($this->returnCallback(function($path, $file, $data) use($writes) {
+            ->will($this->returnCallback(function ($path, $file, $data) use ($writes) {
                 $combined_path = $path . '/' . $file;
                 $this->assertTrue(isset($writes[$combined_path]), 'No write expected to ' . $combined_path);
                 $contents = file_get_contents(__DIR__ . '/CompoundEdgeCases/'.$writes[$path . '/' . $file]);
                 $this->assertEquals($contents, $data);
             }));
 
-        foreach($entities as $entity) {
+        foreach ($entities as $entity) {
             $known_traits[$entity->getShortName()] = $entity;
         }
 
         $package_io->expects($this->any())
             ->method('getEntityOrEntityTrait')
-            ->will($this->returnCallback(function($name) use($known_traits) {
+            ->will($this->returnCallback(function ($name) use ($known_traits) {
                 return isset($known_traits[$name]) ? $known_traits[$name] : null;
             }));
         return $package_io;

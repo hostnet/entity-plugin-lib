@@ -37,7 +37,6 @@ class PackageIO implements PackageIOInterface
 
         foreach ($class_map as $class => $file) {
             $package_class = new PackageClass($class, $file);
-            // TODO strpos and then use only the last part as values of generated_files. Maybe even keys?
             if (strstr($class, '\\Generated\\')) {
                 $this->generated_files[] = $package_class;
             } elseif ($package_class->isInterface() || $package_class->isException()) {
