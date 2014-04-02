@@ -36,6 +36,10 @@ class CompoundGenerator
     {
         foreach ($this->entity_package->getPackageIO()->getEntities() as $package_class) {
             /* @var $package_class PackageClass */
+
+            $this->writeIfDebug(
+                '        - Finding traits for <info>' . $package_class->getName() . '</info>.'
+            );
             $traits = $this->recursivelyFindUseStatementsFor($this->entity_package, $package_class);
             $this->generateTrait($package_class, $traits);
             $this->generateInterface($package_class, $traits);
@@ -48,18 +52,28 @@ class CompoundGenerator
      *
      * @param EntityPackage $entity_package
      * @param string $class_name
+     * @param bool $has_recursed Is this the first time this function is called, or is it recursing.
      * @return array[]UseStatement
      */
-    private function recursivelyFindUseStatementsFor(EntityPackage $entity_package, PackageClass $package_class)
-    {
+    private function recursivelyFindUseStatementsFor(
+        EntityPackage $entity_package,
+        PackageClass $package_class,
+        $has_recursed = false
+    ) {
         $result = array();
         foreach ($entity_package->getDependentPackages() as $dependent_package) {
             /* @var $package EntityPackage */
-            $result = array_merge($result, $this->recursivelyFindUseStatementsFor($dependent_package, $package_class));
+            $use_statements = $this->recursivelyFindUseStatementsFor($dependent_package, $package_class, false);
+            $result = array_merge($result, $use_statements);
         }
         $package_class = $entity_package->getPackageIO()->getEntityOrEntityTrait($package_class->getShortName());
         if ($package_class) {
+            if ($has_recursed) {
+                $this->writeIfDebug('          Injected <info>' . $package_class->getName() . '</info> from <info>' . $entity_package->getPackage()->getName() . '</info>.');
+            }
             $result[] = new UseStatement($package_class->getNamespaceName(), $package_class);
+        } else {
+            $this->writeIfDebug('          No trait in <info>' . $entity_package->getPackage()->getName() . '</info>.');
         }
         return $result;
     }
@@ -132,20 +146,16 @@ class CompoundGenerator
         );
     }
 
-    /**
-     *
-     * @todo these lines are also in the installer
-     * @param string $path
-     * @return string Namespace
-     */
-    private function convertPathToNamespace($path)
-    {
-        return str_replace('/', '\\', $path);
-    }
-
     private function writeIfVeryVerbose($text)
     {
         if ($this->io->isVeryVerbose()) {
+            $this->io->write($text);
+        }
+    }
+
+    private function writeIfDebug($text)
+    {
+        if ($this->io->isDebug()) {
             $this->io->write($text);
         }
     }

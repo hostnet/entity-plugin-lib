@@ -18,32 +18,27 @@ use Composer\Script\ScriptEvents;
  * Outputs the phases we go through to the IOInterface
  * If verbose, will output package level detail
  * If very verbose, will output class level detail
- *
+ * @todo Cut the dependency to LibraryInstaller, this does not make sense now we are a plugin.
  * @author Nico Schoenmaker <nschoenmaker@hostnet.nl>
  */
 class Installer extends LibraryInstaller implements PackagePathResolver
 {
+    const PACKAGE_TYPE            = 'hostnet-entity';
+    const EXTRA_ENTITY_BUNDLE_DIR = 'entity-bundle-dir';
 
     private $twig_environment = false;
 
-    const PACKAGE_TYPE = 'hostnet-entity';
-
     /**
-     *
-     * @see \Composer\Installer\LibraryInstaller::supports()
-     */
-    public function supports($packageType)
-    {
-        return self::PACKAGE_TYPE === $packageType;
-    }
-
-    /**
-     *
      * @see \Hostnet\Component\EntityPlugin\PackagePathResolver::getSourcePath()
      */
     public function getSourcePath(PackageInterface $package)
     {
-        return $this->getInstallPath($package) . '/src';
+        $path  = $this->getInstallPath($package);
+        $extra = $package->getExtra();
+        if (isset($extra[self::EXTRA_ENTITY_BUNDLE_DIR])) {
+            return $path . '/' . $extra[self::EXTRA_ENTITY_BUNDLE_DIR];
+        }
+        return $path . '/src';
     }
 
     /**
@@ -93,11 +88,23 @@ class Installer extends LibraryInstaller implements PackagePathResolver
         $supported_packages = array();
         foreach ($packages as $package) {
             /* @var $package \Composer\Package\PackageInterface */
-            if ($this->supports($package->getType())) {
+            if ($this->supportsPackage($package)) {
                 $supported_packages[] = $package;
             }
         }
         return $supported_packages;
+    }
+
+    /**
+     * @param PackageInterface $package
+     * @return boolean
+     */
+    private function supportsPackage(PackageInterface $package)
+    {
+        $extra = $package->getExtra();
+        if (self::PACKAGE_TYPE === $package->getType() || isset($extra[self::EXTRA_ENTITY_BUNDLE_DIR])) {
+            return true;
+        }
     }
 
     /**
