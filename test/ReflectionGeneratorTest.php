@@ -35,7 +35,11 @@ class ReflectionGeneratorTest extends \PHPUnit_Framework_TestCase
                     function ($directory, $file, $data) use ($that, $package_class) {
                         $that->assertEquals($package_class->getGeneratedDirectory(), $directory);
                         $short_name = $package_class->getShortName();
-                        if ($file === $short_name . 'TraitInterface.php') {
+                        if ($file === $short_name . 'Interface.php') {
+                          $contents = file_get_contents(
+                              __DIR__ . '/EdgeCases/' . $short_name . 'Interface.expected.php'
+                          );
+                        } else if ($file === $short_name . 'TraitInterface.php') {
                             $contents = file_get_contents(
                                 __DIR__ . '/EdgeCases/' . $short_name . 'TraitInterface.expected.php'
                             );
@@ -67,6 +71,12 @@ class ReflectionGeneratorTest extends \PHPUnit_Framework_TestCase
             ),
             array(
                 new PackageClass('Hostnet\EdgeCases\Entity\TypedParameters', __DIR__ . '/EdgeCases/TypedParameters.php')
+            ),
+            array(
+                new PackageClass(
+                    'Hostnet\EdgeCases\Entity\TraitsShouldRockTrait',
+                    __DIR__ . '/EdgeCases/TraitsShouldRockTrait.php'
+                )
             )
         );
     }

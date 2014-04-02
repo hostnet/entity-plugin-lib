@@ -88,6 +88,10 @@ class ReflectionGenerator
 
     private function getInterfaceName($trait_or_class_name)
     {
-        return $trait_or_class_name . 'TraitInterface';
+        if ($this->package_class->isTrait()) {
+            return $trait_or_class_name . 'Interface';
+        } else {
+            return $trait_or_class_name . 'TraitInterface';
+        }
     }
 }
