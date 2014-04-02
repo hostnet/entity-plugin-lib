@@ -20,6 +20,12 @@ This is awesome for you if;
 
 If you do not belong in one of those groups, be careful since this might not be what you want.
 
+### Example
+
+One application needs to know about ```Clients```, but is unaware of the concept of a ```Contract```. Another application requires access to both of them. So in one application, you'd want to be able to call ```$client->getContracts()```. But in the other, you'd prefer to not know about contracts at all!
+
+With this plugin you can create one package that is purely ```Client``` focussed, and another that is ```Contract``` focussed, and that injects the additional functionality (like ```getContracts```) to ```Client```.
+
 ### Usage
 
 #### Creating an extendible package
