@@ -28,6 +28,8 @@ class Installer extends LibraryInstaller implements PackagePathResolver
 
     private $twig_environment = false;
 
+    private $graph = null;
+
     /**
      * @see \Hostnet\Component\EntityPlugin\PackagePathResolver::getSourcePath()
      */
@@ -55,28 +57,43 @@ class Installer extends LibraryInstaller implements PackagePathResolver
     }
 
     /**
-     * Gets called on the POST_AUTOLOAD_DUMP event
+     * Calculate the dependency graph
+     * @return \Hostnet\Component\EntityPlugin\EntityPackageBuilder
+     */
+    private function getGraph() {
+        if ($this->graph === null) {
+            $local_repository   = $this->composer->getRepositoryManager()->getLocalRepository();
+            $packages           = $local_repository->getPackages();
+            $packages[]         = $this->composer->getPackage();
+            $supported_packages = $this->getSupportedPackages($packages);
+            $this->setUpAutoloading($supported_packages);
+            $this->graph = new EntityPackageBuilder($this, $supported_packages);
+        }
+        return $this->graph;
+    }
+    /**
+     * Gets called on the PRE_AUTOLOAD_DUMP event
      */
     public function postAutoloadDump()
     {
-        $this->io->write('<info>Generating code for entities</info>');
-        $local_repository   = $this->composer->getRepositoryManager()->getLocalRepository();
-        $packages           = $local_repository->getPackages();
-        $packages[]         = $this->composer->getPackage();
-        $supported_packages = $this->getSupportedPackages($packages);
-        $this->setUpAutoloading($supported_packages);
-        $graph = new EntityPackageBuilder($this, $supported_packages);
-
+        $graph = $this->getGraph();
         $this->io->write('<info>Pass 1/3: Generating compound traits and interfaces</info>');
         $this->generateCompoundCode($graph);
 
         $this->io->write('<info>Pass 2/3: Preparing individual generation</info>');
         $this->generateEmptyCode($graph);
+    }
+
+    /**
+     * Gets called on the POST_AUTOLOAD_DUMP event
+     */
+    public function postAutoloadDump()
+    {
+        $graph = $this->getGraph();
 
         $this->io->write('<info>Pass 3/3: Performing individual generation</info>');
         $this->generateConcreteIndividualCode($graph);
     }
-
     /**
      * Gives all packages that we need to install
      *
