@@ -23,7 +23,7 @@ class PackageIOTest extends \PHPUnit_Framework_TestCase
         array $generated_files = array()
     ) {
         $class_mapper = $this->mockClassMapper($class_map);
-        $io = new PackageIO(__DIR__, $class_mapper);
+        $io           = new PackageIO(__DIR__, $class_mapper);
         $this->assertEquals(array_values($entities), $io->getEntities(), 'Entities');
         $this->assertEquals($services, $io->getServices(), 'Services');
         foreach (array_merge($entity_traits, $entities) as $name => $entity_trait) {

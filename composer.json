@@ -23,6 +23,9 @@
     "autoload": {
         "psr-4": { "Hostnet\\Component\\EntityPlugin\\": "src/" }
     },
+    "autoload-dev": {
+        "psr-4": { "Hostnet\\Component\\EntityPlugin\\": "test/" }
+    },
     "config": {
         "github-oauth": {
             "github.com": "8ed444290f5ae4c7e82628ef30acc90680f0474b"

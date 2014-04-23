@@ -60,7 +60,8 @@ class Installer extends LibraryInstaller implements PackagePathResolver
      * Calculate the dependency graph
      * @return \Hostnet\Component\EntityPlugin\EntityPackageBuilder
      */
-    private function getGraph() {
+    private function getGraph()
+    {
         if ($this->graph === null) {
             $local_repository   = $this->composer->getRepositoryManager()->getLocalRepository();
             $packages           = $local_repository->getPackages();
@@ -71,6 +72,7 @@ class Installer extends LibraryInstaller implements PackagePathResolver
         }
         return $this->graph;
     }
+
     /**
      * Gets called on the PRE_AUTOLOAD_DUMP event
      */

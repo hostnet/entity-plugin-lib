@@ -16,26 +16,27 @@ class CompoundGeneratorTest extends \PHPUnit_Framework_TestCase
      */
     public function testGenerate(PackageIOInterface $package_io, array $dependant_packages = [])
     {
-        $io = $this->mockIo();
-        $loader = new \Twig_Loader_Filesystem(__DIR__ . '/../src/Resources/templates/');
+        $io          = $this->mockIo();
+        $loader      = new \Twig_Loader_Filesystem(__DIR__ . '/../src/Resources/templates/');
         $environment = new \Twig_Environment($loader);
 
         // 1. A basic run with no entities
         $entity_package = $this->mockEntityPackage($package_io, $dependant_packages);
-        $generator = new CompoundGenerator($io, $environment, $entity_package);
+        $generator      = new CompoundGenerator($io, $environment, $entity_package);
         $generator->generate();
     }
 
     public function generateProvider()
     {
-        $entities = [];
+        $entities         = [];
         $empty_package_io = $this->mockPackageIO($entities, []);
 
         $entities = [new PackageClass('Hostnet\Product\Entity\Product', 'src/Entity/')];
-        $writes = [
+        $writes   = [
             'src/Entity/Generated//ProductTraits.php' => 'SingleEntityTraits.php',
-            'src/Entity/Generated//ProductInterface.php' => 'SingleEntityInterfaces.php'
+            'src/Entity/Generated//ProductInterface.php' => 'ProductInterface.php'
         ];
+
         $one_entity_package_io = $this->mockPackageIO($entities, $writes);
 
         return [
@@ -54,11 +55,13 @@ class CompoundGeneratorTest extends \PHPUnit_Framework_TestCase
 
     private function mockEntityPackage(PackageIOInterface $package_io, array $dependant_packages = [])
     {
-        $package = new Package('hostnet/package', '1.0.0', '1.0.0');
+        $package        = new Package('hostnet/package', '1.0.0', '1.0.0');
         $entity_package = new EntityPackage($package, $package_io);
+
         foreach ($dependant_packages as $dependant_package) {
             $entity_package->addDependentPackage($dependant_package);
         }
+
         return $entity_package;
     }
 
@@ -85,7 +88,11 @@ class CompoundGeneratorTest extends \PHPUnit_Framework_TestCase
         $package_io->expects($this->any())
             ->method('getEntityOrEntityTrait')
             ->will($this->returnCallback(function ($name) use ($known_traits) {
-                return isset($known_traits[$name]) ? $known_traits[$name] : null;
+                if (isset($known_traits[$name])) {
+                    return $known_traits[$name];
+                } else {
+                    return null;
+                }
             }));
         return $package_io;
     }

@@ -8,6 +8,7 @@ use Composer\IO\NullIO;
 use Composer\Package\RootPackage;
 use Composer\Repository\RepositoryManager;
 use Composer\Repository\WritableArrayRepository;
+use Hostnet\Component\EntityPlugin\Mock\Installer;
 
 class InstallerTest extends \PHPUnit_Framework_TestCase
 {
@@ -18,7 +19,7 @@ class InstallerTest extends \PHPUnit_Framework_TestCase
         $root_package = new RootPackage('hostnet/root-package', 1, 1);
         $this->assertEquals('.', $installer->getInstallPath($root_package));
 
-        $installer = new MockInstallerForInstallerTest($this->mockIO(), $this->mockComposer());
+        $installer = new Installer($this->mockIO(), $this->mockComposer());
 
         $package = $this->getMock('Composer\Package\PackageInterface');
         $package->expects($this->once())->method('getPrettyName')->will($this->returnValue('prettyName'));
@@ -60,15 +61,5 @@ class InstallerTest extends \PHPUnit_Framework_TestCase
     private function mockConfig()
     {
         return new Config();
-    }
-}
-
-class MockInstallerForInstallerTest extends Installer
-{
-    public $initialize_vendor_dir_called = 0;
-
-    protected function initializeVendorDir()
-    {
-        $this->initialize_vendor_dir_called++;
     }
 }

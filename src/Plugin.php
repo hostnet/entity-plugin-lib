@@ -21,7 +21,7 @@ class Plugin implements PluginInterface, EventSubscriberInterface
     {
         return [
             ScriptEvents::POST_AUTOLOAD_DUMP => ['onPostAutoloadDump', 10 ],
-            ScriptEvents::PRE_AUTOLOAD_DUMP  => ['onPreAutoloadDump', 10 ],
+            ScriptEvents::PRE_AUTOLOAD_DUMP => ['onPreAutoloadDump', 10 ],
         ];
     }
 

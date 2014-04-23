@@ -64,12 +64,18 @@ class CompoundGenerator
         foreach ($entity_package->getDependentPackages() as $dependent_package) {
             /* @var $package EntityPackage */
             $use_statements = $this->recursivelyFindUseStatementsFor($dependent_package, $package_class, false);
-            $result = array_merge($result, $use_statements);
+            $result         = array_merge($result, $use_statements);
         }
         $package_class = $entity_package->getPackageIO()->getEntityOrEntityTrait($package_class->getShortName());
         if ($package_class) {
             if ($has_recursed) {
-                $this->writeIfDebug('          Injected <info>' . $package_class->getName() . '</info> from <info>' . $entity_package->getPackage()->getName() . '</info>.');
+                $this->writeIfDebug(
+                    '          Injected <info>' .
+                    $package_class->getName() .
+                    '</info> from <info>' .
+                    $entity_package->getPackage()->getName() .
+                    '</info>.'
+                );
             }
             $result[] = new UseStatement($package_class->getNamespaceName(), $package_class);
         } else {
