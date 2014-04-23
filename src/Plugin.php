@@ -19,12 +19,10 @@ class Plugin implements PluginInterface, EventSubscriberInterface
 
     public static function getSubscribedEvents()
     {
-        return array(
-            ScriptEvents::POST_AUTOLOAD_DUMP => array(
-                'onPostAutoloadDump',
-                0
-            )
-        );
+        return [
+            ScriptEvents::POST_AUTOLOAD_DUMP => ['onPostAutoloadDump', 10 ],
+            ScriptEvents::PRE_AUTOLOAD_DUMP  => ['onPreAutoloadDump', 10 ],
+        ];
     }
 
     /**
@@ -33,5 +31,13 @@ class Plugin implements PluginInterface, EventSubscriberInterface
     public function onPostAutoloadDump()
     {
         $this->installer->postAutoloadDump();
+    }
+
+    /**
+     * Gets called on the POST_AUTOLOAD_DUMP event
+     */
+    public function onPreAutoloadDump()
+    {
+        $this->installer->preAutoloadDump();
     }
 }
