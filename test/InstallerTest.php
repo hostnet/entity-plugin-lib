@@ -12,6 +12,8 @@ use Hostnet\Component\EntityPlugin\Mock\Installer;
 
 class InstallerTest extends \PHPUnit_Framework_TestCase
 {
+
+
     public function testGetInstallPath()
     {
         $installer = new Installer($this->mockIO(), $this->mockComposer());
