@@ -36,10 +36,10 @@ class ReflectionGeneratorTest extends \PHPUnit_Framework_TestCase
                         $that->assertEquals($package_class->getGeneratedDirectory(), $directory);
                         $short_name = $package_class->getShortName();
                         if ($file === $short_name . 'Interface.php') {
-                          $contents = file_get_contents(
-                              __DIR__ . '/EdgeCases/' . $short_name . 'Interface.expected.php'
-                          );
-                        } else if ($file === $short_name . 'TraitInterface.php') {
+                            $contents = file_get_contents(
+                                __DIR__ . '/EdgeCases/' . $short_name . 'Interface.expected.php'
+                            );
+                        } elseif ($file === $short_name . 'TraitInterface.php') {
                             $contents = file_get_contents(
                                 __DIR__ . '/EdgeCases/' . $short_name . 'TraitInterface.expected.php'
                             );
