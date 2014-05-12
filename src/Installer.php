@@ -194,7 +194,6 @@ class Installer extends LibraryInstaller implements PackagePathResolver
                     '        - Preparing interface and abstract trait for <info>' . $entity->getName() . '</info>'
                 );
                 $generator = new EmptyGenerator(
-                    $this->io,
                     $this->getTwigEnvironment(),
                     new Writer(),
                     $entity
@@ -206,7 +205,6 @@ class Installer extends LibraryInstaller implements PackagePathResolver
                     '        - Preparing interface and abstract trait for <info>' . $entity->getName() . '</info>'
                 );
                 $generator = new EmptyGenerator(
-                    $this->io,
                     $this->getTwigEnvironment(),
                     new Writer(),
                     $entity
