@@ -20,11 +20,24 @@ class CompoundGenerator
 
     private $entity_package;
 
-    public function __construct(IOInterface $io, \Twig_Environment $environment, EntityPackage $entity_package)
-    {
+    private $writer;
+
+    /**
+     * @param IOInterface $io
+     * @param \Twig_Environment $environment
+     * @param EntityPackage $entity_package
+     * @param WriterInterface $writer
+     */
+    public function __construct(
+        IOInterface $io,
+        \Twig_Environment $environment,
+        EntityPackage $entity_package,
+        WriterInterface $writer
+    ) {
         $this->io             = $io;
         $this->environment    = $environment;
         $this->entity_package = $entity_package;
+        $this->writer         = $writer;
     }
 
     /**
@@ -111,9 +124,8 @@ class CompoundGenerator
             )
         );
 
-        $this->entity_package->getPackageIO()->writeGeneratedFile(
-            $package_class->getGeneratedDirectory(),
-            $short_name . 'Traits.php',
+        $this->writer->writeFile(
+            $package_class->getGeneratedDirectory() . $short_name . 'Traits.php',
             $data
         );
     }
@@ -145,9 +157,8 @@ class CompoundGenerator
             )
         );
 
-        $this->entity_package->getPackageIO()->writeGeneratedFile(
-            $package_class->getGeneratedDirectory(),
-            $short_name . 'Interface.php',
+        $this->writer->writeFile(
+            $package_class->getGeneratedDirectory() . $short_name . 'Interface.php',
             $data
         );
     }

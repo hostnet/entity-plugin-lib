@@ -130,36 +130,4 @@ class PackageIO implements PackageIOInterface
     {
         return $this->generated_files;
     }
-
-    // @codeCoverageIgnoreStart
-
-    /**
-     *
-     * @see \Hostnet\Component\EntityPlugin\PackageIOInterface::writeGeneratedFile()
-     */
-    public function writeGeneratedFile($path, $file, $data)
-    {
-        $this->ensureDirectoryExists($path);
-
-        if (! is_dir($path)) {
-            mkdir($path, 0755, true);
-        }
-        file_put_contents($path . '/' . $file, $data);
-    }
-
-    /**
-     * Ensures that the Generated/ folder exists
-     *
-     * @throws \RuntimeException
-     */
-    private function ensureDirectoryExists($path)
-    {
-        if (! is_dir($path)) {
-            if (! mkdir($path)) {
-                throw new \RuntimeException('Could not create "Generated" directory "' . $path . '"');
-            }
-        }
-    }
-
-    // @codeCoverageIgnoreEnd
 }

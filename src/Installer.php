@@ -163,7 +163,14 @@ class Installer extends LibraryInstaller implements PackagePathResolver
                 '    - Generating for package <info>'.
                 $entity_package->getPackage()->getName() . '</info>'
             );
-            $generator = new CompoundGenerator($this->io, $this->getTwigEnvironment(), $entity_package);
+
+            $generator = new CompoundGenerator(
+                $this->io,
+                $this->getTwigEnvironment(),
+                $entity_package,
+                new Writer()
+            );
+
             $generator->generate();
         }
     }
@@ -189,7 +196,7 @@ class Installer extends LibraryInstaller implements PackagePathResolver
                 $generator = new EmptyGenerator(
                     $this->io,
                     $this->getTwigEnvironment(),
-                    $entity_package->getPackageIO(),
+                    new Writer(),
                     $entity
                 );
                 $generator->generate();
@@ -201,7 +208,7 @@ class Installer extends LibraryInstaller implements PackagePathResolver
                 $generator = new EmptyGenerator(
                     $this->io,
                     $this->getTwigEnvironment(),
-                    $entity_package->getPackageIO(),
+                    new Writer(),
                     $entity
                 );
                 $generator->generate();
@@ -226,25 +233,13 @@ class Installer extends LibraryInstaller implements PackagePathResolver
                 $this->writeIfVeryVerbose(
                     '        - Generating interface and abstract trait for <info>' . $entity->getName() . '</info>'
                 );
-                $generator = new ReflectionGenerator(
-                    $this->io,
-                    $this->getTwigEnvironment(),
-                    $entity_package->getPackageIO(),
-                    $entity
-                );
-                $generator->generate();
+                ReflectionGenerator::generateInIsolation($entity->getName(), $entity->getGeneratedDirectory());
             }
             foreach ($entity_package->getPackageIO()->getEntityTraits() as $entity) {
                 $this->writeIfVeryVerbose(
                     '        - Generating interface and abstract trait for <info>' . $entity->getName() . '</info>'
                 );
-                $generator = new ReflectionGenerator(
-                    $this->io,
-                    $this->getTwigEnvironment(),
-                    $entity_package->getPackageIO(),
-                    $entity
-                );
-                $generator->generate();
+                ReflectionGenerator::generateInIsolation($entity->getName(), $entity->getGeneratedDirectory());
             }
         }
     }

@@ -52,17 +52,4 @@ interface PackageIOInterface
      * @return PackageClass[]
      */
     public function getGeneratedFiles();
-
-    /**
-     * Write a generated file to the package.
-     * Ensures by itself that the directory exists
-     *
-     * @param $path The
-     *            path the file should be generated to
-     * @param $file The
-     *            filename
-     * @param $data The
-     *            data to write
-     */
-    public function writeGeneratedFile($path, $file, $data);
 }

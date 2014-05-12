@@ -14,34 +14,41 @@ class CompoundGeneratorTest extends \PHPUnit_Framework_TestCase
      * @param PackageIOInterface $package_io
      * @param array $dependant_packages
      */
-    public function testGenerate(PackageIOInterface $package_io, array $dependant_packages = [])
-    {
+    public function testGenerate(
+        PackageIOInterface $package_io,
+        array $dependant_packages,
+        WriterInterface $writer
+    ) {
         $io          = $this->mockIo();
         $loader      = new \Twig_Loader_Filesystem(__DIR__ . '/../src/Resources/templates/');
         $environment = new \Twig_Environment($loader);
 
         // 1. A basic run with no entities
         $entity_package = $this->mockEntityPackage($package_io, $dependant_packages);
-        $generator      = new CompoundGenerator($io, $environment, $entity_package);
+        $generator      = new CompoundGenerator($io, $environment, $entity_package, $writer);
         $generator->generate();
     }
 
     public function generateProvider()
     {
         $entities         = [];
-        $empty_package_io = $this->mockPackageIO($entities, []);
+        $empty_package_io = $this->mockPackageIO($entities);
 
         $entities = [new PackageClass('Hostnet\Product\Entity\Product', 'src/Entity/')];
-        $writes   = [
-            'src/Entity/Generated//ProductTraits.php' => 'SingleEntityTraits.php',
-            'src/Entity/Generated//ProductInterface.php' => 'ProductInterface.php'
+
+        $writes = [
+            'src/Entity/Generated/ProductTraits.php' => 'SingleEntityTraits.php',
+            'src/Entity/Generated/ProductInterface.php' => 'ProductInterface.php'
         ];
 
-        $one_entity_package_io = $this->mockPackageIO($entities, $writes);
+        $one_entity_package_io = $this->mockPackageIO($entities);
+
+        $writer_empty = $this->mockWriter([]);
+        $writer_one   = $this->mockWriter($writes);
 
         return [
-            [$empty_package_io, []],
-            [$one_entity_package_io, []]
+            [$empty_package_io, [], $writer_empty],
+            [$one_entity_package_io, [], $writer_one],
         ];
     }
 
@@ -65,21 +72,27 @@ class CompoundGeneratorTest extends \PHPUnit_Framework_TestCase
         return $entity_package;
     }
 
-    private function mockPackageIO(array $entities, array $writes, array $known_traits = [])
+    private function mockWriter(array $writes)
+    {
+        $writer = $this->getMock('Hostnet\Component\EntityPlugin\WriterInterface');
+
+        $writer->expects($this->exactly(count($writes)))
+        ->method('writeFile')
+        ->will($this->returnCallback(function ($path, $data) use ($writes) {
+            $this->assertTrue(isset($writes[$path]), 'No write expected to ' . $path);
+            $contents = file_get_contents(__DIR__ . '/CompoundEdgeCases/'.$writes[$path]);
+            $this->assertEquals($contents, $data);
+        }));
+
+        return $writer;
+    }
+
+    private function mockPackageIO(array $entities, array $known_traits = [])
     {
         $package_io = $this->getMock('Hostnet\Component\EntityPlugin\PackageIOInterface');
         $package_io->expects($this->any())
             ->method('getEntities')
             ->will($this->returnValue($entities));
-
-        $package_io->expects($this->exactly(count($writes)))
-            ->method('writeGeneratedFile')
-            ->will($this->returnCallback(function ($path, $file, $data) use ($writes) {
-                $combined_path = $path . '/' . $file;
-                $this->assertTrue(isset($writes[$combined_path]), 'No write expected to ' . $combined_path);
-                $contents = file_get_contents(__DIR__ . '/CompoundEdgeCases/'.$writes[$path . '/' . $file]);
-                $this->assertEquals($contents, $data);
-            }));
 
         foreach ($entities as $entity) {
             $known_traits[$entity->getShortName()] = $entity;

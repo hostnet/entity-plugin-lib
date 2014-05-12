@@ -2,6 +2,7 @@
 namespace Hostnet\Component\EntityPlugin;
 
 use Composer\IO\NullIO;
+use Hostnet\EdgeCases\Entity\Generated\MultipleArgumentsTraitInterface;
 
 /**
  * More a functiononal test then a unit-test
@@ -12,6 +13,35 @@ use Composer\IO\NullIO;
  */
 class ReflectionGeneratorTest extends \PHPUnit_Framework_TestCase
 {
+    /**
+     * @dataProvider generateInIsolationProvider
+     *
+     * @param PackageClass $package_class
+     */
+    public function testGenerateInIsolation(PackageClass $package_class)
+    {
+        $short_name = $package_class->getShortName();
+
+        if (strpos($short_name, 'Trait') === false) {
+            $trait = 'Trait';
+        } else {
+            $trait = '';
+        }
+
+        $class         = $package_class->getName();
+        $base_dir      = __DIR__ . '/EdgeCases/';
+        $expected_file = $base_dir . $short_name . $trait . 'Interface.expected.php';
+        $actual_file   = $base_dir . 'Generated/' . $short_name . $trait . 'Interface.php';
+        $expected      = file_get_contents($expected_file);
+
+        ReflectionGenerator::generateInIsolation($class, $base_dir);
+
+        $actual = file_get_contents($actual_file);
+        unlink($actual_file);
+        rmdir($base_dir . 'Generated/');
+
+        $this->assertEquals($actual, $expected);
+    }
 
     /**
      * @dataProvider generateProvider
@@ -20,21 +50,25 @@ class ReflectionGeneratorTest extends \PHPUnit_Framework_TestCase
      */
     public function testGenerate(PackageClass $package_class)
     {
-        include_once __DIR__ . '/EdgeCases/' . $package_class->getShortName() . '.php';
-        $io          = new NullIO();
+        //include_once __DIR__ . '/EdgeCases/' . $package_class->getShortName() . '.php';
         $loader      = new \Twig_Loader_Filesystem(__DIR__ . '/../src/Resources/templates/');
         $environment = new \Twig_Environment($loader);
 
-        $package_io = $this->getMock('Hostnet\Component\EntityPlugin\PackageIOInterface');
+        $package_io = $this->getMock('Hostnet\Component\EntityPlugin\WriterInterface');
 
         $that = $this;
         $package_io->expects($this->once())
-            ->method('writeGeneratedFile')
+            ->method('writeFile')
             ->will(
                 $this->returnCallback(
-                    function ($directory, $file, $data) use ($that, $package_class) {
+                    function ($path, $data) use ($that, $package_class) {
+                        $file      = basename($path);
+                        $directory = dirname($path) . '/';
+
                         $that->assertEquals($package_class->getGeneratedDirectory(), $directory);
+
                         $short_name = $package_class->getShortName();
+
                         if ($file === $short_name . 'Interface.php') {
                             $contents = file_get_contents(
                                 __DIR__ . '/EdgeCases/' . $short_name . 'Interface.expected.php'
@@ -50,7 +84,7 @@ class ReflectionGeneratorTest extends \PHPUnit_Framework_TestCase
                     }
                 )
             );
-        $generator = new ReflectionGenerator($io, $environment, $package_io, $package_class);
+        $generator = new ReflectionGenerator($environment, $package_io, $package_class);
         $this->assertNull($generator->generate());
     }
 
@@ -79,5 +113,42 @@ class ReflectionGeneratorTest extends \PHPUnit_Framework_TestCase
                 )
             )
         );
+    }
+
+    public function generateInIsolationProvider()
+    {
+        return array(
+            array(
+                    new PackageClass(
+                        'Hostnet\EdgeCases\Entity\MultipleArguments',
+                        __DIR__ . '/EdgeCases/MultipleArguments.php'
+                    )
+                ),
+                array(
+                    new PackageClass(
+                        'Hostnet\EdgeCases\Entity\TypedParameters',
+                        __DIR__ . '/EdgeCases/TypedParameters.php'
+                    )
+                ),
+                array(
+                    new PackageClass(
+                        'Hostnet\EdgeCases\Entity\TraitsShouldRockTrait',
+                        __DIR__ . '/EdgeCases/TraitsShouldRockTrait.php'
+                    )
+                )
+        );
+    }
+
+    public function testMain()
+    {
+        // functionallity is already tested, test for smoke...
+        $base_dir = __DIR__ . '/EdgeCases/';
+        ReflectionGenerator::main(
+            'Hostnet\EdgeCases\Entity\MultipleArguments',
+            $base_dir
+        );
+
+        unlink($base_dir . 'Generated/MultipleArgumentsTraitInterface.php');
+        rmdir($base_dir . 'Generated/');
     }
 }

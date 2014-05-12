@@ -2,6 +2,7 @@
 namespace Hostnet\Component\EntityPlugin;
 
 use Composer\IO\IOInterface;
+use Symfony\Component\Console\Output\ConsoleOutput;
 
 /**
  * A simple, light-weight generator that can be used runtime during development
@@ -11,9 +12,6 @@ use Composer\IO\IOInterface;
  */
 class ReflectionGenerator
 {
-
-    private $io;
-
     private $environment;
 
     private $package_io;
@@ -21,23 +19,17 @@ class ReflectionGenerator
     private $package_class;
 
     /**
-     *
-     * @todo We only need the "writeGeneratedFile" function of PackageIO, we
-     *       should split the interface
-     * @param IOInterface $io
      * @param \Twig_Environment $environment
      * @param PackageIOInterface $package_io
      * @param PackageClass $package_class
      */
     public function __construct(
-        IOInterface $io,
         \Twig_Environment $environment,
-        PackageIOInterface $package_io,
+        WriterInterface $writer,
         PackageClass $package_class
     ) {
-        $this->io            = $io;
         $this->environment   = $environment;
-        $this->package_io    = $package_io;
+        $this->writer        = $writer;
         $this->package_class = $package_class;
     }
 
@@ -63,7 +55,7 @@ class ReflectionGenerator
         $interface = $this->environment->render('trait_interface.php.twig', $params);
         $path      = $this->package_class->getGeneratedDirectory();
 
-        $this->package_io->writeGeneratedFile($path, $interface_name . '.php', $interface);
+        $this->writer->writeFile($path . $interface_name . '.php', $interface);
     }
 
     /**
@@ -93,5 +85,48 @@ class ReflectionGenerator
         } else {
             return $trait_or_class_name . 'TraitInterface';
         }
+    }
+
+    /**
+     *
+     * @param string $class Fully Qualified class name to generate interface for
+     * @param string $path Base paths where code should be generated
+     * @return string
+     */
+    public static function generateInIsolation($class, $path)
+    {
+        $php       = '/usr/bin/env php -r';
+        $namespace = 'namespace Hostnet\\Component\\EntityPlugin;';
+        $require   = 'require \'' . __FILE__ . '\';';
+        $main      = 'ReflectionGenerator::main(\'' . $class . '\',\'' . $path .'\');';
+        return `$php "$namespace $require $main"`;
+    }
+
+    /**
+     * Generated in process isolation entry point.
+     *
+     * @param string $class Fully Qualified class name to generate interface for
+     * @param string $path Base paths where code should be generated
+     */
+    public static function main($class, $path)
+    {
+        // enable autoloading
+        // @codeCoverageIgnoreStart
+        if (file_exists(__DIR__ . '/../vendor/autoload.php')) {
+            include __DIR__ . '/../vendor/autoload.php';
+        } else {
+            include __DIR__ . '/../../autoload.php';
+        }
+        // @codeCoverageIgnoreEnd
+
+        // setup all the dependencies
+        $loader        = new \Twig_Loader_Filesystem(__DIR__ . '/Resources/templates/');
+        $environment   = new \Twig_Environment($loader);
+        $writer        = new Writer();
+        $package_class = new PackageClass($class, $path);
+
+        // generate the files
+        $generator = new ReflectionGenerator($environment, $writer, $package_class);
+        $generator->generate();
     }
 }
