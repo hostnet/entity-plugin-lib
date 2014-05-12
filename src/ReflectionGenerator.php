@@ -18,7 +18,7 @@ class ReflectionGenerator
 
     private $package_class;
 
-    /**
+    /**dirname
      * @param \Twig_Environment $environment
      * @param PackageIOInterface $package_io
      * @param PackageClass $package_class
@@ -54,7 +54,6 @@ class ReflectionGenerator
 
         $interface = $this->environment->render('trait_interface.php.twig', $params);
         $path      = $this->package_class->getGeneratedDirectory();
-
         $this->writer->writeFile($path . $interface_name . '.php', $interface);
     }
 
@@ -90,25 +89,23 @@ class ReflectionGenerator
     /**
      *
      * @param string $class Fully Qualified class name to generate interface for
-     * @param string $path Base paths where code should be generated
      * @return string
      */
-    public static function generateInIsolation($class, $path)
+    public static function generateInIsolation($class)
     {
         $php       = '/usr/bin/env php -r';
         $namespace = 'namespace Hostnet\\Component\\EntityPlugin;';
         $require   = 'require \'' . __FILE__ . '\';';
-        $main      = 'ReflectionGenerator::main(\'' . $class . '\',\'' . $path .'\');';
-        return `$php "$namespace $require $main"`;
+        $main      = 'ReflectionGenerator::main(\'' . $class . '\');';
+        echo `$php "$namespace $require $main"`;
     }
 
     /**
      * Generated in process isolation entry point.
      *
      * @param string $class Fully Qualified class name to generate interface for
-     * @param string $path Base paths where code should be generated
      */
-    public static function main($class, $path)
+    public static function main($class)
     {
         // enable autoloading
         // @codeCoverageIgnoreStart
@@ -120,10 +117,12 @@ class ReflectionGenerator
         // @codeCoverageIgnoreEnd
 
         // setup all the dependencies
+        $reflection    = new \ReflectionClass($class);
+        $path          = $reflection->getFileName();
+        $package_class = new PackageClass($class, $path);
         $loader        = new \Twig_Loader_Filesystem(__DIR__ . '/Resources/templates/');
         $environment   = new \Twig_Environment($loader);
         $writer        = new Writer();
-        $package_class = new PackageClass($class, $path);
 
         // generate the files
         $generator = new ReflectionGenerator($environment, $writer, $package_class);

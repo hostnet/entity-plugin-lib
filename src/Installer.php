@@ -231,13 +231,13 @@ class Installer extends LibraryInstaller implements PackagePathResolver
                 $this->writeIfVeryVerbose(
                     '        - Generating interface and abstract trait for <info>' . $entity->getName() . '</info>'
                 );
-                ReflectionGenerator::generateInIsolation($entity->getName(), $entity->getGeneratedDirectory());
+                ReflectionGenerator::generateInIsolation($entity->getName());
             }
             foreach ($entity_package->getPackageIO()->getEntityTraits() as $entity) {
                 $this->writeIfVeryVerbose(
                     '        - Generating interface and abstract trait for <info>' . $entity->getName() . '</info>'
                 );
-                ReflectionGenerator::generateInIsolation($entity->getName(), $entity->getGeneratedDirectory());
+                ReflectionGenerator::generateInIsolation($entity->getName());
             }
         }
     }

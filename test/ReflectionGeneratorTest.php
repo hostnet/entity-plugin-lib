@@ -34,7 +34,7 @@ class ReflectionGeneratorTest extends \PHPUnit_Framework_TestCase
         $actual_file   = $base_dir . 'Generated/' . $short_name . $trait . 'Interface.php';
         $expected      = file_get_contents($expected_file);
 
-        ReflectionGenerator::generateInIsolation($class, $base_dir);
+        ReflectionGenerator::generateInIsolation($class);
 
         $actual = file_get_contents($actual_file);
         unlink($actual_file);
@@ -142,13 +142,10 @@ class ReflectionGeneratorTest extends \PHPUnit_Framework_TestCase
     public function testMain()
     {
         // functionallity is already tested, test for smoke...
-        $base_dir = __DIR__ . '/EdgeCases/';
-        ReflectionGenerator::main(
-            'Hostnet\EdgeCases\Entity\MultipleArguments',
-            $base_dir
-        );
+        $base_dir = __DIR__ . '/EdgeCases/Generated/';
+        ReflectionGenerator::main('Hostnet\EdgeCases\Entity\MultipleArguments');
 
-        unlink($base_dir . 'Generated/MultipleArgumentsTraitInterface.php');
-        rmdir($base_dir . 'Generated/');
+        unlink($base_dir . 'MultipleArgumentsTraitInterface.php');
+        rmdir($base_dir);
     }
 }
