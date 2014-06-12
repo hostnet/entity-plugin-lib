@@ -24,8 +24,11 @@ class EntityPackageBuilder
             $this->addPackage($package);
         }
         foreach ($this->tree_nodes as $entity_package) {
+
             /* @var $entity_package EntityPackage */
-            foreach ($entity_package->getRequires() as $link) {
+            $links = array_merge($entity_package->getRequires(), $entity_package->getSugests());
+
+            foreach ($links as $link) {
                 /* @var $link \Composer\Package\Link */
                 // The target of a $link is it's dependency
                 if (! isset($this->tree_nodes[$link->getTarget()])) {

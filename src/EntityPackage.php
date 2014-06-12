@@ -74,4 +74,9 @@ class EntityPackage
     {
         return $this->dependent_packages;
     }
+
+    public function getSugests()
+    {
+        return $this->package->getSuggests();
+    }
 }
