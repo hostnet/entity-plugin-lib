@@ -78,7 +78,7 @@ class ReflectionGeneratorTest extends \PHPUnit_Framework_TestCase
                                 __DIR__ . '/EdgeCases/' . $short_name . 'TraitInterface.expected.php'
                             );
                         } else {
-                            $this->fail('Unexpected file ' . $file);
+                            $that->fail('Unexpected file ' . $file);
                         }
                         $that->assertEquals($contents, $data);
                     }

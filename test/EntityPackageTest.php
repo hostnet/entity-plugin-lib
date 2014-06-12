@@ -44,6 +44,23 @@ class EntityPackageTest extends \PHPUnit_Framework_TestCase
         ), $entity_package->getRequires());
     }
 
+    public function testGetSuggests()
+    {
+        $package        = new Package('hostnet/foo', 1.0, 1.0);
+        $entity_package = new EntityPackage(
+            $package,
+            $this->getMock('Hostnet\Component\EntityPlugin\PackageIOInterface')
+        );
+        $this->assertEquals(array(), $entity_package->getSuggests());
+        $link = new Link('hostnet/a', 'hostnet/foo');
+        $package->setSuggests(array(
+            $link
+        ));
+        $this->assertEquals(array(
+            $link
+        ), $entity_package->getSuggests());
+    }
+
     public function testAddRequiredPackage()
     {
         $package        = new Package('hostnet/foo', 1.0, 1.0);

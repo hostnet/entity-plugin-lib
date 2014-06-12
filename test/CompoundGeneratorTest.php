@@ -75,13 +75,13 @@ class CompoundGeneratorTest extends \PHPUnit_Framework_TestCase
     private function mockWriter(array $writes)
     {
         $writer = $this->getMock('Hostnet\Component\EntityPlugin\WriterInterface');
-
+        $that   = $this;
         $writer->expects($this->exactly(count($writes)))
         ->method('writeFile')
-        ->will($this->returnCallback(function ($path, $data) use ($writes) {
-            $this->assertTrue(isset($writes[$path]), 'No write expected to ' . $path);
+        ->will($this->returnCallback(function ($path, $data) use ($writes, $that) {
+            $that->assertTrue(isset($writes[$path]), 'No write expected to ' . $path);
             $contents = file_get_contents(__DIR__ . '/CompoundEdgeCases/'.$writes[$path]);
-            $this->assertEquals($contents, $data);
+            $that->assertEquals($contents, $data);
         }));
 
         return $writer;
