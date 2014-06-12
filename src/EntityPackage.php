@@ -75,7 +75,7 @@ class EntityPackage
         return $this->dependent_packages;
     }
 
-    public function getSugests()
+    public function getSuggests()
     {
         return $this->package->getSuggests();
     }

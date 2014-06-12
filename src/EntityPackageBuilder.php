@@ -26,7 +26,7 @@ class EntityPackageBuilder
         foreach ($this->tree_nodes as $entity_package) {
 
             /* @var $entity_package EntityPackage */
-            $links = array_merge($entity_package->getRequires(), $entity_package->getSugests());
+            $links = array_merge($entity_package->getRequires(), $entity_package->getSuggests());
 
             foreach ($links as $link) {
                 /* @var $link \Composer\Package\Link */
