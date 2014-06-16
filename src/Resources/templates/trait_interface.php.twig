@@ -7,13 +7,13 @@ namespace {{ namespace }};
  */
 interface {{ name }}
 {
+{% if methods | length %}
+
 {% for method in methods %}
-    {%- if method.isPublic() and not method.isStatic() %}
-
+{% if method.isPublic() and not method.isStatic() %}
     {{ method.docComment }}
-    public function {{ method.name }}(
-      {%- include 'parameters.php.twig' with { parameters: method.parameters } -%});
-    {%- endif %}
-    {%- endfor %}
-
+    public function {{ method.name }}({% include 'parameters.php.twig' with { parameters: method.parameters } %});
+{% endif %}
+{% endfor %}
+{% endif %}
 }
