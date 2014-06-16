@@ -14,12 +14,6 @@
         "squizlabs/php_codesniffer": "1.*"
     },
     "minimum-stability": "stable",
-    "repositories": [
-        {
-            "type":"composer",
-            "url": "http://packagist.hostnetbv.nl"
-        }
-    ],
     "autoload": {
         "psr-4": { "Hostnet\\Component\\EntityPlugin\\": "src/" }
     },
