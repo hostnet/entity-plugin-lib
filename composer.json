@@ -23,11 +23,6 @@
             "Hostnet\\EdgeCases\\Entity\\": "test/EdgeCases"
         }
     },
-    "config": {
-        "github-oauth": {
-            "github.com": "8ed444290f5ae4c7e82628ef30acc90680f0474b"
-        }
-    },
     "extra": {
         "class": "Hostnet\\Component\\EntityPlugin\\Plugin"
     }
