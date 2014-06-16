@@ -29,13 +29,14 @@ class EntityPackageBuilder
             $links = array_merge($entity_package->getRequires(), $entity_package->getSuggests());
 
             foreach ($links as $link) {
-                /* @var $link \Composer\Package\Link */
-                // The target of a $link is it's dependency
-                if (! isset($this->tree_nodes[$link->getTarget()])) {
-                    continue;
+                if ($link instanceof \Composer\Package\Link) {
+                    //The target of a $link is it's dependency
+                    if (! isset($this->tree_nodes[$link->getTarget()])) {
+                        continue;
+                    }
+                    $entity_package->addRequiredPackage($this->tree_nodes[$link->getTarget()]);
+                    $this->tree_nodes[$link->getTarget()]->addDependentPackage($entity_package);
                 }
-                $entity_package->addRequiredPackage($this->tree_nodes[$link->getTarget()]);
-                $this->tree_nodes[$link->getTarget()]->addDependentPackage($entity_package);
             }
         }
     }
