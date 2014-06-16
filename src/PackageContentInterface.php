@@ -7,9 +7,8 @@ namespace Hostnet\Component\EntityPlugin;
  *
  * @author Nico Schoenmaker <nschoenmaker@hostnet.nl>
  */
-interface PackageIOInterface
+interface PackageContentInterface
 {
-
     /**
      * Get the entities contained in the package
      *
@@ -24,6 +23,14 @@ interface PackageIOInterface
      * @return PackageClass null
      */
     public function getEntityOrEntityTrait($name);
+
+    /**
+     * Get all optional entity traits for the given entity name in this package
+     *
+     * @param string $name
+     * @return OptionalPackageTrait[]
+     */
+    public function getOptionalEntityTraits($name);
 
     /**
      * Get all entity traits in the package
@@ -47,9 +54,9 @@ interface PackageIOInterface
     public function getServiceTraits();
 
     /**
-     * Get the generated files contained in the package
-     *
-     * @return PackageClass[]
+     * Returns if the entity is available in the package
+     * @param $shortName the short name of the entity to check for
+     * @return bool
      */
-    public function getGeneratedFiles();
+    public function hasEntity($shortName);
 }
