@@ -11,63 +11,56 @@ class CompoundGeneratorTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @dataProvider generateProvider
-     * @param PackageIOInterface $package_io
-     * @param array $dependant_packages
+     * @param PackageContentInterface $package_io
      */
     public function testGenerate(
-        PackageIOInterface $package_io,
-        array $dependant_packages,
+        PackageContentInterface $package_content,
         WriterInterface $writer
     ) {
-        $io          = $this->mockIo();
+        $io          = $this->getMock('Composer\IO\IOInterface');
         $loader      = new \Twig_Loader_Filesystem(__DIR__ . '/../src/Resources/templates/');
         $environment = new \Twig_Environment($loader);
 
         // 1. A basic run with no entities
-        $entity_package = $this->mockEntityPackage($package_io, $dependant_packages);
+        $entity_package = $this->mockEntityPackage($package_content);
         $generator      = new CompoundGenerator($io, $environment, $entity_package, $writer);
         $generator->generate();
     }
 
     public function generateProvider()
     {
-        $entities         = [];
-        $empty_package_io = $this->mockPackageIO($entities);
-
-        $entities = [new PackageClass('Hostnet\Product\Entity\Product', 'src/Entity/')];
-
+        $empty_package_content = new PackageContent([]);
+        $entities = [
+            'Hostnet\Product\Entity\Product' => 'src/Entity/Product.php',
+            'Hostnet\Client\Entity\Client' => 'src/Entity/Client.php',
+            'Hostnet\Contract\Entity\Contract' => 'src/Entity/Contract.php',
+            'Hostnet\Contract\Entity\ContractWhenClientTrait' => 'src/Entity/ContractWhenClientTrait.php',
+            'Hostnet\Contract\Entity\ContractWhenEasterTrait' => 'src/Entity/ContractWhenEasterTrait.php'
+        ];
         $writes = [
-            'src/Entity/Generated/ProductTraits.php' => 'SingleEntityTraits.php',
-            'src/Entity/Generated/ProductInterface.php' => 'ProductInterface.php'
+            'src/Entity/Generated/ProductTraits.php' => 'ProductTraits.php',
+            'src/Entity/Generated/ProductInterface.php' => 'ProductInterface.php',
+            'src/Entity/Generated/ClientTraits.php' => 'ClientTraits.php',
+            'src/Entity/Generated/ClientInterface.php' => 'ClientInterface.php',
+            'src/Entity/Generated/ContractTraits.php' => 'ContractTraits.php',
+            'src/Entity/Generated/ContractInterface.php' => 'ContractInterface.php',
         ];
 
-        $one_entity_package_io = $this->mockPackageIO($entities);
+        $entity_package_content = new PackageContent($entities);
 
         $writer_empty = $this->mockWriter([]);
-        $writer_one   = $this->mockWriter($writes);
+        $writer       = $this->mockWriter($writes);
 
         return [
-            [$empty_package_io, [], $writer_empty],
-            [$one_entity_package_io, [], $writer_one],
+            [$empty_package_content, $writer_empty],
+            [$entity_package_content, $writer],
         ];
     }
 
-    /**
-     * @return Composer\IO\IOInterface
-     */
-    private function mockIo()
-    {
-        return $this->getMock('Composer\IO\IOInterface');
-    }
-
-    private function mockEntityPackage(PackageIOInterface $package_io, array $dependant_packages = [])
+    private function mockEntityPackage(PackageContentInterface $package_content)
     {
         $package        = new Package('hostnet/package', '1.0.0', '1.0.0');
-        $entity_package = new EntityPackage($package, $package_io);
-
-        foreach ($dependant_packages as $dependant_package) {
-            $entity_package->addDependentPackage($dependant_package);
-        }
+        $entity_package = new EntityPackage($package, $package_content);
 
         return $entity_package;
     }
@@ -85,28 +78,5 @@ class CompoundGeneratorTest extends \PHPUnit_Framework_TestCase
         }));
 
         return $writer;
-    }
-
-    private function mockPackageIO(array $entities, array $known_traits = [])
-    {
-        $package_io = $this->getMock('Hostnet\Component\EntityPlugin\PackageIOInterface');
-        $package_io->expects($this->any())
-            ->method('getEntities')
-            ->will($this->returnValue($entities));
-
-        foreach ($entities as $entity) {
-            $known_traits[$entity->getShortName()] = $entity;
-        }
-
-        $package_io->expects($this->any())
-            ->method('getEntityOrEntityTrait')
-            ->will($this->returnCallback(function ($name) use ($known_traits) {
-                if (isset($known_traits[$name])) {
-                    return $known_traits[$name];
-                } else {
-                    return null;
-                }
-            }));
-        return $package_io;
     }
 }

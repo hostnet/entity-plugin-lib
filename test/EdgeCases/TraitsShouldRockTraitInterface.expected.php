@@ -7,5 +7,4 @@ namespace Hostnet\EdgeCases\Entity\Generated;
  */
 interface TraitsShouldRockTraitInterface
 {
-
 }

@@ -47,18 +47,48 @@ class CompoundGenerator
      */
     public function generate()
     {
-        foreach ($this->entity_package->getPackageIO()->getEntities() as $package_class) {
+        foreach ($this->entity_package->getPackageContent()->getEntities() as $package_class) {
             /* @var $package_class PackageClass */
 
             $this->writeIfDebug(
                 '        - Finding traits for <info>' . $package_class->getName() . '</info>.'
             );
-            $traits = $this->recursivelyFindUseStatementsFor($this->entity_package, $package_class);
+            $required_traits = $this->recursivelyFindUseStatementsFor($this->entity_package, $package_class);
+            $optional_traits = $this->findUseStatementsForOptionalTraits($this->entity_package, $package_class);
+            $traits          = array_merge($required_traits, $optional_traits);
+
             $this->generateTrait($package_class, $traits);
             $this->generateInterface($package_class, $traits);
         }
     }
 
+    private function findUseStatementsForOptionalTraits(
+        EntityPackage $entity_package,
+        PackageClass $package_class
+    ) {
+        $content = $entity_package->getPackageContent();
+        $traits  = $content->getOptionalEntityTraits($package_class->getShortName());
+        $result  = [];
+
+        foreach ($traits as $trait) {
+            /* @var $trait OptionalPackageTrait */
+            $requirement = $trait->getRequirement();
+            if ($content->hasEntity($requirement)) {
+                $result[] = $trait;
+                $this->writeIfDebug(
+                    'Injected <info>' . $trait->getName() .   '</info> from <info>' .
+                    $entity_package->getPackage()->getName() .
+                    '</info>.'
+                );
+            } else {
+                $this->writeIfDebug(
+                    'Not injected <info>' . $trait->getName() .   '</info> from <info>' .
+                    $entity_package->getPackage()->getName() . ' because ' . $requirement . 'is not found.</info>.'
+                );
+            }
+        }
+        return $result;
+    }
     /**
      * Gives all the entities to be required in the compound interface
      * Also generates a unique alias for them
@@ -79,7 +109,7 @@ class CompoundGenerator
             $use_statements = $this->recursivelyFindUseStatementsFor($dependent_package, $package_class, false);
             $result         = array_merge($result, $use_statements);
         }
-        $package_class = $entity_package->getPackageIO()->getEntityOrEntityTrait($package_class->getShortName());
+        $package_class = $entity_package->getPackageContent()->getEntityOrEntityTrait($package_class->getShortName());
         if ($package_class) {
             if ($has_recursed) {
                 $this->writeIfDebug(
@@ -90,10 +120,11 @@ class CompoundGenerator
                     '</info>.'
                 );
             }
-            $result[] = new UseStatement($package_class->getNamespaceName(), $package_class);
+            $result[] = $package_class;
         } else {
             $this->writeIfDebug('          No trait in <info>' . $entity_package->getPackage()->getName() . '</info>.');
         }
+
         return $result;
     }
 

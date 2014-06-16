@@ -63,4 +63,27 @@ class PackageClassTest extends \PHPUnit_Framework_TestCase
         $package_class = new PackageClass($class, new \SplFileInfo(__FILE__));
         $this->assertTrue($package_class->isException());
     }
+
+    /**
+     * @dataProvider getAliasProvider
+     */
+    public function testGetAlias($class, $expected)
+    {
+        $package_class = new PackageClass($class, __DIR__);
+        $this->assertEquals($expected, $package_class->getAlias());
+    }
+
+    public function getAliasProvider()
+    {
+        return array(
+            array(
+                'Hihihi\Hahaha\Hohoho\Bluh',
+                'HihihiHahahaHohoho'
+            ),
+            array(
+                'Hostnet\Client\Entity\Client',
+                'HostnetClientEntity'
+            )
+        );
+    }
 }

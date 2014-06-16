@@ -22,10 +22,10 @@ class EntityPackage
 
     private $dependent_packages = array();
 
-    public function __construct(PackageInterface $package, PackageIOInterface $package_io)
+    public function __construct(PackageInterface $package, PackageContentInterface $package_content)
     {
-        $this->package    = $package;
-        $this->package_io = $package_io;
+        $this->package         = $package;
+        $this->package_content = $package_content;
     }
 
     /**
@@ -39,11 +39,11 @@ class EntityPackage
 
     /**
      *
-     * @return PackageIOInterface
+     * @return PackageContentInterface
      */
-    public function getPackageIO()
+    public function getPackageContent()
     {
-        return $this->package_io;
+        return $this->package_content;
     }
 
     /**

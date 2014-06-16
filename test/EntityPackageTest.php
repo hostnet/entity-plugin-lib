@@ -12,19 +12,19 @@ class EntityPackageTest extends \PHPUnit_Framework_TestCase
         $package        = new Package('hostnet/foo', 1.0, 1.0);
         $entity_package = new EntityPackage(
             $package,
-            $this->getMock('Hostnet\Component\EntityPlugin\PackageIOInterface')
+            $this->getMock('Hostnet\Component\EntityPlugin\PackageContentInterface')
         );
         $this->assertEquals($package, $entity_package->getPackage());
     }
 
-    public function testGetPackageIO()
+    public function testGetPackageContent()
     {
-        $package_io     = $this->getMock('Hostnet\Component\EntityPlugin\PackageIOInterface');
+        $package_io     = $this->getMock('Hostnet\Component\EntityPlugin\PackageContentInterface');
         $entity_package = new EntityPackage(
             new Package('hostnet/foo', 1.0, 1.0),
             $package_io
         );
-        $this->assertEquals($package_io, $entity_package->getPackageIO());
+        $this->assertEquals($package_io, $entity_package->getPackageContent());
     }
 
     public function testGetRequires()
@@ -32,7 +32,7 @@ class EntityPackageTest extends \PHPUnit_Framework_TestCase
         $package        = new Package('hostnet/foo', 1.0, 1.0);
         $entity_package = new EntityPackage(
             $package,
-            $this->getMock('Hostnet\Component\EntityPlugin\PackageIOInterface')
+            $this->getMock('Hostnet\Component\EntityPlugin\PackageContentInterface')
         );
         $this->assertEquals(array(), $entity_package->getRequires());
         $link = new Link('hostnet/a', 'hostnet/foo');
@@ -49,7 +49,7 @@ class EntityPackageTest extends \PHPUnit_Framework_TestCase
         $package        = new Package('hostnet/foo', 1.0, 1.0);
         $entity_package = new EntityPackage(
             $package,
-            $this->getMock('Hostnet\Component\EntityPlugin\PackageIOInterface')
+            $this->getMock('Hostnet\Component\EntityPlugin\PackageContentInterface')
         );
         $this->assertEquals(array(), $entity_package->getSuggests());
         $link = new Link('hostnet/a', 'hostnet/foo');
@@ -66,16 +66,16 @@ class EntityPackageTest extends \PHPUnit_Framework_TestCase
         $package        = new Package('hostnet/foo', 1.0, 1.0);
         $entity_package = new EntityPackage(
             $package,
-            $this->getMock('Hostnet\Component\EntityPlugin\PackageIOInterface')
+            $this->getMock('Hostnet\Component\EntityPlugin\PackageContentInterface')
         );
 
         $child_a = new EntityPackage(
             new Package('hostnet/a', 1.0, 1.0),
-            $this->getMock('Hostnet\Component\EntityPlugin\PackageIOInterface')
+            $this->getMock('Hostnet\Component\EntityPlugin\PackageContentInterface')
         );
         $child_b = new EntityPackage(
             new Package('hostnet/b', 1.0, 1.0),
-            $this->getMock('Hostnet\Component\EntityPlugin\PackageIOInterface')
+            $this->getMock('Hostnet\Component\EntityPlugin\PackageContentInterface')
         );
 
         $this->assertEquals(array(), $entity_package->getRequiredPackages());
@@ -96,16 +96,16 @@ class EntityPackageTest extends \PHPUnit_Framework_TestCase
         $package        = new Package('hostnet/foo', 1.0, 1.0);
         $entity_package = new EntityPackage(
             $package,
-            $this->getMock('Hostnet\Component\EntityPlugin\PackageIOInterface')
+            $this->getMock('Hostnet\Component\EntityPlugin\PackageContentInterface')
         );
 
         $parent_a = new EntityPackage(
             new Package('hostnet/a', 1.0, 1.0),
-            $this->getMock('Hostnet\Component\EntityPlugin\PackageIOInterface')
+            $this->getMock('Hostnet\Component\EntityPlugin\PackageContentInterface')
         );
         $parent_b = new EntityPackage(
             new Package('hostnet/b', 1.0, 1.0),
-            $this->getMock('Hostnet\Component\EntityPlugin\PackageIOInterface')
+            $this->getMock('Hostnet\Component\EntityPlugin\PackageContentInterface')
         );
         $this->assertEquals(array(), $entity_package->getDependentPackages());
         $entity_package->addDependentPackage($parent_a);

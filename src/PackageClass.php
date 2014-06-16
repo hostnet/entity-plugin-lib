@@ -68,6 +68,11 @@ class PackageClass
         return substr($this->class, 0, $pos);
     }
 
+    public function getAlias()
+    {
+        return str_replace('\\', '', $this->getNamespaceName());
+    }
+
     /**
      * Is this a trait? Assumes you have your naming in order.
      * @return boolean

@@ -21,13 +21,11 @@ class TypedParameters
      */
     public function anArray(array $foo)
     {
-
     }
 
     /**
      */
     public function aNamespacedArgument(ReflectionGenerator $generator)
     {
-
     }
 }

@@ -2,7 +2,7 @@
 namespace {{ namespace }};
 
 {% for use_statement in use_statements %}
-use {{ use_statement.namespace }}\Generated\{{ class_name }}TraitInterface as {{ use_statement.alias }};
+use {{ use_statement.namespaceName }}\Generated\{{ class_name }}TraitInterface as {{ use_statement.alias }};
 {% endfor %}
 
 /**
@@ -10,8 +10,9 @@ use {{ use_statement.namespace }}\Generated\{{ class_name }}TraitInterface as {{
  * This is a combined interface that will automatically extend to contain the required functions.
  */
 interface {{ class_name }}Interface extends
-    {% for use_statement in use_statements %}
-{{ use_statement.alias }}{% if not loop.last %},{% endif %}
+{% for use_statement in use_statements %}
+    {{ use_statement.alias }}{% if not loop.last %},
+{% endif %}
 {% endfor %}
 
 {

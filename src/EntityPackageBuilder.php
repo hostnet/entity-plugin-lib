@@ -42,9 +42,10 @@ class EntityPackageBuilder
 
     private function addPackage(PackageInterface $package)
     {
-        $package_io = new PackageIO($this->resolver->getSourcePath($package), new ClassMapper());
+        $class_map       = (new ClassMapper())->createClassMap($this->resolver->getSourcePath($package));
+        $package_content = new PackageContent($class_map);
 
-        $this->tree_nodes[$package->getName()] = new EntityPackage($package, $package_io);
+        $this->tree_nodes[$package->getName()] = new EntityPackage($package, $package_content);
     }
 
     /**

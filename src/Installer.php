@@ -189,7 +189,7 @@ class Installer extends LibraryInstaller implements PackagePathResolver
                 '    - Preparing package <info>' . $entity_package->getPackage()
                     ->getName() . '</info>'
             );
-            foreach ($entity_package->getPackageIO()->getEntities() as $entity) {
+            foreach ($entity_package->getPackageContent()->getEntities() as $entity) {
                 $this->writeIfVeryVerbose(
                     '        - Preparing interface and abstract trait for <info>' . $entity->getName() . '</info>'
                 );
@@ -200,7 +200,7 @@ class Installer extends LibraryInstaller implements PackagePathResolver
                 );
                 $generator->generate();
             }
-            foreach ($entity_package->getPackageIO()->getEntityTraits() as $entity) {
+            foreach ($entity_package->getPackageContent()->getEntityTraits() as $entity) {
                 $this->writeIfVeryVerbose(
                     '        - Preparing interface and abstract trait for <info>' . $entity->getName() . '</info>'
                 );
@@ -227,13 +227,13 @@ class Installer extends LibraryInstaller implements PackagePathResolver
                 '    - Generating for package <info>' . $entity_package->getPackage()
                     ->getName() . '</info>'
             );
-            foreach ($entity_package->getPackageIO()->getEntities() as $entity) {
+            foreach ($entity_package->getPackageContent()->getEntities() as $entity) {
                 $this->writeIfVeryVerbose(
                     '        - Generating interface and abstract trait for <info>' . $entity->getName() . '</info>'
                 );
                 ReflectionGenerator::generateInIsolation($entity->getName());
             }
-            foreach ($entity_package->getPackageIO()->getEntityTraits() as $entity) {
+            foreach ($entity_package->getPackageContent()->getEntityTraits() as $entity) {
                 $this->writeIfVeryVerbose(
                     '        - Generating interface and abstract trait for <info>' . $entity->getName() . '</info>'
                 );

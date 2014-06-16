@@ -20,7 +20,7 @@ class ReflectionGenerator
 
     /**dirname
      * @param \Twig_Environment $environment
-     * @param PackageIOInterface $package_io
+     * @param PackageContentInterface $package_io
      * @param PackageClass $package_class
      */
     public function __construct(
