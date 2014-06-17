@@ -58,7 +58,6 @@ class CompoundGenerator
             $traits          = array_merge($required_traits, $optional_traits);
 
             $this->generateTrait($package_class, $traits);
-            $this->generateInterface($package_class, $traits);
         }
     }
 
@@ -157,39 +156,6 @@ class CompoundGenerator
 
         $this->writer->writeFile(
             $package_class->getGeneratedDirectory() . $short_name . 'Traits.php',
-            $data
-        );
-    }
-
-    /**
-     * Generates Generated/<class_name>Interfaces.php
-     *
-     * @param string $relative_path
-     *            The relative path to the directory to generate the interface in
-     * @param string $class_name
-     * @param array $traits
-     */
-    private function generateInterface(PackageClass $package_class, array $traits)
-    {
-        $short_name = $package_class->getShortName();
-
-        $this->writeIfVeryVerbose(
-            '        - Generating combined interface for <info>' . $package_class->getName() . '</info>'
-        );
-
-        $generated_namespace = $package_class->getGeneratedNamespaceName();
-
-        $data = $this->environment->render(
-            'combined_interface.php.twig',
-            array(
-                'class_name' => $short_name,
-                'namespace' => $generated_namespace,
-                'use_statements' => $traits
-            )
-        );
-
-        $this->writer->writeFile(
-            $package_class->getGeneratedDirectory() . $short_name . 'Interface.php',
             $data
         );
     }

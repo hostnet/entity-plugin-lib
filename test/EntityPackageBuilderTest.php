@@ -54,6 +54,9 @@ class EntityPackageBuilderTest extends \PHPUnit_Framework_TestCase
         $bar->setRequires(array(
             new Link('hostnet/bar', 'hostnet/foo')
         ));
+        $bar->setSuggests(array(
+            'Very useless text...'
+        ));
 
         return array(
             array(

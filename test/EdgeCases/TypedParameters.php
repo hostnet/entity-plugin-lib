@@ -3,8 +3,20 @@ namespace Hostnet\EdgeCases\Entity;
 
 use Hostnet\Component\EntityPlugin\ReflectionGenerator;
 
+trait extra
+{
+    /**
+     * I am from a trait
+     */
+    public function extra()
+    {
+    }
+}
+
 class TypedParameters
 {
+    use extra;
+
     /**
      */
     public function oneParameter(\DateTime $date)

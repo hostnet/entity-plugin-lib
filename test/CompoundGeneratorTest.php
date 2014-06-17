@@ -39,11 +39,8 @@ class CompoundGeneratorTest extends \PHPUnit_Framework_TestCase
         ];
         $writes = [
             'src/Entity/Generated/ProductTraits.php' => 'ProductTraits.php',
-            'src/Entity/Generated/ProductInterface.php' => 'ProductInterface.php',
             'src/Entity/Generated/ClientTraits.php' => 'ClientTraits.php',
-            'src/Entity/Generated/ClientInterface.php' => 'ClientInterface.php',
             'src/Entity/Generated/ContractTraits.php' => 'ContractTraits.php',
-            'src/Entity/Generated/ContractInterface.php' => 'ContractInterface.php',
         ];
 
         $entity_package_content = new PackageContent($entities);

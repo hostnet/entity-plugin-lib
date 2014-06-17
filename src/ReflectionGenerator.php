@@ -40,21 +40,19 @@ class ReflectionGenerator
      */
     public function generate()
     {
-        $trait_or_class_name = $this->package_class->getShortName();
-        $interface_name      = $this->getInterfaceName($trait_or_class_name);
+        $class_name          = $this->package_class->getShortName();
         $generated_namespace = $this->package_class->getGeneratedNamespaceName();
 
         $params = array(
-            'trait_or_class_name' => $trait_or_class_name,
-            'name'                => $interface_name,
-            'namespace'           => $generated_namespace,
-            'type_hinter'         => new TypeHinter(),
-            'methods'             => $this->getMethods($this->package_class->getNamespaceName(), $trait_or_class_name)
+            'class_name'  => $class_name,
+            'namespace'   => $generated_namespace,
+            'type_hinter' => new TypeHinter(),
+            'methods'     => $this->getMethods($this->package_class->getNamespaceName(), $class_name)
         );
 
-        $interface = $this->environment->render('trait_interface.php.twig', $params);
+        $interface = $this->environment->render('interface.php.twig', $params);
         $path      = $this->package_class->getGeneratedDirectory();
-        $this->writer->writeFile($path . $interface_name . '.php', $interface);
+        $this->writer->writeFile($path . $class_name . 'Interface.php', $interface);
     }
 
     /**
@@ -75,15 +73,6 @@ class ReflectionGenerator
         }
 
         return $methods;
-    }
-
-    private function getInterfaceName($trait_or_class_name)
-    {
-        if ($this->package_class->isTrait()) {
-            return $trait_or_class_name . 'Interface';
-        } else {
-            return $trait_or_class_name . 'TraitInterface';
-        }
     }
 
     /**
@@ -109,10 +98,19 @@ class ReflectionGenerator
     {
         // enable autoloading
         // @codeCoverageIgnoreStart
-        if (file_exists(__DIR__ . '/../vendor/autoload.php')) {
-            include __DIR__ . '/../vendor/autoload.php';
-        } else {
+        if (file_exists(getcwd() . '/vendor/autoload.php')) {
+            // If symlinked this is enables testing using ./composer.phar dump-autoload
+            // in the project root directory.
+            include getcwd() . '/vendor/autoload.php';
+        } elseif (file_exists(__DIR__ . '/../../../autoload.php')) {
+            // We are loaded in a parent project and inside the vendor directory.
+            // Test this before a standalone checkout to not accidentially pick
+            // the autoload created by running ./composer.phar dump-autmoload in
+            // or install in the vendor directory for this package.
             include __DIR__ . '/../../../autoload.php';
+        } else {
+            // Stand alone checkout
+            include __DIR__ . '/../vendor/autoload.php';
         }
         // @codeCoverageIgnoreEnd
 

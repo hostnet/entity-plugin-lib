@@ -8,8 +8,6 @@ namespace Hostnet\Component\EntityPlugin;
  * Why on earth would we do this?
  * Client\Entity\Client uses Client\Entity\Generated\ClientTraits
  * Client\Entity\Generated\ClientTraits uses AdvancedClient\Entity\ClientTrait
- * AdvancedClient\Entity\ClientTrait uses Client\Entity\Generated\AbstractClientTrait
- * Client\Entity\Generated\AbstractClientTrait is generated based on reflection of Client\Entity\Client
  * This is a circle. There are others. Thus we generate empty files first where we have to.
  *
  * @author Nico Schoenmaker <nschoenmaker@hostnet.nl>
