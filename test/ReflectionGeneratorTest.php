@@ -20,18 +20,11 @@ class ReflectionGeneratorTest extends \PHPUnit_Framework_TestCase
      */
     public function testGenerateInIsolation(PackageClass $package_class)
     {
-        $short_name = $package_class->getShortName();
-
-        if (strpos($short_name, 'Trait') === false) {
-            $trait = 'Trait';
-        } else {
-            $trait = '';
-        }
-
+        $short_name    = $package_class->getShortName();
         $class         = $package_class->getName();
         $base_dir      = __DIR__ . '/EdgeCases/';
-        $expected_file = $base_dir . $short_name . $trait . 'Interface.expected.php';
-        $actual_file   = $base_dir . 'Generated/' . $short_name . $trait . 'Interface.php';
+        $expected_file = $base_dir . $short_name . 'Interface.expected.php';
+        $actual_file   = $base_dir . 'Generated/' . $short_name . 'Interface.php';
         $expected      = file_get_contents($expected_file);
 
         ReflectionGenerator::generateInIsolation($class);
@@ -73,9 +66,9 @@ class ReflectionGeneratorTest extends \PHPUnit_Framework_TestCase
                             $contents = file_get_contents(
                                 __DIR__ . '/EdgeCases/' . $short_name . 'Interface.expected.php'
                             );
-                        } elseif ($file === $short_name . 'TraitInterface.php') {
+                        } elseif ($file === $short_name . 'EntityTraitInterface.php') {
                             $contents = file_get_contents(
-                                __DIR__ . '/EdgeCases/' . $short_name . 'TraitInterface.expected.php'
+                                __DIR__ . '/EdgeCases/' . $short_name . 'EntityTraitInterface.expected.php'
                             );
                         } else {
                             $that->fail('Unexpected file ' . $file);
@@ -105,12 +98,6 @@ class ReflectionGeneratorTest extends \PHPUnit_Framework_TestCase
             ),
             array(
                 new PackageClass('Hostnet\EdgeCases\Entity\TypedParameters', __DIR__ . '/EdgeCases/TypedParameters.php')
-            ),
-            array(
-                new PackageClass(
-                    'Hostnet\EdgeCases\Entity\TraitsShouldRockTrait',
-                    __DIR__ . '/EdgeCases/TraitsShouldRockTrait.php'
-                )
             )
         );
     }
@@ -129,12 +116,6 @@ class ReflectionGeneratorTest extends \PHPUnit_Framework_TestCase
                         'Hostnet\EdgeCases\Entity\TypedParameters',
                         __DIR__ . '/EdgeCases/TypedParameters.php'
                     )
-                ),
-                array(
-                    new PackageClass(
-                        'Hostnet\EdgeCases\Entity\TraitsShouldRockTrait',
-                        __DIR__ . '/EdgeCases/TraitsShouldRockTrait.php'
-                    )
                 )
         );
     }
@@ -145,7 +126,7 @@ class ReflectionGeneratorTest extends \PHPUnit_Framework_TestCase
         $base_dir = __DIR__ . '/EdgeCases/Generated/';
         ReflectionGenerator::main('Hostnet\EdgeCases\Entity\MultipleArguments');
 
-        unlink($base_dir . 'MultipleArgumentsTraitInterface.php');
+        unlink($base_dir . 'MultipleArgumentsInterface.php');
         rmdir($base_dir);
     }
 }

@@ -6,4 +6,7 @@ php:
   - hhvm
 
 before_script:
-    - composer install --prefer-source
+    - composer install --prefer-source --dev
+
+script:
+    - vendor/bin/phpunit

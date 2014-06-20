@@ -176,7 +176,7 @@ class Installer extends LibraryInstaller implements PackagePathResolver
     }
 
     /**
-     * Phase 2: Ensure all interfaces and traits exist
+     * Ensure all interfaces and traits exist
      *
      * @see EmptyGenerator
      * @param EntityPackageBuilder $graph
@@ -191,18 +191,7 @@ class Installer extends LibraryInstaller implements PackagePathResolver
             );
             foreach ($entity_package->getPackageContent()->getEntities() as $entity) {
                 $this->writeIfVeryVerbose(
-                    '        - Preparing interface and abstract trait for <info>' . $entity->getName() . '</info>'
-                );
-                $generator = new EmptyGenerator(
-                    $this->getTwigEnvironment(),
-                    new Writer(),
-                    $entity
-                );
-                $generator->generate();
-            }
-            foreach ($entity_package->getPackageContent()->getEntityTraits() as $entity) {
-                $this->writeIfVeryVerbose(
-                    '        - Preparing interface and abstract trait for <info>' . $entity->getName() . '</info>'
+                    '        - Generating empty interface for <info>' . $entity->getName() . '</info>'
                 );
                 $generator = new EmptyGenerator(
                     $this->getTwigEnvironment(),
@@ -215,7 +204,7 @@ class Installer extends LibraryInstaller implements PackagePathResolver
     }
 
     /**
-     * Phase 3: Ensure all interfaces and traits are filled with correct methods
+     * Ensure all interfaces and traits are filled with correct methods
      *
      * @param EntityPackageBuilder $graph
      */
@@ -229,13 +218,7 @@ class Installer extends LibraryInstaller implements PackagePathResolver
             );
             foreach ($entity_package->getPackageContent()->getEntities() as $entity) {
                 $this->writeIfVeryVerbose(
-                    '        - Generating interface and abstract trait for <info>' . $entity->getName() . '</info>'
-                );
-                ReflectionGenerator::generateInIsolation($entity->getName());
-            }
-            foreach ($entity_package->getPackageContent()->getEntityTraits() as $entity) {
-                $this->writeIfVeryVerbose(
-                    '        - Generating interface and abstract trait for <info>' . $entity->getName() . '</info>'
+                    '        - Generating interface for <info>' . $entity->getName() . '</info>'
                 );
                 ReflectionGenerator::generateInIsolation($entity->getName());
             }

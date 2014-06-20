@@ -6,12 +6,11 @@ namespace Hostnet\Component\EntityPlugin;
  * As the class name tells you, they are generated with a empty class body
  *
  * Why on earth would we do this?
- * Client\Entity\Client uses Client\Entity\Generated\ClientTraits
- * Client\Entity\Generated\ClientTraits uses AdvancedClient\Entity\ClientTrait
- * AdvancedClient\Entity\ClientTrait uses Client\Entity\Generated\AbstractClientTrait
- * Client\Entity\Generated\AbstractClientTrait is generated based on reflection of Client\Entity\Client
- * This is a circle. There are others. Thus we generate empty files first where we have to.
+ * In order to use reflection we have to have valid classes. So we first generate
+ * empty interfaces and traits. Secondly we fill the interfaces with their methods
+ * in process isolation.
  *
+ * @author Hidde Boomsma <hboomsma@hostnet.nl>
  * @author Nico Schoenmaker <nschoenmaker@hostnet.nl>
  */
 class EmptyGenerator extends ReflectionGenerator
