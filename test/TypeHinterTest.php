@@ -1,6 +1,18 @@
 <?php
 namespace Hostnet\Component\EntityPlugin;
 
+use \Hostnet\Component\EntityPlugin\ReflectionGenerator;
+
+function parameterHints(
+    array $array,
+    \Hostnet\Component\EntityPlugin\ReflectionGenerator $full_namespace,
+    ReflectionGenerator $namespace,
+    \DateTime $datetime,
+    \DateTime $datetime_null = null
+) {
+    return "quite useless, we only need the parameters...";
+}
+
 class TypeHinterTest extends \PHPUnit_Framework_TestCase
 {
 
@@ -15,61 +27,28 @@ class TypeHinterTest extends \PHPUnit_Framework_TestCase
 
     public function getTypeHintProvider()
     {
-        $array_param = $this->getMockBuilder('ReflectionParameter')
-            ->disableOriginalConstructor()
-            ->getMock();
-        $array_param->expects($this->once())
-            ->method('isArray')
-            ->will($this->returnValue(true));
-
-        $typed_param = $this->getMockBuilder('ReflectionParameter')
-            ->disableOriginalConstructor()
-            ->getMock();
-        $typed_param->expects($this->once())
-            ->method('isArray')
-            ->will($this->returnValue(false));
-        $typed_param->expects($this->any())
-            ->method('__toString')
-            ->will($this->returnValue('Parameter #0 [ <optional> DateTime $date ]'));
-
-        $typed_required_param = $this->getMockBuilder('ReflectionParameter')
-            ->disableOriginalConstructor()
-            ->getMock();
-        $typed_required_param->expects($this->once())
-            ->method('isArray')
-            ->will($this->returnValue(false));
-        $typed_required_param->expects($this->any())
-            ->method('__toString')
-            ->will($this->returnValue('Parameter #0 [ <required> DateTime $date ]'));
-
-        $namespaced_param = $this->getMockBuilder('ReflectionParameter')
-            ->disableOriginalConstructor()
-            ->getMock();
-        $namespaced_param->expects($this->once())
-            ->method('isArray')
-            ->will($this->returnValue(false));
-        $namespaced_param->expects($this->any())
-            ->method('__toString')
-            ->will($this->returnValue(
-                'Parameter #0 [ <required> Hostnet\Component\EntityPlugin\ReflectionGenerator $generator ]'
-            ));
         return array(
             array(
-                $array_param,
+                new \ReflectionParameter('Hostnet\Component\EntityPlugin\parameterHints', 'array'),
                 'array '
             ),
             array(
-                $typed_param,
+                new \ReflectionParameter('Hostnet\Component\EntityPlugin\parameterHints', 'datetime_null'),
                 '\DateTime '
             ),
             array(
-                $typed_required_param,
+                new \ReflectionParameter('Hostnet\Component\EntityPlugin\parameterHints', 'datetime'),
                 '\DateTime '
             ),
             array(
-                $namespaced_param,
+                new \ReflectionParameter('Hostnet\Component\EntityPlugin\parameterHints', 'namespace'),
+                '\Hostnet\Component\EntityPlugin\ReflectionGenerator '
+            ),
+            array(
+                new \ReflectionParameter('Hostnet\Component\EntityPlugin\parameterHints', 'full_namespace'),
                 '\Hostnet\Component\EntityPlugin\ReflectionGenerator '
             )
+
         );
     }
 }
