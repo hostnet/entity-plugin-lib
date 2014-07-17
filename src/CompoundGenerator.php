@@ -94,31 +94,25 @@ class CompoundGenerator
      *
      * @param EntityPackage $entity_package
      * @param string $class_name
-     * @param bool $has_recursed Is this the first time this function is called, or is it recursing.
+     * @param array $checked list of checked packages to prevent recusrion errors
      * @return array[]UseStatement
      */
     private function recursivelyFindUseStatementsFor(
         EntityPackage $entity_package,
         PackageClass $package_class,
-        $has_recursed = false
+        array $checked = []
     ) {
         $result = array();
         foreach ($entity_package->getDependentPackages() as $dependent_package) {
             /* @var $package EntityPackage */
-            $use_statements = $this->recursivelyFindUseStatementsFor($dependent_package, $package_class, false);
-            $result         = array_merge($result, $use_statements);
+            if (!in_array($dependent_package, $checked)) {
+                $checked[]      = $dependent_package;
+                $use_statements = $this->recursivelyFindUseStatementsFor($dependent_package, $package_class, $checked);
+                $result         = array_merge($result, $use_statements);
+            }
         }
         $package_class = $entity_package->getPackageContent()->getEntityOrEntityTrait($package_class->getShortName());
         if ($package_class) {
-            if ($has_recursed) {
-                $this->writeIfDebug(
-                    '          Injected <info>' .
-                    $package_class->getName() .
-                    '</info> from <info>' .
-                    $entity_package->getPackage()->getName() .
-                    '</info>.'
-                );
-            }
             $result[] = $package_class;
         } else {
             $this->writeIfDebug('          No trait in <info>' . $entity_package->getPackage()->getName() . '</info>.');
