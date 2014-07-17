@@ -26,7 +26,9 @@ class EntityPackageBuilder
         foreach ($this->tree_nodes as $entity_package) {
 
             /* @var $entity_package EntityPackage */
-            $links = array_merge($entity_package->getRequires(), $entity_package->getSuggests());
+            $links = array_merge($entity_package->getRequires(), array_map(function ($str) use ($entity_package) {
+                return new \Composer\Package\Link($entity_package->getPackage()->getName(), $str);
+            }, array_keys($entity_package->getSuggests())));
 
             foreach ($links as $link) {
                 if ($link instanceof \Composer\Package\Link) {

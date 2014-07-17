@@ -49,13 +49,14 @@ class EntityPackageBuilderTest extends \PHPUnit_Framework_TestCase
             new Link('hostnet/requires-external', 'hostnet/not-linked')
         ));
 
-        $foo = new Package('hostnet/foo', 1, 1);
-        $bar = new Package('hostnet/bar', 1, 1);
+        $foo    = new Package('hostnet/foo', 1, 1);
+        $bar    = new Package('hostnet/bar', 1, 1);
+        $foobar = new Package('hostnet/foobar', 1, 1);
         $bar->setRequires(array(
             new Link('hostnet/bar', 'hostnet/foo')
         ));
-        $bar->setSuggests(array(
-            'Very useless text...'
+        $foo->setSuggests(array(
+            'hostnet/foobar' => 'Very useless text...'
         ));
 
         return array(
@@ -79,10 +80,13 @@ class EntityPackageBuilderTest extends \PHPUnit_Framework_TestCase
             array(
                 array(
                     $foo,
-                    $bar
+                    $bar,
+                    $foobar
                 ),
                 array(
-                    'hostnet/foo' => array(),
+                    'hostnet/foo' => array(
+                        $foobar
+                    ),
                     'hostnet/bar' => array(
                         $foo
                     )
