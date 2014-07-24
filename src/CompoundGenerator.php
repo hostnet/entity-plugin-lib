@@ -55,7 +55,7 @@ class CompoundGenerator
             );
             $required_traits = $this->recursivelyFindUseStatementsFor($this->entity_package, $package_class);
             $optional_traits = $this->findUseStatementsForOptionalTraits($this->entity_package, $package_class);
-            $traits          = array_merge($required_traits, $optional_traits);
+            $traits          = array_unique(array_merge($required_traits, $optional_traits), SORT_REGULAR);
 
             $this->generateTrait($package_class, $traits);
         }
@@ -86,7 +86,7 @@ class CompoundGenerator
                 );
             }
         }
-        return array_unique($result, SORT_REGULAR); // remove any duplicate use statements
+        return $result;
     }
     /**
      * Gives all the entities to be required in the compound interface
