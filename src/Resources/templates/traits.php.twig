@@ -1,7 +1,8 @@
 <?php
 namespace {{ namespace }};
-{%if use_statements | length %}
-{% for use_statement in use_statements if use_statement.isTrait() %}
+{% if use_statements | length %}
+
+{% for use_statement in use_statements %}
 use {{ use_statement.name}} as {{ use_statement.alias }};
 {% endfor %}
 {% endif %}
@@ -13,7 +14,7 @@ use {{ use_statement.name}} as {{ use_statement.alias }};
  */
 trait {{ class_name }}Traits
 {
-{% for use_statement in use_statements if use_statement.isTrait() %}
+{% for use_statement in use_statements %}
     use {{ use_statement.alias }};
 {% endfor %}
 }

@@ -1,5 +1,6 @@
 <?php
 namespace Hostnet\Contract\Entity\Generated;
+
 use Hostnet\Contract\Entity\ContractWhenClientTrait as HostnetContractEntityBecauseClient;
 
 /**
