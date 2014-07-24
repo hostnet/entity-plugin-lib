@@ -86,7 +86,7 @@ class CompoundGenerator
                 );
             }
         }
-        return $result;
+        return array_unique($result, SORT_REGULAR); // remove any duplicate use statements
     }
     /**
      * Gives all the entities to be required in the compound interface

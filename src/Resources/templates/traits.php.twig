@@ -1,11 +1,12 @@
 <?php
 namespace {{ namespace }};
 {%if use_statements | length %}
+
 {% for use_statement in use_statements if use_statement.isTrait() %}
 use {{ use_statement.name}} as {{ use_statement.alias }};
 {% endfor %}
-{% endif %}
 
+{% endif %}
 /**
  * Trait of traits generated for {{ class_name }}
  * This is the guy that the main class needs to require, and ensures that everything is glued
