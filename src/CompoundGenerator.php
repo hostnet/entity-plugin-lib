@@ -144,7 +144,7 @@ class CompoundGenerator
             array(
                 'class_name' => $short_name,
                 'namespace' => $generated_namespace,
-                'use_statements' => $traits
+                'use_statements' => array_filter($traits, function (PackageClass $stmt) { return $stmt->isTrait();})
             )
         );
 
