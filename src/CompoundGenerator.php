@@ -72,7 +72,11 @@ class CompoundGenerator
         foreach ($traits as $trait) {
             /* @var $trait OptionalPackageTrait */
             $requirement = $trait->getRequirement();
-            if ($content->hasEntity($requirement)) {
+            $found = false;
+            foreach ($entity_package->getFlattenedRequiredPackages() as $required_entity_package) {
+                $found = $found || $required_entity_package->getPackageContent()->hasEntity($requirement);
+            }
+            if ($found) {
                 $result[] = $trait;
                 $this->writeIfDebug(
                     'Injected <info>' . $trait->getName() .   '</info> from <info>' .

@@ -10,7 +10,7 @@ function parameterHints(
     \DateTime $datetime,
     \DateTime $datetime_null = null
 ) {
-    return "quite useless, we only need the parameters...";
+    return 'quite useless, we only need the parameters...';
 }
 
 class TypeHinterTest extends \PHPUnit_Framework_TestCase

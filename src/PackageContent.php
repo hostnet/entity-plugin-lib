@@ -162,10 +162,14 @@ class PackageContent implements PackageContentInterface
 
     public function hasEntity($shortName)
     {
+        if ($this->entities === null) {
+            $this->warmCache();
+        }
         foreach ($this->entities as $entity) {
             if ($entity->getShortName() == $shortName) {
                 return true;
             }
         }
+        return false;
     }
 }
