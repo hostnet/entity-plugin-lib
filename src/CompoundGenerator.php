@@ -83,7 +83,7 @@ class CompoundGenerator
             } else {
                 $this->writeIfDebug(
                     'Not injected <info>' . $trait->getName() .   '</info> from <info>' .
-                    $entity_package->getPackage()->getName() . ' because ' . $requirement . 'is not found.</info>.'
+                    $entity_package->getPackage()->getName() . ' because ' . $requirement . ' is not found</info>.'
                 );
             }
         }
@@ -92,7 +92,7 @@ class CompoundGenerator
 
     /**
      * @param EntityPackage $entity_package
-     * @param unknown_type $requirement
+     * @param string $requirement
      * @return boolean
      */
     private function doesEntityExistInTree(EntityPackage $entity_package, $requirement)
