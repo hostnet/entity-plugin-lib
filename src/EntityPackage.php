@@ -16,7 +16,7 @@ class EntityPackage
 
     private $package;
 
-    private $package_io;
+    private $package_content;
 
     private $required_packages = array();
 
@@ -78,5 +78,21 @@ class EntityPackage
     public function getSuggests()
     {
         return $this->package->getSuggests();
+    }
+
+    /**
+     * Flattens the dependency tree of this package.
+     * All the packages it directly or indirectly references will be uniquely in this list.
+     * @return EntityPackage[]
+     */
+    public function getFlattenedRequiredPackages()
+    {
+        $result = [];
+        foreach ($this->getRequiredPackages() as $dependency) {
+            $name          = $dependency->getPackage()->getName();
+            $result[$name] = $dependency;
+            $result        = array_merge($result, $dependency->getFlattenedRequiredPackages());
+        }
+        return $result;
     }
 }

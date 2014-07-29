@@ -31,7 +31,7 @@ class PackageContentTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(array_values($entity_traits), $content->getEntityTraits(), 'Entity traits');
 
         // test optional traits
-        foreach(array_keys($entities) as $name) {
+        foreach (array_keys($entities) as $name) {
             if (!isset($optional_entity_traits[$name])) {
                 $result = [];
             } else {
@@ -133,5 +133,11 @@ class PackageContentTest extends \PHPUnit_Framework_TestCase
     {
         $io = new PackageContent((new ClassMapper())->createClassMap(__DIR__));
         $this->assertNull($io->getEntityOrEntityTrait('DoesNotExist'));
+    }
+
+    public function testHasEntityDoesCacheWarm()
+    {
+        $io = new PackageContent([]);
+        $this->assertFalse($io->hasEntity('Foo'));
     }
 }
