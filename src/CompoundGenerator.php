@@ -72,11 +72,8 @@ class CompoundGenerator
         foreach ($traits as $trait) {
             /* @var $trait OptionalPackageTrait */
             $requirement = $trait->getRequirement();
-            $found = false;
-            foreach ($entity_package->getFlattenedRequiredPackages() as $required_entity_package) {
-                $found = $found || $required_entity_package->getPackageContent()->hasEntity($requirement);
-            }
-            if ($found) {
+            $found       = false;
+            if ($this->doesEntityExistInTree($entity_package, $requirement)) {
                 $result[] = $trait;
                 $this->writeIfDebug(
                     'Injected <info>' . $trait->getName() .   '</info> from <info>' .
@@ -92,6 +89,22 @@ class CompoundGenerator
         }
         return $result;
     }
+
+    /**
+     * @param EntityPackage $entity_package
+     * @param unknown_type $requirement
+     * @return boolean
+     */
+    private function doesEntityExistInTree(EntityPackage $entity_package, $requirement)
+    {
+        foreach ($entity_package->getFlattenedRequiredPackages() as $required_entity_package) {
+            if ($required_entity_package->getPackageContent()->hasEntity($requirement)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     /**
      * Gives all the entities to be required in the compound interface
      * Also generates a unique alias for them

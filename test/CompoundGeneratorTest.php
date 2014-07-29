@@ -22,8 +22,7 @@ class CompoundGeneratorTest extends \PHPUnit_Framework_TestCase
         $io          = $this->getMock('Composer\IO\IOInterface');
         $loader      = new \Twig_Loader_Filesystem(__DIR__ . '/../src/Resources/templates/');
         $environment = new \Twig_Environment($loader);
-
-        $generator      = new CompoundGenerator($io, $environment, $entity_package, $writer);
+        $generator   = new CompoundGenerator($io, $environment, $entity_package, $writer);
         $generator->generate();
     }
 
@@ -31,7 +30,7 @@ class CompoundGeneratorTest extends \PHPUnit_Framework_TestCase
     {
         // Test case 1: Empty test case
         $empty_package_content = new PackageContent([]);
-        $writer_empty = $this->mockWriter([]);
+        $writer_empty          = $this->mockWriter([]);
 
         $entities = [
             'Hostnet\Product\Entity\Product' => 'src/Entity/Product.php',
@@ -39,18 +38,18 @@ class CompoundGeneratorTest extends \PHPUnit_Framework_TestCase
             'Hostnet\Contract\Entity\ContractWhenClientTrait' => 'src/Entity/ContractWhenClientTrait.php',
             'Hostnet\Contract\Entity\ContractWhenEasterTrait' => 'src/Entity/ContractWhenEasterTrait.php'
         ];
-        $writes = [
+        $writes   = [
             'src/Entity/Generated/ProductTraits.php' => 'ProductTraits.php',
             'src/Entity/Generated/ContractTraits.php' => 'ContractTraits.php',
         ];
 
         $entity_package_content = new PackageContent($entities);
-        $entity_package = $this->mockEntityPackage($entity_package_content);
+        $entity_package         = $this->mockEntityPackage($entity_package_content);
 
         $suggested_package_content = new PackageContent(['Hostnet\Client\Entity\Client' => 'src/Entity/Client.php']);
         $entity_package->addRequiredPackage($this->mockEntityPackage($suggested_package_content));
 
-        $writer       = $this->mockWriter($writes);
+        $writer = $this->mockWriter($writes);
 
         return [
             [$this->mockEntityPackage($empty_package_content), $writer_empty],

@@ -88,9 +88,10 @@ class EntityPackage
     public function getFlattenedRequiredPackages()
     {
         $result = [];
-        foreach($this->getRequiredPackages() as $dependency) {
-            $result[$dependency->getPackage()->getName()] = $dependency;
-            $result = array_merge($result, $dependency->getFlattenedRequiredPackages());
+        foreach ($this->getRequiredPackages() as $dependency) {
+            $name          = $dependency->getPackage()->getName();
+            $result[$name] = $dependency;
+            $result        = array_merge($result, $dependency->getFlattenedRequiredPackages());
         }
         return $result;
     }
