@@ -2,7 +2,7 @@
     "name": "hostnet/entity-plugin-lib",
     "type": "composer-plugin",
     "description": "Installer for all the Hostnet Doctrine entity libraries",
-    "license": "proprietary",
+    "license": "MIT",
     "require": {
         "php": ">=5.4",
         "twig/twig": "1.*, >=1.13",
