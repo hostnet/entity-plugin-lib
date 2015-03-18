@@ -14,13 +14,13 @@ class ReflectionGenerator
 {
     private $environment;
 
-    private $package_io;
+    private $writer;
 
     private $package_class;
 
-    /**dirname
+    /**
      * @param \Twig_Environment $environment
-     * @param PackageContentInterface $package_io
+     * @param WriterInterface $writer
      * @param PackageClass $package_class
      */
     public function __construct(
@@ -47,7 +47,7 @@ class ReflectionGenerator
             'class_name'  => $class_name,
             'namespace'   => $generated_namespace,
             'type_hinter' => new TypeHinter(),
-            'methods'     => $this->getMethods($this->package_class->getNamespaceName(), $class_name)
+            'methods'     => $this->getMethods()
         ];
 
         $interface = $this->environment->render('interface.php.twig', $params);

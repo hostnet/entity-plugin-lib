@@ -19,10 +19,7 @@ class PackageContent implements PackageContentInterface
     private $service_traits         = null;
 
     /**
-     *
-     * @param String $path
-     * @param ClassMapperInterface $class_mapper
-     *            To map the classes
+     * @param array $class_map Map keyed with class names, valued where the class can be found.
      */
     public function __construct(array $class_map)
     {
@@ -40,7 +37,7 @@ class PackageContent implements PackageContentInterface
         foreach ($this->class_map as $class => $file) {
             $package_class = new PackageClass($class, $file);
             if (strstr($class, '\\Generated\\')) {
-                $this->generated_files[] = $package_class;
+                continue;
             } elseif ($package_class->isInterface() || $package_class->isException()) {
                 // Do not generate files for interfaces or exceptions
                 continue;
