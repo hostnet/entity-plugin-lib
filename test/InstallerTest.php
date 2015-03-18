@@ -12,7 +12,12 @@ use Hostnet\Component\EntityPlugin\Mock\Installer;
 
 class InstallerTest extends \PHPUnit_Framework_TestCase
 {
+    private $working_dir;
 
+    protected function setUp()
+    {
+        $this->working_dir = __DIR__ . '/..';
+    }
 
     public function testGetInstallPath()
     {
@@ -25,7 +30,7 @@ class InstallerTest extends \PHPUnit_Framework_TestCase
 
         $package = $this->getMock('Composer\Package\PackageInterface');
         $package->expects($this->once())->method('getPrettyName')->will($this->returnValue('prettyName'));
-        $this->assertEquals('vendor/prettyName', $installer->getInstallPath($package));
+        $this->assertEquals($this->working_dir . '/vendor/prettyName', $installer->getInstallPath($package));
         $this->assertEquals(1, $installer->initialize_vendor_dir_called);
     }
 
@@ -62,6 +67,6 @@ class InstallerTest extends \PHPUnit_Framework_TestCase
 
     private function mockConfig()
     {
-        return new Config();
+        return new Config(true, $this->working_dir);
     }
 }
