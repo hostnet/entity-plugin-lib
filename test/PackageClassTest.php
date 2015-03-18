@@ -75,15 +75,15 @@ class PackageClassTest extends \PHPUnit_Framework_TestCase
 
     public function getAliasProvider()
     {
-        return array(
-            array(
+        return [
+            [
                 'Hihihi\Hahaha\Hohoho\Bluh',
                 'HihihiHahahaHohoho'
-            ),
-            array(
+            ],
+            [
                 'Hostnet\Client\Entity\Client',
                 'HostnetClientEntity'
-            )
-        );
+            ]
+        ];
     }
 }

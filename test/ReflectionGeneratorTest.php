@@ -83,41 +83,41 @@ class ReflectionGeneratorTest extends \PHPUnit_Framework_TestCase
 
     public function generateProvider()
     {
-        return array(
-            array(
+        return [
+            [
                 new PackageClass(
                     'Hostnet\EdgeCases\Entity\ConstructShouldNotBePresent',
                     __DIR__ . '/EdgeCases/ConstructShouldNotBePresent.php'
                 )
-            ),
-            array(
+            ],
+            [
                 new PackageClass(
                     'Hostnet\EdgeCases\Entity\MultipleArguments',
                     __DIR__ . '/EdgeCases/MultipleArguments.php'
                 )
-            ),
-            array(
+            ],
+            [
                 new PackageClass('Hostnet\EdgeCases\Entity\TypedParameters', __DIR__ . '/EdgeCases/TypedParameters.php')
-            )
-        );
+            ]
+        ];
     }
 
     public function generateInIsolationProvider()
     {
-        return array(
-            array(
+        return [
+            [
                     new PackageClass(
                         'Hostnet\EdgeCases\Entity\MultipleArguments',
                         __DIR__ . '/EdgeCases/MultipleArguments.php'
                     )
-                ),
-                array(
+                ],
+                [
                     new PackageClass(
                         'Hostnet\EdgeCases\Entity\TypedParameters',
                         __DIR__ . '/EdgeCases/TypedParameters.php'
                     )
-                )
-        );
+                ]
+        ];
     }
 
     public function testMain()

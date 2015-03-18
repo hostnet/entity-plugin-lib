@@ -14,7 +14,7 @@ class EntityPackageBuilder
 
     private $resolver;
 
-    private $tree_nodes = array();
+    private $tree_nodes = [];
 
     public function __construct(PackagePathResolver $resolver, array $packages)
     {

@@ -42,14 +42,14 @@ class EntityPackageTest extends \PHPUnit_Framework_TestCase
             $package,
             $this->getMock('Hostnet\Component\EntityPlugin\PackageContentInterface')
         );
-        $this->assertEquals(array(), $entity_package->getSuggests());
+        $this->assertEquals([], $entity_package->getSuggests());
         $link = new Link('hostnet/a', 'hostnet/foo');
-        $package->setSuggests(array(
+        $package->setSuggests([
             $link
-        ));
-        $this->assertEquals(array(
+        ]);
+        $this->assertEquals([
             $link
-        ), $entity_package->getSuggests());
+        ], $entity_package->getSuggests());
     }
 
     public function testAddRequiredPackage()
@@ -69,17 +69,17 @@ class EntityPackageTest extends \PHPUnit_Framework_TestCase
             $this->getMock('Hostnet\Component\EntityPlugin\PackageContentInterface')
         );
 
-        $this->assertEquals(array(), $entity_package->getRequiredPackages());
+        $this->assertEquals([], $entity_package->getRequiredPackages());
 
         $entity_package->addRequiredPackage($child_a);
-        $this->assertEquals(array(
+        $this->assertEquals([
             $child_a
-        ), $entity_package->getRequiredPackages());
+        ], $entity_package->getRequiredPackages());
         $entity_package->addRequiredPackage($child_b);
-        $this->assertEquals(array(
+        $this->assertEquals([
             $child_a,
             $child_b
-        ), $entity_package->getRequiredPackages());
+        ], $entity_package->getRequiredPackages());
     }
 
     public function testAddDependentPackage()
@@ -98,16 +98,16 @@ class EntityPackageTest extends \PHPUnit_Framework_TestCase
             new Package('hostnet/b', 1.0, 1.0),
             $this->getMock('Hostnet\Component\EntityPlugin\PackageContentInterface')
         );
-        $this->assertEquals(array(), $entity_package->getDependentPackages());
+        $this->assertEquals([], $entity_package->getDependentPackages());
         $entity_package->addDependentPackage($parent_a);
-        $this->assertEquals(array(
+        $this->assertEquals([
             $parent_a
-        ), $entity_package->getDependentPackages());
+        ], $entity_package->getDependentPackages());
         $entity_package->addDependentPackage($parent_b);
-        $this->assertEquals(array(
+        $this->assertEquals([
             $parent_a,
             $parent_b
-        ), $entity_package->getDependentPackages());
+        ], $entity_package->getDependentPackages());
     }
 
     public function testGetFlattenedRequiredPackages()

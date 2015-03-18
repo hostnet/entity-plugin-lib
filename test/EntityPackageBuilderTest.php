@@ -12,8 +12,8 @@ class EntityPackageBuilderTest extends \PHPUnit_Framework_TestCase
      */
     public function testAddsDependencies(
         array $packages,
-        array $expected_required_packages = array(),
-        array $expected_dependent_packages = array()
+        array $expected_required_packages = [],
+        array $expected_dependent_packages = []
     ) {
         $mock = $this->getMock('Hostnet\Component\EntityPlugin\PackagePathResolver');
         $mock->expects($this->any())
@@ -24,7 +24,7 @@ class EntityPackageBuilderTest extends \PHPUnit_Framework_TestCase
         $entity_packages = $builder->getEntityPackages();
 
         foreach ($expected_required_packages as $package_name => $required_packages) {
-            $actual_required = array();
+            $actual_required = [];
             foreach ($entity_packages[$package_name]->getRequiredPackages() as $requirement) {
                 $this->assertInstanceOf('Hostnet\Component\EntityPlugin\EntityPackage', $requirement);
                 $actual_required[] = $requirement->getPackage();
@@ -33,7 +33,7 @@ class EntityPackageBuilderTest extends \PHPUnit_Framework_TestCase
         }
 
         foreach ($expected_dependent_packages as $package_name => $dependent_packages) {
-            $actual_dependant = array();
+            $actual_dependant = [];
             foreach ($entity_packages[$package_name]->getDependentPackages() as $dep) {
                 $this->assertInstanceOf('Hostnet\Component\EntityPlugin\EntityPackage', $dep);
                 $actual_dependant[] = $dep->getPackage();
@@ -45,59 +45,59 @@ class EntityPackageBuilderTest extends \PHPUnit_Framework_TestCase
     public function addsDependenciesProvider()
     {
         $requires_external = new Package('hostnet/requires-external', 1, 1);
-        $requires_external->setRequires(array(
+        $requires_external->setRequires([
             new Link('hostnet/requires-external', 'hostnet/not-linked')
-        ));
+        ]);
 
         $foo    = new Package('hostnet/foo', 1, 1);
         $bar    = new Package('hostnet/bar', 1, 1);
         $foobar = new Package('hostnet/foobar', 1, 1);
-        $bar->setRequires(array(
+        $bar->setRequires([
             new Link('hostnet/bar', 'hostnet/foo')
-        ));
-        $foo->setSuggests(array(
+        ]);
+        $foo->setSuggests([
             'hostnet/foobar' => 'Very useless text...'
-        ));
+        ]);
 
-        return array(
-            array(
-                array(),
-            ),
-            array(
-                array($requires_external)
-            ),
-            array(
-                array(
+        return [
+            [
+                [],
+            ],
+            [
+                [$requires_external]
+            ],
+            [
+                [
                     $foo
-                ),
-                array(
-                    'hostnet/foo' => array()
-                ),
-                array(
-                    'hostnet/foo' => array()
-                )
-            ),
-            array(
-                array(
+                ],
+                [
+                    'hostnet/foo' => []
+                ],
+                [
+                    'hostnet/foo' => []
+                ]
+            ],
+            [
+                [
                     $foo,
                     $bar,
                     $foobar
-                ),
-                array(
-                    'hostnet/foo' => array(
+                ],
+                [
+                    'hostnet/foo' => [
                         $foobar
-                    ),
-                    'hostnet/bar' => array(
+                    ],
+                    'hostnet/bar' => [
                         $foo
-                    )
-                ),
-                array(
-                    'hostnet/foo' => array(
+                    ]
+                ],
+                [
+                    'hostnet/foo' => [
                         $bar
-                    ),
-                    'hostnet/bar' => array()
-                )
-            )
-        );
+                    ],
+                    'hostnet/bar' => []
+                ]
+            ]
+        ];
     }
 }

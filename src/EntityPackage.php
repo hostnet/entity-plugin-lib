@@ -18,9 +18,9 @@ class EntityPackage
 
     private $package_content;
 
-    private $required_packages = array();
+    private $required_packages = [];
 
-    private $dependent_packages = array();
+    private $dependent_packages = [];
 
     public function __construct(PackageInterface $package, PackageContentInterface $package_content)
     {
