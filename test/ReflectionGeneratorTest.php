@@ -55,6 +55,7 @@ class ReflectionGeneratorTest extends \PHPUnit_Framework_TestCase
             ->will(
                 $this->returnCallback(
                     function ($path, $data) use ($that, $package_class) {
+                        $contents  = null;
                         $file      = basename($path);
                         $directory = dirname($path) . '/';
 

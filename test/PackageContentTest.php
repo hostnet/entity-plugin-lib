@@ -7,7 +7,7 @@ class PackageContentTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider newPackageContentProvider
      *
-     * @param \Iterator $iterator
+     * @param array $class_map
      * @param array $entities
      * @param array $services
      * @param array $entity_traits

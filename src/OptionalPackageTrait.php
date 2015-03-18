@@ -18,7 +18,7 @@ class OptionalPackageTrait extends PackageClass
      *
      * @param string $class
      * @param string $path
-     * @param string $requirements[]
+     * @param string $requirement
      */
     public function __construct($class, $path, $requirement)
     {

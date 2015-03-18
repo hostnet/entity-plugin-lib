@@ -26,7 +26,7 @@ class Installer extends LibraryInstaller implements PackagePathResolver
     const PACKAGE_TYPE            = 'hostnet-entity';
     const EXTRA_ENTITY_BUNDLE_DIR = 'entity-bundle-dir';
 
-    private $twig_environment = false;
+    private $twig_environment = null;
 
     private $graph = null;
 

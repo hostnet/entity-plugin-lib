@@ -72,7 +72,6 @@ class CompoundGenerator
         foreach ($traits as $trait) {
             /* @var $trait OptionalPackageTrait */
             $requirement = $trait->getRequirement();
-            $found       = false;
             if ($this->doesEntityExistInTree($entity_package, $requirement)) {
                 $result[] = $trait;
                 $this->writeIfDebug(
@@ -110,9 +109,9 @@ class CompoundGenerator
      * Also generates a unique alias for them
      *
      * @param EntityPackage $entity_package
-     * @param string $class_name
+     * @param PackageClass $package_class
      * @param array $checked list of checked packages to prevent recusrion errors
-     * @return array[]UseStatement
+     * @return UseStatement[]
      */
     private function recursivelyFindUseStatementsFor(
         EntityPackage $entity_package,
@@ -141,9 +140,7 @@ class CompoundGenerator
     /**
      * Generates Generated/<class_name>Traits.php
      *
-     * @param string $relative_path
-     *            The relative path to the directory to generate the trait in
-     * @param string $class_name
+     * @param PackageClass $package_class
      * @param array $traits
      */
     private function generateTrait(PackageClass $package_class, array $traits)
