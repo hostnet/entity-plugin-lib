@@ -104,7 +104,7 @@ class Installer extends LibraryInstaller implements PackagePathResolver
      */
     private function getSupportedPackages(array $packages)
     {
-        $supported_packages = array();
+        $supported_packages = [];
         foreach ($packages as $package) {
             /* @var $package \Composer\Package\PackageInterface */
             if ($this->supportsPackage($package)) {
@@ -137,12 +137,12 @@ class Installer extends LibraryInstaller implements PackagePathResolver
             $generator     = $this->composer->getAutoloadGenerator();
             $download_path = $this->getInstallPath($package);
             $map           = $generator->parseAutoloads(
-                array(
-                    array(
+                [
+                    [
                         $package,
                         $download_path
-                    )
-                ),
+                    ]
+                ],
                 new Package('dummy', '1.0.0.0', '1.0.0')
             );
             $class_loader  = $generator->createLoader($map);

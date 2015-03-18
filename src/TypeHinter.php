@@ -17,7 +17,7 @@ class TypeHinter
         if ($parameter->isArray()) {
             return 'array ';
         }
-        $matches = array();
+        $matches = [];
         preg_match('/\[\s\<\w+?>\s([\\\\\w]+)/s', $parameter->__toString(), $matches);
         if (isset($matches[1])) {
             return '\\' . $matches[1] . ' ';

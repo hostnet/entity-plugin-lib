@@ -119,7 +119,7 @@ class CompoundGenerator
         PackageClass $package_class,
         array $checked = []
     ) {
-        $result = array();
+        $result = [];
         foreach ($entity_package->getDependentPackages() as $dependent_package) {
             /* @var $package EntityPackage */
             if (!in_array($dependent_package, $checked)) {
@@ -158,7 +158,7 @@ class CompoundGenerator
 
         $data = $this->environment->render(
             'traits.php.twig',
-            array(
+            [
                 'class_name' => $short_name,
                 'namespace' => $generated_namespace,
                 'use_statements' => array_filter(
@@ -167,7 +167,7 @@ class CompoundGenerator
                         return $stmt->isTrait();
                     }
                 )
-            )
+            ]
         );
 
         $this->writer->writeFile(

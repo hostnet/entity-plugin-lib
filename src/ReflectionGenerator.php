@@ -43,12 +43,12 @@ class ReflectionGenerator
         $class_name          = $this->package_class->getShortName();
         $generated_namespace = $this->package_class->getGeneratedNamespaceName();
 
-        $params = array(
+        $params = [
             'class_name'  => $class_name,
             'namespace'   => $generated_namespace,
             'type_hinter' => new TypeHinter(),
             'methods'     => $this->getMethods($this->package_class->getNamespaceName(), $class_name)
-        );
+        ];
 
         $interface = $this->environment->render('interface.php.twig', $params);
         $path      = $this->package_class->getGeneratedDirectory();

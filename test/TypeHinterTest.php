@@ -27,28 +27,27 @@ class TypeHinterTest extends \PHPUnit_Framework_TestCase
 
     public function getTypeHintProvider()
     {
-        return array(
-            array(
+        return [
+            [
                 new \ReflectionParameter('Hostnet\Component\EntityPlugin\parameterHints', 'array'),
                 'array '
-            ),
-            array(
+            ],
+            [
                 new \ReflectionParameter('Hostnet\Component\EntityPlugin\parameterHints', 'datetime_null'),
                 '\DateTime '
-            ),
-            array(
+            ],
+            [
                 new \ReflectionParameter('Hostnet\Component\EntityPlugin\parameterHints', 'datetime'),
                 '\DateTime '
-            ),
-            array(
+            ],
+            [
                 new \ReflectionParameter('Hostnet\Component\EntityPlugin\parameterHints', 'namespace'),
                 '\Hostnet\Component\EntityPlugin\ReflectionGenerator '
-            ),
-            array(
+            ],
+            [
                 new \ReflectionParameter('Hostnet\Component\EntityPlugin\parameterHints', 'full_namespace'),
                 '\Hostnet\Component\EntityPlugin\ReflectionGenerator '
-            )
-
-        );
+            ]
+        ];
     }
 }
