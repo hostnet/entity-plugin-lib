@@ -6,6 +6,7 @@ use Composer\Package\Package;
 /**
  * More of a functional-like test to check the outputted html.
  * @author Nico Schoenmaker <nschoenmaker@hostnet.nl>
+ * @covers Hostnet\Component\EntityPlugin\CompoundGenerator
  */
 class CompoundGeneratorTest extends \PHPUnit_Framework_TestCase
 {
@@ -29,7 +30,6 @@ class CompoundGeneratorTest extends \PHPUnit_Framework_TestCase
     public function generateProvider()
     {
         // Test case 1: Empty test case
-        $empty_package_content = new PackageContent([]);
         $writer_empty          = $this->mockWriter([]);
 
         $entities = [
@@ -43,24 +43,25 @@ class CompoundGeneratorTest extends \PHPUnit_Framework_TestCase
             'src/Entity/Generated/ContractTraits.php' => 'ContractTraits.php',
         ];
 
-        $entity_package_content = new PackageContent($entities);
-        $entity_package         = $this->mockEntityPackage($entity_package_content);
-
-        $suggested_package_content = new PackageContent(['Hostnet\Client\Entity\Client' => 'src/Entity/Client.php']);
-        $entity_package->addRequiredPackage($this->mockEntityPackage($suggested_package_content));
+        $entity_package         = $this->mockEntityPackage($entities);
+        $suggested_map = ['Hostnet\Client\Entity\Client' => 'src/Entity/Client.php'];
+        $entity_package->addRequiredPackage($this->mockEntityPackage($suggested_map));
 
         $writer = $this->mockWriter($writes);
 
         return [
-            [$this->mockEntityPackage($empty_package_content), $writer_empty],
+            [$this->mockEntityPackage([]), $writer_empty],
             [$entity_package, $writer],
         ];
     }
 
-    private function mockEntityPackage(PackageContentInterface $package_content)
-    {
+    private function mockEntityPackage(
+        array $class_map
+    ) {
         $package        = new Package('hostnet/package', '1.0.0', '1.0.0');
-        $entity_package = new EntityPackage($package, $package_content);
+        $entity_content = new PackageContent($class_map, PackageContent::ENTITY);
+        $repo_content   = new PackageContent($class_map, PackageContent::REPOSITORY);
+        $entity_package = new EntityPackage($package, $entity_content, $repo_content);
 
         return $entity_package;
     }

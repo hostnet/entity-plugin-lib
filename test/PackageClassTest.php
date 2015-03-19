@@ -1,6 +1,9 @@
 <?php
 namespace Hostnet\Component\EntityPlugin;
 
+/**
+ * @covers Hostnet\Component\EntityPlugin\PackageClass
+ */
 class PackageClassTest extends \PHPUnit_Framework_TestCase
 {
 

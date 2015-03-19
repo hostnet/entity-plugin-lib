@@ -10,6 +10,9 @@ use Composer\Repository\RepositoryManager;
 use Composer\Repository\WritableArrayRepository;
 use Hostnet\Component\EntityPlugin\Mock\Installer as MockInstaller;
 
+/**
+ * @covers Hostnet\Component\EntityPlugin\Installer
+ */
 class InstallerTest extends \PHPUnit_Framework_TestCase
 {
     private $working_dir;

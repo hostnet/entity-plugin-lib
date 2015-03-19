@@ -1,143 +1,77 @@
 <?php
 namespace Hostnet\Component\EntityPlugin;
 
+/**
+ * @covers Hostnet\Component\EntityPlugin\PackageContent
+ */
 class PackageContentTest extends \PHPUnit_Framework_TestCase
 {
+    private static $map = [
+        'Foo\Bar\Baz' => 'Baz.php',
+        'Foo\Bar\BazInterface' => 'BazInterface.php',
+        'Foo\Bar\BazException' => 'BazException.php',
+        'Foo\Bar\BlahTrait' => 'BlahTrait.php',
+        'Foo\Bar\BazWhenBlahTrait' => '/BazWhenBlahTrait.php',
+        'Foo\Bar\Generated\Baz' => 'Generated/Baz.php',
+        'Foo\Baz\Bar' => 'Bar.php'
+    ];
 
-    /**
-     * @dataProvider newPackageContentProvider
-     *
-     * @param array $class_map
-     * @param array $entities
-     * @param array $services
-     * @param array $entity_traits
-     * @param array $service_traits
-     * @param array $optional_entity_traits
-     */
-    public function testNewPackageContent(
-        array $class_map,
-        array $entities = [],
-        array $services = [],
-        array $entity_traits = [],
-        array $service_traits = [],
-        array $optional_entity_traits = []
-    ) {
-        $content = new PackageContent($class_map);
-        $this->assertEquals(array_values($entities), $content->getEntities(), 'Entities');
-        $this->assertEquals($services, $content->getServices(), 'Services');
-        foreach (array_merge($entity_traits, $entities) as $name => $entity_trait) {
-            $this->assertEquals($entity_trait, $content->getEntityOrEntityTrait($name), 'Entity or traits');
-        }
-        $this->assertEquals(array_values($entity_traits), $content->getEntityTraits(), 'Entity traits');
+    private $empty_content;
 
-        // test optional traits
-        foreach (array_keys($entities) as $name) {
-            if (!isset($optional_entity_traits[$name])) {
-                $result = [];
-            } else {
-                $result = $optional_entity_traits[$name];
-            }
-            $this->assertEquals($result, $content->getOptionalEntityTraits($name), 'Optional entity traits');
-        }
+    private $content;
 
-        $this->assertEquals($service_traits, $content->getServiceTraits(), 'Service traits');
+    protected function setUp()
+    {
+        $this->empty_content = new PackageContent([], '\\Bar\\');
+        $this->content = new PackageContent(self::$map, '\\Bar\\');
     }
 
-    public function newPackageContentProvider()
+    public function testGetClasses()
     {
-        $irrelevant                 = ['Hostnet\Component\Foo' => 'foo.php'];
-        $client_entity              = ['Foo\Client\Entity\Client' => 'src/Bar/Client.php'];
-        $contract_entity            = ['Foo\Contract\Entity\Contract' => 'src/Bar/Contract.php'];
-        $client_trait               = ['Foo\Entity\ClientTrait' => 'src/Bar/ClientTrait.php'];
-        $contract_when_client_trait = ['Foo\Entity\ContractWhenClientTrait' => 'src/Bar/ContractWhenClientTrait.php'];
-        $client_service             = ['Foo\Service\ClientService' => 'src/Bar/ClientService.php'];
-        $client_service_trait       = ['Foo\Service\ClientServiceTrait' => 'src/Bar/ClientServiceTrait.php'];
-        $ignored                    = [
-            'Hostnet\Entity\FooInterface' => 'FooInterface.php',
-            'Hostnet\Entity\FooException' => 'FooException.php',
-            'Hostnet\Service\FooInterface' => 'FooInterface.php',
-            'Hostnet\Service\FooException' => 'FooException.php'
-        ];
-
-        $one_of_all = array_merge(
-            $irrelevant,
-            $client_entity,
-            $contract_entity,
-            $client_trait,
-            $contract_when_client_trait,
-            $client_service,
-            $client_service_trait
+        $this->assertEquals([], $this->empty_content->getClasses());
+        $this->assertEquals(
+            [new PackageClass('Foo\Bar\Baz', 'Baz.php')],
+            $this->content->getClasses()
         );
-
-        $client_file                     = new PackageClass('Foo\Client\Entity\Client', 'src/Bar/Client.php');
-        $contract_file                   = new PackageClass('Foo\Contract\Entity\Contract', 'src/Bar/Contract.php');
-        $client_trait_file               = new PackageClass('Foo\Entity\ClientTrait', 'src/Bar/ClientTrait.php');
-        $contract_when_client_trait_file = new OptionalPackageTrait(
-            'Foo\Entity\ContractWhenClientTrait',
-            'src/Bar/ContractWhenClientTrait.php',
-            'Client'
-        );
-        $client_service_file             = new PackageClass('Foo\Service\ClientService', 'src/Bar/ClientService.php');
-        $client_service_trait_file       = new PackageClass(
-            'Foo\Service\ClientServiceTrait',
-            'src/Bar/ClientServiceTrait.php'
-        );
-
-        return [
-            [
-                []
-            ],
-            [
-                $irrelevant
-            ],
-            [
-                $ignored
-            ],
-            [
-                $client_entity,
-                [
-                    'Client' => $client_file
-                ]
-            ],
-            [
-                $client_trait,
-                [],
-                [],
-                [
-                    'Client' => $client_trait_file
-                ]
-            ],
-            [
-                $one_of_all,
-                [
-                    'Client' => $client_file,
-                    'Contract' => $contract_file
-                ],
-                [
-                    $client_service_file
-                ],
-                [
-                    'Client' => $client_trait_file,
-                ],
-                [
-                    $client_service_trait_file
-                ],
-                [
-                    'Contract' => [ $contract_when_client_trait_file ]
-                ]
-            ],
-        ];
     }
 
-    public function testGetEntityOrEntityTrait()
+    public function testGetClassOrTrait()
     {
-        $io = new PackageContent((new ClassMapper())->createClassMap(__DIR__));
-        $this->assertNull($io->getEntityOrEntityTrait('DoesNotExist'));
+        $this->assertNull($this->empty_content->getClassOrTrait('Baz'));
+        $this->assertEquals(
+            new PackageClass('Foo\Bar\Baz', 'Baz.php'),
+            $this->content->getClassOrTrait('Baz')
+        );
+        $this->assertEquals(
+            new PackageClass('Foo\Bar\BlahTrait', 'BlahTrait.php'),
+            $this->content->getClassOrTrait('Blah')
+        );
+        $this->assertNull($this->content->getClassOrTrait('Bar'));
     }
 
-    public function testHasEntityDoesCacheWarm()
+    public function testGetOptionalTraits()
     {
-        $io = new PackageContent([]);
-        $this->assertFalse($io->hasEntity('Foo'));
+        $this->assertEquals([], $this->empty_content->getOptionalTraits('Baz'));
+        $this->assertEquals(
+            [new OptionalPackageTrait('Foo\Bar\BazWhenBlahTrait', '/BazWhenBlahTrait.php', 'Blah')],
+            $this->content->getOptionalTraits('Baz')
+        );
+        $this->assertEquals([], $this->content->getOptionalTraits('Blah'));
+    }
+
+    public function testGetTraits()
+    {
+        $this->assertEquals([], $this->empty_content->getTraits());
+        $this->assertEquals(
+            [new PackageClass('Foo\Bar\BlahTrait', 'BlahTrait.php')],
+            $this->content->getTraits()
+        );
+    }
+
+    public function testHasClass()
+    {
+        $this->assertFalse($this->empty_content->hasClass('Bar'));
+        $this->assertFalse($this->content->hasClass('Bar'));
+        $this->assertTrue($this->content->hasClass('Baz'));
     }
 }

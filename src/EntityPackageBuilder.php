@@ -1,6 +1,7 @@
 <?php
 namespace Hostnet\Component\EntityPlugin;
 
+use Composer\Autoload\ClassMapGenerator;
 use Composer\Package\PackageInterface;
 
 /**
@@ -45,10 +46,15 @@ class EntityPackageBuilder
 
     private function addPackage(PackageInterface $package)
     {
-        $class_map       = (new ClassMapper())->createClassMap($this->resolver->getSourcePath($package));
-        $package_content = new PackageContent($class_map);
+        $class_map       = ClassMapGenerator::createMap($this->resolver->getSourcePath($package));
+        $entity_content  = new PackageContent($class_map, PackageContent::ENTITY);
+        $repo_content    = new PackageContent($class_map, PackageContent::REPOSITORY);
 
-        $this->tree_nodes[$package->getName()] = new EntityPackage($package, $package_content);
+        $this->tree_nodes[$package->getName()] = new EntityPackage(
+            $package,
+            $entity_content,
+            $repo_content
+        );
     }
 
     /**

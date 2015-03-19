@@ -1,8 +1,6 @@
 <?php
 namespace Hostnet\Component\EntityPlugin;
 
-use Composer\Autoload\ClassMapGenerator;
-
 /**
  * Concrete implementation of the PackageContentInterface
  *
@@ -10,98 +8,101 @@ use Composer\Autoload\ClassMapGenerator;
  */
 class PackageContent implements PackageContentInterface
 {
+    const ENTITY = '\\Entity\\';
+    const REPOSITORY = '\\Repository\\';
 
-    private $class_map              = [];
-    private $entities               = null;
-    private $entity_traits          = null;
-    private $optional_entity_traits = null;
-    private $services               = null;
-    private $service_traits         = null;
+    private $class_map;
+    private $type;
+
+    private $classes;
+
+    private $traits;
+
+    private $optional_traits;
 
     /**
      * @param array $class_map Map keyed with class names, valued where the class can be found.
+     * @param string $type Either self::ENTITY or self::REPOSITORY
      */
-    public function __construct(array $class_map)
+    public function __construct(array $class_map, $type)
     {
         $this->class_map = $class_map;
+        $this->type      = $type;
     }
 
-    private function warmCache()
+    private function ensureCacheIsWarmed()
     {
-        $this->entities               = [];
-        $this->entity_traits          = [];
-        $this->optional_entity_traits = [];
-        $this->services               = [];
-        $this->service_traits         = [];
-
-        foreach ($this->class_map as $class => $file) {
-            $package_class = new PackageClass($class, $file);
-            if (strstr($class, '\\Generated\\')) {
-                continue;
-            } elseif ($package_class->isInterface() || $package_class->isException()) {
-                // Do not generate files for interfaces or exceptions
-                continue;
-            } elseif (strpos($class, '\\Service\\')) {
-                $this->addService($package_class);
-            } elseif (strpos($class, '\\Entity\\')) {
-                $this->addEntity($class, $file);
-            }
+        if ($this->classes !== null) {
+            return;
         }
-    }
 
-    private function addEntity($class_name, $path)
-    {
-        $matches = array();
-        if (preg_match('/\/([A-Z][A-Za-z0-9_]+)When([A-Z][A-Za-z0-9_]+)Trait\.php$/', $path, $matches)) {
-            $this->optional_entity_traits[$matches[1]][] = new OptionalPackageTrait($class_name, $path, $matches[2]);
-        } else {
-            $class = new PackageClass($class_name, $path);
-            if ($class->isTrait()) {
-                $this->entity_traits[] = $class;
+        $this->classes         = [];
+        $this->traits          = [];
+        $this->optional_traits = [];
+
+        foreach ($this->class_map as $class_name => $file) {
+            $package_class = new PackageClass($class_name, $file);
+
+            if (! $this->isRelevant($package_class)) {
+                continue;
+            }
+
+            // Now split it into a trait, optional trait or class.
+            $matches = [];
+            if (preg_match('/\/([A-Z][A-Za-z0-9_]+)When([A-Z][A-Za-z0-9_]+)Trait\.php$/', $file, $matches)) {
+                $this->optional_traits[$matches[1]][] = new OptionalPackageTrait($class_name, $file, $matches[2]);
+            } else if ($package_class->isTrait()) {
+                $this->traits[] = $package_class;
             } else {
-                $this->entities[] = $class;
+                $this->classes[] = $package_class;
             }
         }
     }
 
-    private function addService(PackageClass $class)
+    /**
+     * Only classes in the correct namespace ($this->type) are relevant.
+     *
+     * Generated files, interfaces and exceptions are not relevant.
+     *
+     * @param PackageClass $package_class
+     * @return boolean
+     */
+    private function isRelevant(PackageClass $package_class)
     {
-        if ($class->isTrait()) {
-            $this->service_traits[] = $class;
-        } else {
-            $this->services[] = $class;
+        $class_name = $package_class->getName();
+        if (strstr($class_name, '\\Generated\\')
+            || $package_class->isInterface()
+            || $package_class->isException()
+            || strpos($class_name, $this->type) === false
+        ) {
+            return false;
         }
+        return true;
     }
 
     /**
-     *
-     * @see \Hostnet\Component\EntityPlugin\PackageContentInterface::getEntities()
+     * @see \Hostnet\Component\EntityPlugin\PackageContentInterface::getClasses()
      */
-    public function getEntities()
+    public function getClasses()
     {
-        if ($this->entities === null) {
-            $this->warmCache();
-        }
-        return $this->entities;
+        $this->ensureCacheIsWarmed();
+        return $this->classes;
     }
 
     /**
-     *
-     * @see \Hostnet\Component\EntityPlugin\PackageContentInterface::getEntityOrEntityTrait()
+     * @see \Hostnet\Component\EntityPlugin\PackageContentInterface::getClassOrTrait()
      */
-    public function getEntityOrEntityTrait($name)
+    public function getClassOrTrait($name)
     {
-        if ($this->entities === null) {
-            $this->warmCache();
-        }
-        foreach ($this->entities as $class) {
+        $this->ensureCacheIsWarmed();
+        foreach ($this->classes as $class) {
             /* @var $class PackageClass */
             if ($class->getShortName() == $name) {
                 return $class;
             }
         }
         $looking_for = $name . 'Trait';
-        foreach ($this->entity_traits as $class) {
+        foreach ($this->traits as $class) {
             /* @var $class PackageClass */
             if ($class->getShortName() == $looking_for) {
                 return $class;
@@ -110,60 +111,35 @@ class PackageContent implements PackageContentInterface
     }
 
     /**
-     * @see \Hostnet\Component\EntityPlugin\PackageContentInterface::getOptionalEntityTraits()
+     * @see \Hostnet\Component\EntityPlugin\PackageContentInterface::getOptionalTraits()
      */
-    public function getOptionalEntityTraits($name)
+    public function getOptionalTraits($name)
     {
-        if ($this->optional_entity_traits === null) {
-            $this->warmCache();
-        }
+        $this->ensureCacheIsWarmed();
 
-        if (isset($this->optional_entity_traits[$name])) {
-            return $this->optional_entity_traits[$name];
-        } else {
-            return [];
+        if (isset($this->optional_traits[$name])) {
+            return $this->optional_traits[$name];
         }
-    }
-
-    public function getEntityTraits()
-    {
-        if ($this->entity_traits === null) {
-            $this->warmCache();
-        }
-        return $this->entity_traits;
+        return [];
     }
 
     /**
-     *
-     * @see \Hostnet\Component\EntityPlugin\PackageContentInterface::getServices()
+     * @see \Hostnet\Component\EntityPlugin\PackageContentInterface::getTraits()
      */
-    public function getServices()
+    public function getTraits()
     {
-        if ($this->services === null) {
-            $this->warmCache();
-        }
-        return $this->services;
+        $this->ensureCacheIsWarmed();
+        return $this->traits;
     }
 
     /**
-     *
-     * @see \Hostnet\Component\EntityPlugin\PackageContentInterface::getServiceTraits()
+     * @see \Hostnet\Component\EntityPlugin\PackageContentInterface::hasClass()
      */
-    public function getServiceTraits()
+    public function hasClass($short_name)
     {
-        if ($this->service_traits === null) {
-            $this->warmCache();
-        }
-        return $this->service_traits;
-    }
-
-    public function hasEntity($shortName)
-    {
-        if ($this->entities === null) {
-            $this->warmCache();
-        }
-        foreach ($this->entities as $entity) {
-            if ($entity->getShortName() == $shortName) {
+        $this->ensureCacheIsWarmed();
+        foreach ($this->classes as $entity) {
+            if ($entity->getShortName() == $short_name) {
                 return true;
             }
         }
