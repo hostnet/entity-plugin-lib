@@ -20,7 +20,7 @@ class EntityPackageTest extends \PHPUnit_Framework_TestCase
     public function testGetEntityContent()
     {
         $entity_content = $this->getMock('Hostnet\Component\EntityPlugin\PackageContentInterface');
-        $entity_package  = new EntityPackage(
+        $entity_package = new EntityPackage(
             new Package('hostnet/foo', 1.0, 1.0),
             $entity_content,
             $this->getMock('Hostnet\Component\EntityPlugin\PackageContentInterface')
@@ -30,8 +30,8 @@ class EntityPackageTest extends \PHPUnit_Framework_TestCase
 
     public function testGetRepositoryContent()
     {
-        $repo_content = $this->getMock('Hostnet\Component\EntityPlugin\PackageContentInterface');
-        $entity_package  = new EntityPackage(
+        $repo_content   = $this->getMock('Hostnet\Component\EntityPlugin\PackageContentInterface');
+        $entity_package = new EntityPackage(
             new Package('hostnet/foo', 1.0, 1.0),
             $this->getMock('Hostnet\Component\EntityPlugin\PackageContentInterface'),
             $repo_content

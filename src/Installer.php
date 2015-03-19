@@ -42,7 +42,7 @@ class Installer extends LibraryInstaller implements PackagePathResolver
     ) {
         parent::__construct($io, $composer);
         $this->compound_generators = $compound_generators;
-        $this->empty_generator = $empty_generator;
+        $this->empty_generator     = $empty_generator;
     }
 
     /**

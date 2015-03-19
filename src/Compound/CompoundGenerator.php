@@ -8,7 +8,8 @@ use Hostnet\Component\EntityPlugin\PackageClass;
 use Hostnet\Component\EntityPlugin\WriterInterface;
 
 /**
- * The generator for stage 1 that only has to hook into composer
+ * The generator for pass 1/3: Generating compound traits and interfaces
+ *
  * It generates the combined entity and repository traits
  * Generated/ClientTrait and Generated/ClientRepositoryTrait
  *
@@ -132,7 +133,7 @@ class CompoundGenerator
                 $result         = array_merge($result, $use_statements);
             }
         }
-        $contents = $this->content_provider->getPackageContent($entity_package);
+        $contents      = $this->content_provider->getPackageContent($entity_package);
         $package_class = $contents->getClassOrTrait($package_class->getShortName());
         if ($package_class) {
             $result[] = $package_class;

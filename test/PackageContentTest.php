@@ -23,7 +23,7 @@ class PackageContentTest extends \PHPUnit_Framework_TestCase
     protected function setUp()
     {
         $this->empty_content = new PackageContent([], '\\Bar\\');
-        $this->content = new PackageContent(self::$map, '\\Bar\\');
+        $this->content       = new PackageContent(self::$map, '\\Bar\\');
     }
 
     public function testGetClasses()

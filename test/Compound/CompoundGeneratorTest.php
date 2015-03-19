@@ -31,8 +31,8 @@ class CompoundGeneratorTest extends \PHPUnit_Framework_TestCase
         $generator   = new CompoundGenerator($io, $environment, $entity_writer, $provider);
         $generator->generate($entity_package);
 
-        $provider    = new PackageContentProvider(PackageContent::REPOSITORY);
-        $generator   = new CompoundGenerator($io, $environment, $repo_writer, $provider);
+        $provider  = new PackageContentProvider(PackageContent::REPOSITORY);
+        $generator = new CompoundGenerator($io, $environment, $repo_writer, $provider);
         $generator->generate($entity_package);
     }
 
@@ -50,21 +50,25 @@ class CompoundGeneratorTest extends \PHPUnit_Framework_TestCase
             'Hostnet\Product\Entity\Product' => 'src/Entity/Product.php',
 
             'Hostnet\Contract\Repository\ContractRepository' => 'src/Repository/ContractRepository.php',
-            'Hostnet\Contract\Repository\ContractRepositoryWhenClientTrait' => 'src/Repository/ContractRepositoryWhenClientTrait.php',
-            'Hostnet\Contract\Repository\ContractRepositoryWhenEasterTrait' => 'src/Repository/ContractRepositoryWhenEasterTrait.php',
+            'Hostnet\Contract\Repository\ContractRepositoryWhenClientTrait' =>
+                'src/Repository/ContractRepositoryWhenClientTrait.php',
+            'Hostnet\Contract\Repository\ContractRepositoryWhenEasterTrait' =>
+                'src/Repository/ContractRepositoryWhenEasterTrait.php',
             'Hostnet\Product\Repository\ProductRepository' => 'src/Repository/ProductRepository.php',
         ];
-        $writes   = [
+
+        $writes = [
             'src/Entity/Generated/ContractTraits.php' => 'ContractTraits.php',
             'src/Entity/Generated/ProductTraits.php' => 'ProductTraits.php',
         ];
-        $repo_writes   = [
+
+        $repo_writes = [
             'src/Repository/Generated/ContractRepositoryTraits.php' => 'ContractRepositoryTraits.php',
             'src/Repository/Generated/ProductRepositoryTraits.php' => 'ProductRepositoryTraits.php',
         ];
 
-        $entity_package         = $this->mockEntityPackage($entities);
-        $suggested_map = ['Hostnet\Client\Entity\Client' => 'src/Entity/Client.php'];
+        $entity_package = $this->mockEntityPackage($entities);
+        $suggested_map  = ['Hostnet\Client\Entity\Client' => 'src/Entity/Client.php'];
         $entity_package->addRequiredPackage($this->mockEntityPackage($suggested_map));
 
         $writer      = $this->mockWriter($writes);
