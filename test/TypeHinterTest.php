@@ -8,7 +8,8 @@ function parameterHints(
     \Hostnet\Component\EntityPlugin\ReflectionGenerator $full_namespace,
     ReflectionGenerator $namespace,
     \DateTime $datetime,
-    \DateTime $datetime_null = null
+    \DateTime $datetime_null = null,
+    $empty
 ) {
     return 'quite useless, we only need the parameters...';
 }
@@ -50,6 +51,10 @@ class TypeHinterTest extends \PHPUnit_Framework_TestCase
             [
                 new \ReflectionParameter('Hostnet\Component\EntityPlugin\parameterHints', 'full_namespace'),
                 '\Hostnet\Component\EntityPlugin\ReflectionGenerator '
+            ],
+            [
+                new \ReflectionParameter('Hostnet\Component\EntityPlugin\parameterHints', 'empty'),
+                ''
             ]
         ];
     }

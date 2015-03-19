@@ -78,8 +78,8 @@ class ReflectionGeneratorTest extends \PHPUnit_Framework_TestCase
                     }
                 )
             );
-        $generator = new ReflectionGenerator($environment, $package_io, $package_class);
-        $this->assertNull($generator->generate());
+        $generator = new ReflectionGenerator($environment, $package_io);
+        $this->assertNull($generator->generate($package_class));
     }
 
     public function generateProvider()

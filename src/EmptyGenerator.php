@@ -20,7 +20,7 @@ class EmptyGenerator extends ReflectionGenerator
      *
      * @see \Hostnet\Component\EntityPlugin\ReflectionGenerator::getMethods()
      */
-    protected function getMethods()
+    protected function getMethods(PackageClass $package_class)
     {
         return [];
     }
