@@ -26,9 +26,24 @@ class Installer extends LibraryInstaller implements PackagePathResolver
     const PACKAGE_TYPE            = 'hostnet-entity';
     const EXTRA_ENTITY_BUNDLE_DIR = 'entity-bundle-dir';
 
+    private $compound_generators;
+
+    private $empty_generator;
+
     private $twig_environment = null;
 
     private $graph = null;
+
+    public function __construct(
+        IOInterface $io,
+        Composer $composer,
+        array $compound_generators,
+        EmptyGenerator $empty_generator
+    ) {
+        parent::__construct($io, $composer);
+        $this->compound_generators = $compound_generators;
+        $this->empty_generator = $empty_generator;
+    }
 
     /**
      * @see \Hostnet\Component\EntityPlugin\PackagePathResolver::getSourcePath()
@@ -99,7 +114,7 @@ class Installer extends LibraryInstaller implements PackagePathResolver
     /**
      * Gives all packages that we need to install
      *
-     * @param array $packages
+     * @param RootPackageInterface[] $packages
      * @return \Composer\Package\PackageInterface[]
      */
     private function getSupportedPackages(array $packages)
@@ -124,12 +139,13 @@ class Installer extends LibraryInstaller implements PackagePathResolver
         if (self::PACKAGE_TYPE === $package->getType() || isset($extra[self::EXTRA_ENTITY_BUNDLE_DIR])) {
             return true;
         }
+        return false;
     }
 
     /**
      * Ensures all the packages given are autoloaded
      *
-     * @param array $supported_packages
+     * @param PackageInterface[] $supported_packages
      */
     private function setUpAutoloading(array $supported_packages)
     {
@@ -163,15 +179,10 @@ class Installer extends LibraryInstaller implements PackagePathResolver
                 '    - Generating for package <info>'.
                 $entity_package->getPackage()->getName() . '</info>'
             );
-
-            $generator = new CompoundGenerator(
-                $this->io,
-                $this->getTwigEnvironment(),
-                $entity_package,
-                new Writer()
-            );
-
-            $generator->generate();
+            foreach ($this->compound_generators as $compound_generator) {
+                /* @var $compound_generator Compound\CompoundGenerator */
+                $compound_generator->generate($entity_package);
+            }
         }
     }
 
@@ -189,16 +200,11 @@ class Installer extends LibraryInstaller implements PackagePathResolver
                 '    - Preparing package <info>' . $entity_package->getPackage()
                     ->getName() . '</info>'
             );
-            foreach ($entity_package->getPackageContent()->getEntities() as $entity) {
+            foreach ($entity_package->getEntityContent()->getClasses() as $entity) {
                 $this->writeIfVeryVerbose(
                     '        - Generating empty interface for <info>' . $entity->getName() . '</info>'
                 );
-                $generator = new EmptyGenerator(
-                    $this->getTwigEnvironment(),
-                    new Writer(),
-                    $entity
-                );
-                $generator->generate();
+                $this->empty_generator->generate($entity);
             }
         }
     }
@@ -216,7 +222,7 @@ class Installer extends LibraryInstaller implements PackagePathResolver
                 '    - Generating for package <info>' . $entity_package->getPackage()
                     ->getName() . '</info>'
             );
-            foreach ($entity_package->getPackageContent()->getEntities() as $entity) {
+            foreach ($entity_package->getEntityContent()->getClasses() as $entity) {
                 $this->writeIfVeryVerbose(
                     '        - Generating interface for <info>' . $entity->getName() . '</info>'
                 );
@@ -237,18 +243,5 @@ class Installer extends LibraryInstaller implements PackagePathResolver
         if ($this->io->isVeryVerbose()) {
             $this->io->write($text);
         }
-    }
-
-    /**
-     *
-     * @return \Twig_Environment
-     */
-    private function getTwigEnvironment()
-    {
-        if (! $this->twig_environment) {
-            $loader                 = new \Twig_Loader_Filesystem(__DIR__ . '/Resources/templates/');
-            $this->twig_environment = new \Twig_Environment($loader);
-        }
-        return $this->twig_environment;
     }
 }

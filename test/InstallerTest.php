@@ -24,12 +24,13 @@ class InstallerTest extends \PHPUnit_Framework_TestCase
 
     public function testGetInstallPath()
     {
-        $installer = new Installer($this->mockIO(), $this->mockComposer());
+        $empty = $this->prophesize('Hostnet\Component\EntityPlugin\EmptyGenerator')->reveal();
+        $installer = new Installer($this->mockIO(), $this->mockComposer(), [], $empty);
 
         $root_package = new RootPackage('hostnet/root-package', 1, 1);
         $this->assertEquals('.', $installer->getInstallPath($root_package));
 
-        $installer = new MockInstaller($this->mockIO(), $this->mockComposer());
+        $installer = new MockInstaller($this->mockIO(), $this->mockComposer(), [], $empty);
 
         $package = $this->getMock('Composer\Package\PackageInterface');
         $package->expects($this->once())->method('getPrettyName')->will($this->returnValue('prettyName'));
@@ -39,7 +40,8 @@ class InstallerTest extends \PHPUnit_Framework_TestCase
 
     public function testGetSourcePath()
     {
-        $installer = new Installer($this->mockIO(), $this->mockComposer());
+        $empty = $this->prophesize('Hostnet\Component\EntityPlugin\EmptyGenerator')->reveal();
+        $installer = new Installer($this->mockIO(), $this->mockComposer(), [], $empty);
 
         $root_package = new RootPackage('hostnet/root-package', 1, 1);
         $this->assertEquals('./src', $installer->getSourcePath($root_package));

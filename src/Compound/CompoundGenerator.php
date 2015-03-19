@@ -1,11 +1,14 @@
 <?php
-namespace Hostnet\Component\EntityPlugin;
+namespace Hostnet\Component\EntityPlugin\Compound;
 
 use Composer\IO\IOInterface;
 use Composer\Package\PackageInterface;
+use Hostnet\Component\EntityPlugin\EntityPackage;
+use Hostnet\Component\EntityPlugin\PackageClass;
+use Hostnet\Component\EntityPlugin\WriterInterface;
 
 /**
- * The generator for stage 2 that only has to hook into composer
+ * The generator for stage 1 that only has to hook into composer
  * It generates the combined entity and repository traits
  * Generated/ClientTrait and Generated/ClientRepositoryTrait
  *
@@ -18,26 +21,26 @@ class CompoundGenerator
 
     private $environment;
 
-    private $entity_package;
-
     private $writer;
+
+    private $content_provider;
 
     /**
      * @param IOInterface $io
      * @param \Twig_Environment $environment
-     * @param EntityPackage $entity_package
      * @param WriterInterface $writer
+     * @param PackageContentProvider $content_provider
      */
     public function __construct(
         IOInterface $io,
         \Twig_Environment $environment,
-        EntityPackage $entity_package,
-        WriterInterface $writer
+        WriterInterface $writer,
+        PackageContentProvider $content_provider
     ) {
-        $this->io             = $io;
-        $this->environment    = $environment;
-        $this->entity_package = $entity_package;
-        $this->writer         = $writer;
+        $this->io               = $io;
+        $this->environment      = $environment;
+        $this->writer           = $writer;
+        $this->content_provider = $content_provider;
     }
 
     /**
@@ -45,16 +48,16 @@ class CompoundGenerator
      *
      * @return void
      */
-    public function generate()
+    public function generate(EntityPackage $entity_package)
     {
-        foreach ($this->entity_package->getEntityContent()->getClasses() as $package_class) {
+        $classes = $this->content_provider->getPackageContent($entity_package)->getClasses();
+        foreach ($classes as $package_class) {
             /* @var $package_class PackageClass */
-
             $this->writeIfDebug(
                 '        - Finding traits for <info>' . $package_class->getName() . '</info>.'
             );
-            $required_traits = $this->recursivelyFindUseStatementsFor($this->entity_package, $package_class);
-            $optional_traits = $this->findUseStatementsForOptionalTraits($this->entity_package, $package_class);
+            $required_traits = $this->recursivelyFindUseStatementsFor($entity_package, $package_class);
+            $optional_traits = $this->findUseStatementsForOptionalTraits($entity_package, $package_class);
             $traits          = array_unique(array_merge($required_traits, $optional_traits), SORT_REGULAR);
 
             $this->generateTrait($package_class, $traits);
@@ -65,7 +68,7 @@ class CompoundGenerator
         EntityPackage $entity_package,
         PackageClass $package_class
     ) {
-        $content = $entity_package->getEntityContent();
+        $content = $this->content_provider->getPackageContent($entity_package);
         $traits  = $content->getOptionalTraits($package_class->getShortName());
         $result  = [];
 
@@ -90,6 +93,8 @@ class CompoundGenerator
     }
 
     /**
+     * In all other cases within this class, we use the PackageContentProvider to get the package
+     * content. In this case we bypass it since we really want to know whether the entity exists.
      * @param EntityPackage $entity_package
      * @param string $requirement
      * @return boolean
@@ -110,7 +115,7 @@ class CompoundGenerator
      *
      * @param EntityPackage $entity_package
      * @param PackageClass $package_class
-     * @param array $checked list of checked packages to prevent recusrion errors
+     * @param array $checked list of checked packages to prevent recursion errors
      * @return UseStatement[]
      */
     private function recursivelyFindUseStatementsFor(
@@ -127,7 +132,8 @@ class CompoundGenerator
                 $result         = array_merge($result, $use_statements);
             }
         }
-        $package_class = $entity_package->getEntityContent()->getClassOrTrait($package_class->getShortName());
+        $contents = $this->content_provider->getPackageContent($entity_package);
+        $package_class = $contents->getClassOrTrait($package_class->getShortName());
         if ($package_class) {
             $result[] = $package_class;
         } else {

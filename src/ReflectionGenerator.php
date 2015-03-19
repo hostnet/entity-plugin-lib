@@ -16,21 +16,16 @@ class ReflectionGenerator
 
     private $writer;
 
-    private $package_class;
-
     /**
      * @param \Twig_Environment $environment
      * @param WriterInterface $writer
-     * @param PackageClass $package_class
      */
     public function __construct(
         \Twig_Environment $environment,
-        WriterInterface $writer,
-        PackageClass $package_class
+        WriterInterface $writer
     ) {
         $this->environment   = $environment;
         $this->writer        = $writer;
-        $this->package_class = $package_class;
     }
 
     /**
@@ -38,20 +33,20 @@ class ReflectionGenerator
      *
      * @throws \RuntimeException
      */
-    public function generate()
+    public function generate(PackageClass $package_class)
     {
-        $class_name          = $this->package_class->getShortName();
-        $generated_namespace = $this->package_class->getGeneratedNamespaceName();
+        $class_name          = $package_class->getShortName();
+        $generated_namespace = $package_class->getGeneratedNamespaceName();
 
         $params = [
             'class_name'  => $class_name,
             'namespace'   => $generated_namespace,
             'type_hinter' => new TypeHinter(),
-            'methods'     => $this->getMethods()
+            'methods'     => $this->getMethods($package_class)
         ];
 
         $interface = $this->environment->render('interface.php.twig', $params);
-        $path      = $this->package_class->getGeneratedDirectory();
+        $path      = $package_class->getGeneratedDirectory();
         $this->writer->writeFile($path . $class_name . 'Interface.php', $interface);
     }
 
@@ -60,9 +55,9 @@ class ReflectionGenerator
      *
      * @return \ReflectionMethod[]
      */
-    protected function getMethods()
+    protected function getMethods(PackageClass $package_class)
     {
-        $class   = new \ReflectionClass($this->package_class->getName());
+        $class   = new \ReflectionClass($package_class->getName());
         $methods = $class->getMethods();
 
         foreach ($methods as $key => $method) {
@@ -123,7 +118,7 @@ class ReflectionGenerator
         $writer        = new Writer();
 
         // generate the files
-        $generator = new ReflectionGenerator($environment, $writer, $package_class);
-        $generator->generate();
+        $generator = new ReflectionGenerator($environment, $writer);
+        $generator->generate($package_class);
     }
 }
