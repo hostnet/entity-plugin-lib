@@ -10,53 +10,39 @@ namespace Hostnet\Component\EntityPlugin;
 interface PackageContentInterface
 {
     /**
-     * Get the entities contained in the package
+     * Get the classes contained in the package matching the type
      *
      * @return PackageClass[]
      */
-    public function getEntities();
+    public function getClasses();
 
     /**
-     * Get an entity, or entity trait by name, provided it exists in this package
+     * Get a class, or trait by name, provided it exists in this package
      *
      * @param string $name
-     * @return PackageClass null
+     * @return PackageClass|null
      */
-    public function getEntityOrEntityTrait($name);
+    public function getClassOrTrait($name);
 
     /**
-     * Get all optional entity traits for the given entity name in this package
+     * Get all matching optional traits for the given entity name in this package
      *
      * @param string $name
      * @return OptionalPackageTrait[]
      */
-    public function getOptionalEntityTraits($name);
+    public function getOptionalTraits($name);
 
     /**
-     * Get all entity traits in the package
+     * Get all matching traits inside the package
      *
      * @return PackageClass[]
      */
-    public function getEntityTraits();
+    public function getTraits();
 
     /**
-     * Get the repositories contained in the package
-     *
-     * @return PackageClass[]
-     */
-    public function getServices();
-
-    /**
-     * Get the repository traits contained in the package
-     *
-     * @return PackageClass[]
-     */
-    public function getServiceTraits();
-
-    /**
-     * Returns if the entity is available in the package
-     * @param $shortName the short name of the entity to check for
+     * Returns if the entity exists in the package
+     * @param string $short_name the short name of the entity to check for
      * @return bool
      */
-    public function hasEntity($shortName);
+    public function hasClass($short_name);
 }

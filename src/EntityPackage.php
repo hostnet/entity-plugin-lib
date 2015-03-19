@@ -16,16 +16,22 @@ class EntityPackage
 
     private $package;
 
-    private $package_content;
+    private $entity_content;
+
+    private $repo_content;
 
     private $required_packages = [];
 
     private $dependent_packages = [];
 
-    public function __construct(PackageInterface $package, PackageContentInterface $package_content)
-    {
-        $this->package         = $package;
-        $this->package_content = $package_content;
+    public function __construct(
+        PackageInterface $package,
+        PackageContentInterface $entity_content,
+        PackageContentInterface $repo_content
+    ) {
+        $this->package        = $package;
+        $this->entity_content = $entity_content;
+        $this->repo_content   = $repo_content;
     }
 
     /**
@@ -41,9 +47,17 @@ class EntityPackage
      *
      * @return PackageContentInterface
      */
-    public function getPackageContent()
+    public function getEntityContent()
     {
-        return $this->package_content;
+        return $this->entity_content;
+    }
+
+    /**
+     * @return PackageContentInterface
+     */
+    public function getRepositoryContent()
+    {
+        return $this->repo_content;
     }
 
     /**

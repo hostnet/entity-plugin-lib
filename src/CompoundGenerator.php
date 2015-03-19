@@ -47,7 +47,7 @@ class CompoundGenerator
      */
     public function generate()
     {
-        foreach ($this->entity_package->getPackageContent()->getEntities() as $package_class) {
+        foreach ($this->entity_package->getEntityContent()->getClasses() as $package_class) {
             /* @var $package_class PackageClass */
 
             $this->writeIfDebug(
@@ -65,8 +65,8 @@ class CompoundGenerator
         EntityPackage $entity_package,
         PackageClass $package_class
     ) {
-        $content = $entity_package->getPackageContent();
-        $traits  = $content->getOptionalEntityTraits($package_class->getShortName());
+        $content = $entity_package->getEntityContent();
+        $traits  = $content->getOptionalTraits($package_class->getShortName());
         $result  = [];
 
         foreach ($traits as $trait) {
@@ -97,7 +97,7 @@ class CompoundGenerator
     private function doesEntityExistInTree(EntityPackage $entity_package, $requirement)
     {
         foreach ($entity_package->getFlattenedRequiredPackages() as $required_entity_package) {
-            if ($required_entity_package->getPackageContent()->hasEntity($requirement)) {
+            if ($required_entity_package->getEntityContent()->hasClass($requirement)) {
                 return true;
             }
         }
@@ -127,7 +127,7 @@ class CompoundGenerator
                 $result         = array_merge($result, $use_statements);
             }
         }
-        $package_class = $entity_package->getPackageContent()->getEntityOrEntityTrait($package_class->getShortName());
+        $package_class = $entity_package->getEntityContent()->getClassOrTrait($package_class->getShortName());
         if ($package_class) {
             $result[] = $package_class;
         } else {

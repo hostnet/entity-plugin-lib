@@ -13,6 +13,9 @@ function parameterHints(
     return 'quite useless, we only need the parameters...';
 }
 
+/**
+ * @covers Hostnet\Component\EntityPlugin\TypeHinter
+ */
 class TypeHinterTest extends \PHPUnit_Framework_TestCase
 {
 

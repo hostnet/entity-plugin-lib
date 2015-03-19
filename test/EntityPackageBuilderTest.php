@@ -4,6 +4,9 @@ namespace Hostnet\Component\EntityPlugin;
 use Composer\Package\Link;
 use Composer\Package\Package;
 
+/**
+ * @covers Hostnet\Component\EntityPlugin\EntityPackageBuilder
+ */
 class EntityPackageBuilderTest extends \PHPUnit_Framework_TestCase
 {
 

@@ -8,7 +8,7 @@ use Hostnet\EdgeCases\Entity\Generated\MultipleArgumentsTraitInterface;
  * More a functiononal test then a unit-test
  *
  * Tests (minimized versions of) cases that we've found in real-life
- *
+ * @covers Hostnet\Component\EntityPlugin\ReflectionGenerator
  * @author Nico Schoenmaker <nschoenmaker@hostnet.nl>
  */
 class ReflectionGeneratorTest extends \PHPUnit_Framework_TestCase
