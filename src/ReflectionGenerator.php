@@ -24,8 +24,8 @@ class ReflectionGenerator
         \Twig_Environment $environment,
         WriterInterface $writer
     ) {
-        $this->environment   = $environment;
-        $this->writer        = $writer;
+        $this->environment = $environment;
+        $this->writer      = $writer;
     }
 
     /**
@@ -39,10 +39,10 @@ class ReflectionGenerator
         $generated_namespace = $package_class->getGeneratedNamespaceName();
 
         $params = [
-            'class_name'  => $class_name,
-            'namespace'   => $generated_namespace,
+            'class_name' => $class_name,
+            'namespace' => $generated_namespace,
             'type_hinter' => new TypeHinter(),
-            'methods'     => $this->getMethods($package_class)
+            'methods' => $this->getMethods($package_class)
         ];
 
         $interface = $this->environment->render('interface.php.twig', $params);

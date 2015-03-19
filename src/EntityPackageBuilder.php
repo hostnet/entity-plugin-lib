@@ -46,9 +46,9 @@ class EntityPackageBuilder
 
     private function addPackage(PackageInterface $package)
     {
-        $class_map       = ClassMapGenerator::createMap($this->resolver->getSourcePath($package));
-        $entity_content  = new PackageContent($class_map, PackageContent::ENTITY);
-        $repo_content    = new PackageContent($class_map, PackageContent::REPOSITORY);
+        $class_map      = ClassMapGenerator::createMap($this->resolver->getSourcePath($package));
+        $entity_content = new PackageContent($class_map, PackageContent::ENTITY);
+        $repo_content   = new PackageContent($class_map, PackageContent::REPOSITORY);
 
         $this->tree_nodes[$package->getName()] = new EntityPackage(
             $package,

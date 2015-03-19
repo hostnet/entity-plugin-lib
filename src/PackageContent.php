@@ -8,7 +8,7 @@ namespace Hostnet\Component\EntityPlugin;
  */
 class PackageContent implements PackageContentInterface
 {
-    const ENTITY = '\\Entity\\';
+    const ENTITY     = '\\Entity\\';
     const REPOSITORY = '\\Repository\\';
 
     private $class_map;
@@ -51,7 +51,7 @@ class PackageContent implements PackageContentInterface
             $matches = [];
             if (preg_match('/\/([A-Z][A-Za-z0-9_]+)When([A-Z][A-Za-z0-9_]+)Trait\.php$/', $file, $matches)) {
                 $this->optional_traits[$matches[1]][] = new OptionalPackageTrait($class_name, $file, $matches[2]);
-            } else if ($package_class->isTrait()) {
+            } elseif ($package_class->isTrait()) {
                 $this->traits[] = $package_class;
             } else {
                 $this->classes[] = $package_class;

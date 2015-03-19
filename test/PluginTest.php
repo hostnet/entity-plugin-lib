@@ -10,12 +10,12 @@ class PluginTest extends \PHPUnit_Framework_TestCase
 {
     public function testActivate()
     {
-        $plugin = new Plugin();
+        $plugin   = new Plugin();
         $prophecy = $this->prophesize('Composer\Composer');
         $prophecy->getConfig()->willReturn(new Config());
         $prophecy->getDownloadManager()->willReturn(null);
         $composer = $prophecy->reveal();
-        $io = $this->prophesize('Composer\IO\IOInterface')->reveal();
+        $io       = $this->prophesize('Composer\IO\IOInterface')->reveal();
         $plugin->activate($composer, $io);
     }
 

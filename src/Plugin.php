@@ -20,7 +20,7 @@ class Plugin implements PluginInterface, EventSubscriberInterface
         $loader           = new \Twig_Loader_Filesystem(__DIR__ . '/Resources/templates/');
         $twig_environment = new \Twig_Environment($loader);
 
-        $compound_generators = [];
+        $compound_generators   = [];
         $compound_generators[] = new CompoundGenerator(
             $io,
             $twig_environment,

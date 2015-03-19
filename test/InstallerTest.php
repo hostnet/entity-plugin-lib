@@ -24,7 +24,7 @@ class InstallerTest extends \PHPUnit_Framework_TestCase
 
     public function testGetInstallPath()
     {
-        $empty = $this->prophesize('Hostnet\Component\EntityPlugin\EmptyGenerator')->reveal();
+        $empty     = $this->prophesize('Hostnet\Component\EntityPlugin\EmptyGenerator')->reveal();
         $installer = new Installer($this->mockIO(), $this->mockComposer(), [], $empty);
 
         $root_package = new RootPackage('hostnet/root-package', 1, 1);
@@ -40,7 +40,7 @@ class InstallerTest extends \PHPUnit_Framework_TestCase
 
     public function testGetSourcePath()
     {
-        $empty = $this->prophesize('Hostnet\Component\EntityPlugin\EmptyGenerator')->reveal();
+        $empty     = $this->prophesize('Hostnet\Component\EntityPlugin\EmptyGenerator')->reveal();
         $installer = new Installer($this->mockIO(), $this->mockComposer(), [], $empty);
 
         $root_package = new RootPackage('hostnet/root-package', 1, 1);
