@@ -6,7 +6,7 @@
     "require": {
         "php": ">=5.4",
         "twig/twig": "1.*, >=1.13",
-        "composer-plugin-api": "1.0.0"
+        "composer-plugin-api": "^1.0"
     },
     "require-dev": {
         "composer/composer": "master@dev",
