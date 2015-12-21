@@ -1,9 +1,6 @@
 <?php
 namespace Hostnet\Component\EntityPlugin;
 
-use Composer\IO\IOInterface;
-use Symfony\Component\Console\Output\ConsoleOutput;
-
 /**
  * A simple, light-weight generator that can be used runtime during development
  * It does not know about the composer structure, since thats expensive to build
@@ -64,7 +61,9 @@ class ReflectionGenerator
             if ($method->name === '__construct') {
                 // The interface should not contain the constructor
                 unset($methods[$key]);
+                continue;
             }
+            $methods[$key] = new ReflectionMethod($method);
         }
 
         return $methods;

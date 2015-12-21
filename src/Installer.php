@@ -6,10 +6,7 @@ use Composer\Installer\LibraryInstaller;
 use Composer\IO\IOInterface;
 use Composer\Package\Package;
 use Composer\Package\PackageInterface;
-use Composer\Package\RootPackage;
 use Composer\Package\RootPackageInterface;
-use Composer\Repository\InstalledRepositoryInterface;
-use Composer\Script\ScriptEvents;
 
 /**
  * Custom installer to generate the various traits and interfaces for that package

@@ -1,7 +1,6 @@
 <?php
 namespace Hostnet\Component\EntityPlugin;
 
-
 /**
  * More of a functional-like test to check the outputted html.
  * @author Nico Schoenmaker <nschoenmaker@hostnet.nl>

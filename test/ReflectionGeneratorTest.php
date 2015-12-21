@@ -1,9 +1,6 @@
 <?php
 namespace Hostnet\Component\EntityPlugin;
 
-use Composer\IO\NullIO;
-use Hostnet\EdgeCases\Entity\Generated\MultipleArgumentsTraitInterface;
-
 /**
  * More a functiononal test then a unit-test
  *
