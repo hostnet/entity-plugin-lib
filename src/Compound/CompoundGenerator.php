@@ -2,7 +2,6 @@
 namespace Hostnet\Component\EntityPlugin\Compound;
 
 use Composer\IO\IOInterface;
-use Composer\Package\PackageInterface;
 use Hostnet\Component\EntityPlugin\EntityPackage;
 use Hostnet\Component\EntityPlugin\PackageClass;
 use Hostnet\Component\EntityPlugin\WriterInterface;

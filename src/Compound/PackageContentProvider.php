@@ -25,8 +25,10 @@ class PackageContentProvider
      */
     public function getPackageContent(EntityPackage $entity_package)
     {
-        return $this->type == PackageContent::ENTITY
-            ? $entity_package->getEntityContent()
-            : $entity_package->getRepositoryContent();
+        if ($this->type == PackageContent::ENTITY) {
+            return $entity_package->getEntityContent();
+        } else {
+            return $entity_package->getRepositoryContent();
+        }
     }
 }

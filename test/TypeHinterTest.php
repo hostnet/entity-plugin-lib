@@ -8,8 +8,8 @@ function parameterHints(
     \Hostnet\Component\EntityPlugin\ReflectionGenerator $full_namespace,
     ReflectionGenerator $namespace,
     \DateTime $datetime,
-    \DateTime $datetime_null = null,
-    $empty
+    $empty,
+    \DateTime $datetime_null = null
 ) {
     return 'quite useless, we only need the parameters...';
 }

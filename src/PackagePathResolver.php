@@ -14,7 +14,7 @@ interface PackagePathResolver
     /**
      * Get the path containing the actual source of the application
      *
-     * @param PackageInterface $package 
+     * @param PackageInterface $package
      */
     public function getSourcePath(PackageInterface $package);
 }
