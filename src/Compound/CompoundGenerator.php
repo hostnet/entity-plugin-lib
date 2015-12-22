@@ -56,40 +56,9 @@ class CompoundGenerator
             $this->writeIfDebug(
                 '        - Finding traits for <info>' . $package_class->getName() . '</info>.'
             );
-            $required_traits = $this->recursivelyFindUseStatementsFor($entity_package, $package_class);
-            $optional_traits = $this->findUseStatementsForOptionalTraits($entity_package, $package_class);
-            $traits          = array_unique(array_merge($required_traits, $optional_traits), SORT_REGULAR);
-
-            $this->generateTrait($package_class, $traits);
+            $traits = $this->recursivelyFindUseStatementsFor($entity_package, $package_class);
+            $this->generateTrait($package_class, array_unique($traits, SORT_REGULAR));
         }
-    }
-
-    private function findUseStatementsForOptionalTraits(
-        EntityPackage $entity_package,
-        PackageClass $package_class
-    ) {
-        $content = $this->content_provider->getPackageContent($entity_package);
-        $traits  = $content->getOptionalTraits($package_class->getShortName());
-        $result  = [];
-
-        foreach ($traits as $trait) {
-            /* @var $trait OptionalPackageTrait */
-            $requirement = $trait->getRequirement();
-            if ($this->doesEntityExistInTree($entity_package, $requirement)) {
-                $result[] = $trait;
-                $this->writeIfDebug(
-                    'Injected <info>' . $trait->getName() .   '</info> from <info>' .
-                    $entity_package->getPackage()->getName() .
-                    '</info>.'
-                );
-            } else {
-                $this->writeIfDebug(
-                    'Not injected <info>' . $trait->getName() .   '</info> from <info>' .
-                    $entity_package->getPackage()->getName() . ' because ' . $requirement . ' is not found</info>.'
-                );
-            }
-        }
-        return $result;
     }
 
     /**
@@ -121,25 +90,56 @@ class CompoundGenerator
     private function recursivelyFindUseStatementsFor(
         EntityPackage $entity_package,
         PackageClass $package_class,
-        array $checked = []
+        array &$checked = []
     ) {
-        $result = [];
-        foreach ($entity_package->getDependentPackages() as $dependent_package) {
-            /* @var $package EntityPackage */
-            if (!in_array($dependent_package, $checked)) {
-                $checked[]      = $dependent_package;
-                $use_statements = $this->recursivelyFindUseStatementsFor($dependent_package, $package_class, $checked);
-                $result         = array_merge($result, $use_statements);
+        $result              = [];
+        $entity_package_name = $entity_package->getPackage()->getName();
+
+        if (isset($checked[$entity_package_name])) {
+            return $result;
+        } else {
+            $checked[$entity_package_name] = true;
+        }
+
+        foreach ($entity_package->getDependentPackages() as $name => $dependent_package) {
+            /* @var $dependent_package EntityPackage */
+            $use_statements = $this->recursivelyFindUseStatementsFor($dependent_package, $package_class, $checked);
+            $result         = array_merge($result, $use_statements);
+        }
+
+        $this->writeIfDebug(
+            '          - Scanning for traits in <info>' . $entity_package->getPackage()->getName() . '</info>.'
+        );
+
+        $contents = $this->content_provider->getPackageContent($entity_package);
+        $traits   = $contents->getOptionalTraits($package_class->getShortName());
+
+        foreach ($traits as $trait) {
+            /* @var $trait \Hostnet\Component\EntityPlugin\OptionalPackageTrait */
+            $requirement = $trait->getRequirement();
+            if ($this->doesEntityExistInTree($entity_package, $requirement)) {
+                $result[] = $trait;
+                $this->writeIfDebug(
+                    '            Injected <info>' . $trait->getName() .   '</info> from <info>' .
+                    $entity_package->getPackage()->getName() .
+                    '</info>.'
+                );
+            } else {
+                $this->writeIfDebug(
+                    '            Not injected <warn>' . $trait->getName() .   '</warn> from <info>' .
+                    $entity_package->getPackage()->getName() . ' because ' . $requirement . ' is not found</info>.'
+                );
             }
         }
-        $contents      = $this->content_provider->getPackageContent($entity_package);
+
         $package_class = $contents->getClassOrTrait($package_class->getShortName());
         if ($package_class) {
             $result[] = $package_class;
-        } else {
-            $this->writeIfDebug('          No trait in <info>' . $entity_package->getPackage()->getName() . '</info>.');
+            $this->writeIfDebug(
+                '            Found <info>' . $package_class->getName() . '</info> in <info>'
+                . $entity_package->getPackage()->getName() . '</info>.'
+            );
         }
-
         return $result;
     }
 
