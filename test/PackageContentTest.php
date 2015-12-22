@@ -7,13 +7,17 @@ namespace Hostnet\Component\EntityPlugin;
 class PackageContentTest extends \PHPUnit_Framework_TestCase
 {
     private static $map = [
-        'Foo\Bar\Baz' => 'Baz.php',
-        'Foo\Bar\BazInterface' => 'BazInterface.php',
-        'Foo\Bar\BazException' => 'BazException.php',
-        'Foo\Bar\BlahTrait' => 'BlahTrait.php',
-        'Foo\Bar\BazWhenBlahTrait' => '/BazWhenBlahTrait.php',
-        'Foo\Bar\Generated\Baz' => 'Generated/Baz.php',
-        'Foo\Baz\Bar' => 'Bar.php'
+        'Foo\\Bar\\Baz' => 'Baz.php',
+        'Foo\\Bar\\BazInterface' => 'BazInterface.php',
+        'Foo\\Bar\\BazException' => 'BazException.php',
+        'Foo\\Bar\\BlahTrait' => 'BlahTrait.php',
+        'Foo\\Bar\\BazWhenBlahTrait' => '/BazWhenBlahTrait.php',
+        'Foo\\Bar\\Generated\\Baz' => 'Generated/Baz.php',
+        'Foo\\Baz\\Bar' => 'Bar.php',
+        'Hostnet\\Drink\\Entity\\Milk' => '/Milk.php',
+        'Hostnet\\Animal\\Entity\\Cow' => '/Cow.php',
+        'Hostnet\\AnimalDrink\\Entity\\MilkWhenCowTrait' => '/MilkWhenCowTrait.php',
+        'Hostnet\\AnimalDrink\\Entity\\CowWhenMilkTrait' => '/CowWhenMilkTrait.php',
     ];
 
     private $empty_content;
@@ -52,11 +56,36 @@ class PackageContentTest extends \PHPUnit_Framework_TestCase
     public function testGetOptionalTraits()
     {
         $this->assertEquals([], $this->empty_content->getOptionalTraits('Baz'));
+
+        // Optional trait for class included in own package
         $this->assertEquals(
             [new OptionalPackageTrait('Foo\Bar\BazWhenBlahTrait', '/BazWhenBlahTrait.php', 'Blah')],
             $this->content->getOptionalTraits('Baz')
         );
-        $this->assertEquals([], $this->content->getOptionalTraits('Blah'));
+
+        $animaldrink = new PackageContent(self::$map, '\\AnimalDrink\\');
+
+        // Optional trait for class included in other package
+        $this->assertEquals(
+            [
+                new OptionalPackageTrait(
+                    'Hostnet\\AnimalDrink\\Entity\\CowWhenMilkTrait',
+                    '/CowWhenMilkTrait.php',
+                    'Milk'
+                )
+            ],
+            $animaldrink->getOptionalTraits('Cow')
+        );
+        $this->assertEquals(
+            [
+                new OptionalPackageTrait(
+                    'Hostnet\\AnimalDrink\\Entity\\MilkWhenCowTrait',
+                    '/MilkWhenCowTrait.php',
+                    'Cow'
+                )
+            ],
+            $animaldrink->getOptionalTraits('Milk')
+        );
     }
 
     public function testGetTraits()

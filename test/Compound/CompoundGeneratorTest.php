@@ -43,23 +43,11 @@ class CompoundGeneratorTest extends \PHPUnit_Framework_TestCase
 
         // Test case 2: Contract(repository) will be extended with client(repository)
         // While leaving Easter(repository) out
-        $entities = [
-            'Hostnet\Contract\Entity\Contract' => 'src/Entity/Contract.php',
-            'Hostnet\Contract\Entity\ContractWhenClientTrait' => 'src/Entity/ContractWhenClientTrait.php',
-            'Hostnet\Contract\Entity\ContractWhenEasterTrait' => 'src/Entity/ContractWhenEasterTrait.php',
-            'Hostnet\Product\Entity\Product' => 'src/Entity/Product.php',
-
-            'Hostnet\Contract\Repository\ContractRepository' => 'src/Repository/ContractRepository.php',
-            'Hostnet\Contract\Repository\ContractRepositoryWhenClientTrait' =>
-                'src/Repository/ContractRepositoryWhenClientTrait.php',
-            'Hostnet\Contract\Repository\ContractRepositoryWhenEasterTrait' =>
-                'src/Repository/ContractRepositoryWhenEasterTrait.php',
-            'Hostnet\Product\Repository\ProductRepository' => 'src/Repository/ProductRepository.php',
-        ];
 
         $writes = [
             'src/Entity/Generated/ContractTraits.php' => 'ContractTraits.php',
             'src/Entity/Generated/ProductTraits.php' => 'ProductTraits.php',
+            'src/Entity/Generated/DeathContractTraits.php' =>  'DeathContractTraits.php',
         ];
 
         $repo_writes = [
@@ -67,22 +55,82 @@ class CompoundGeneratorTest extends \PHPUnit_Framework_TestCase
             'src/Repository/Generated/ProductRepositoryTraits.php' => 'ProductRepositoryTraits.php',
         ];
 
-        $entity_package = $this->mockEntityPackage($entities);
-        $suggested_map  = ['Hostnet\Client\Entity\Client' => 'src/Entity/Client.php'];
-        $entity_package->addRequiredPackage($this->mockEntityPackage($suggested_map));
+        $contract_package = $this->mockEntityPackage(
+            [
+                'Hostnet\Contract\Entity\Contract' => 'src/Entity/Contract.php',
+                'Hostnet\Contract\Entity\DeathContract' => 'src/Entity/DeathContract.php',
+                'Hostnet\Contract\Entity\ContractWhenClientTrait' => 'src/Entity/ContractWhenClientTrait.php',
+                'Hostnet\Contract\Entity\ContractWhenEasterTrait' => 'src/Entity/ContractWhenEasterTrait.php',
+                'Hostnet\Contract\Repository\ContractRepository' => 'src/Repository/ContractRepository.php',
+                'Hostnet\Contract\Repository\ContractRepositoryWhenClientTrait' =>
+                    'src/Repository/ContractRepositoryWhenClientTrait.php',
+                'Hostnet\Contract\Repository\ContractRepositoryWhenEasterTrait' =>
+                    'src/Repository/ContractRepositoryWhenEasterTrait.php',
+            ],
+            'hostnet/contract'
+        );
+
+        $client_package = $this->mockEntityPackage(
+            ['Hostnet\Client\Entity\Client' => 'src/Entity/Client.php'],
+            'hostnet/client'
+        );
+
+        $product_package = $this->mockEntityPackage(
+            [
+                'Hostnet\Product\Entity\Product' => 'src/Entity/Product.php',
+                'Hostnet\Product\Repository\ProductRepository' => 'src/Repository/ProductRepository.php',
+            ],
+            'hostnet/product'
+        );
+
+        $death_package = $this->mockEntityPackage(
+            [
+                'Hostnet\Death\Entity\DeathContractWhenProductTrait' => 'src/Entity/DeathContractWhenProductTrait.php',
+                'Hostnet\Death\Entity\DeathContractWhenClientTrait' => 'src/Entity/DeathContractWhenClientTrait.php'
+            ],
+            'hostnet/death'
+        );
+
+        /*
+         * APP -------req----------------------------> CONTRACT
+         * | | \                                      /   |  ^
+         * | |  \-----req-------------> CLIENT <-sug-/    |  |
+         * | |                             ^              |  |
+         * |  \                            |              /  /
+         * |   \------req---> PRODUCT <-------sug--------/  /
+         * |                   ^          /                /
+         * |                   |   /-sug-/                /
+         * |                  sug /                      /
+         * \                   | /                      /
+         *  \---------req---> DEATH --sug--- ----------/
+         */
+
+        $app_package = $this->mockEntityPackage([], 'hostnet/app');
+
+        $app_package->addRequiredPackage($contract_package);
+        $app_package->addRequiredPackage($client_package);
+        $app_package->addRequiredPackage($product_package);
+        $app_package->addRequiredPackage($death_package);
+
+        $death_package->addRequiredPackage($contract_package);
+        $death_package->addRequiredPackage($client_package);
+        $death_package->addRequiredPackage($product_package);
+
+        $contract_package->addRequiredPackage($client_package);
+        $contract_package->addRequiredPackage($product_package);
 
         $writer      = $this->mockWriter($writes);
         $repo_writer = $this->mockWriter($repo_writes);
 
         return [
-            [$this->mockEntityPackage([]), $writer_empty, $writer_empty],
-            [$entity_package, $writer, $repo_writer],
+            [$this->mockEntityPackage([], 'hostnet/package'), $writer_empty, $writer_empty],
+            [$app_package, $writer, $repo_writer],
         ];
     }
 
-    private function mockEntityPackage(array $class_map)
+    private function mockEntityPackage(array $class_map, $name)
     {
-        $package        = new Package('hostnet/package', '1.0.0', '1.0.0');
+        $package        = new Package($name, '1.0.0', '1.0.0');
         $entity_content = new PackageContent($class_map, PackageContent::ENTITY);
         $repo_content   = new PackageContent($class_map, PackageContent::REPOSITORY);
         $entity_package = new EntityPackage($package, $entity_content, $repo_content);
