@@ -1,0 +1,14 @@
+{
+    "name": "hostnet/invoice-entities",
+    "type": "hostnet-entity",
+    "require": {
+        "hostnet/client-entities": "^14.0.0",
+        "hostnet/entity-plugin-lib": "^1.0.0"
+    },
+    "conflict": {
+        "hostnet/contract-entities": "<8.0.0"
+    },
+    "suggest": {
+        "hostnet/contract-entities": "description"
+    }
+}

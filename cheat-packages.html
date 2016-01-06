@@ -1,0 +1,152 @@
+<link rel="import" href="/components/polymer/polymer.html">
+<link rel="import" href="/cheat-file.html"></link>
+<link rel="import" href="/cheat-package.html"></link>
+<link rel="import" href="/cheat-diagram.html"></link>
+
+<dom-module id="cheat-packages">
+<template>
+    <style>
+        :host {
+            display: block;
+        }
+        
+        cheat-file.depends_client{
+            --header-color: #FBB;
+        }
+        
+        cheat-file.depends_contract {
+            --header-color: #BFB;
+        }
+        
+        cheat-file.depends_client.depends_contract{
+            --header-color: linear-gradient(to right, #FBB, #BFB);
+        }
+        
+        #package_client {
+            --header-color: #E44;
+        }
+        
+        #package_contract {
+            --header-color: #4C4;
+        }
+        
+        #package_invoice {
+            --header-color: #44F;
+        }
+        
+        #left, #right {
+            display: inline-block;
+            vertical-align: top;
+        }
+        
+        #left cheat-package {
+            min-width: 37em;
+        }
+        
+        #invoice_left {
+            display: inline-block;
+            vertical-align: top;
+        }
+        
+        #invoice_right {
+            display: inline-block;
+            vertical-align: top;
+            margin-left: 1em;
+        }   
+        
+        .legend .depends_client {
+            background: #FBB;
+        }
+        
+        .legend .depends_contract {
+            background: #BFB;
+        }  
+        
+        .legend .depends_invoice {
+            background: #BBF;
+        }
+        
+        .legend .depends_client.depends_contract {
+            background: linear-gradient(to right, #FBB, #BFB);
+        }
+        
+        .legend .depends_invoice.depends_contract {
+            background: linear-gradient(to right, #BBF, #BFB);
+        }
+        
+        .legend th {
+            text-align: left;
+            background: #333;
+            color: white
+        }
+        
+        .legend, cheat-diagram {
+            background: WhiteSmoke;
+            padding: 1em;
+            margin-top: .5em;
+            margin-right: 1.75em;
+            font-family: monospace;
+            font-size: 120%;
+        }
+        
+        .legend td, .legend th {
+            padding: .5em;
+        }
+        
+        @media screen {
+            cheat-diagram, .legend {
+                box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12);
+            }
+        }
+    </style>
+    
+    <div id="left">
+        <cheat-package id="package_client" name="client-entities" style="--cheat-package-color: red;">
+            <cheat-file name="composer.json" src="client-entities/composer.json"></cheat-file>
+            <cheat-file name="src/Entity/Client.php" src="client-entities/src/Entity/Client.phps"></cheat-file>
+        </cheat-package>
+        <br/>
+        <cheat-package id="package_contract" name="contract-entities" style="--cheat-package-color: #00ff00;">
+            <cheat-file name="composer.json" src="contract-entities/composer.json"></cheat-file>
+            <cheat-file name="src/Entity/Contract.php" src="contract-entities/src/Entity/Contract.phps"></cheat-file>
+            <cheat-file class="depends_client" name="src/Entity/ClientTrait.php" src="contract-entities/src/Entity/ClientTrait.phps"></cheat-file>
+        </cheat-package>
+    </div>
+
+    <div id="right">
+        <cheat-package id='package_invoice' name="invoice-entities" style="--background: blue;">
+            <div id="invoice_left">
+                <cheat-file name="composer.json" src="invoice-entities/composer.json"></cheat-file>
+                <cheat-file name="src/Entity/Invoice.php" src="invoice-entities/src/Entity/Invoice.phps"></cheat-file>
+                <cheat-file class="depends_contract" name="src/Entity/InvoiceWhenContractTrait.php" src="invoice-entities/src/Entity/InvoiceWhenContractTrait.phps"></cheat-file>
+            </div>
+            <div id="invoice_right">
+                <cheat-file class="depends_contract" name="src/Entity/ContractTrait.php" src="invoice-entities/src/Entity/ContractTrait.phps"></cheat-file>
+                <cheat-file class="depends_client depends_contract" name="src/Entity/ClientWhenContractTrait.php" src="invoice-entities/src/Entity/ClientWhenContractTrait.phps"></cheat-file>
+            </div>
+        </cheat-package>
+        <cheat-diagram></cheat-diagram>
+        
+        <div class="legend">
+        <table>
+        <tr><th colspan="6">legend</th></tr>
+        <tr>
+            <td colspan="2" class="depends_client">depends on client-entities</td>
+            <td colspan="2" class="depends_contract">depends on contract-entities</td>
+            <td colspan="2" class="depends_invoice">depends on invoice-entities</td>
+        </tr>
+        <tr>
+            <td colspan="3" class="depends_invoice depends_contract">depends on invoice-entities and contract-entities</td>
+            <td colspan="3" class="depends_client depends_contract">depends on client-entities and contract-entities</td>
+        </tr>
+        </div>
+    </table>
+    </div>
+
+</template>
+<script>
+    Polymer({
+        is : "cheat-packages"
+    });
+</script>
+</dom-module>

@@ -1,0 +1,70 @@
+<link rel="import" href="/components/polymer/polymer.html">
+
+<dom-module id="oo-method">
+<template>
+<style>
+    :host {
+        display: table-row;
+    }
+    
+    .private:before {
+        display: inline-block;
+        width: 1em;
+        text-align:center;
+        content: "■";
+        color: #d8424f;
+        font-size: 1.1em;
+        -webkit-text-stroke: 1px #d8424f;
+        -webkit-text-fill-color: #ff86a0;
+    }
+    .protected:before {
+        display: inline-block;
+        width: 1em;
+        text-align:center;
+        content: "◆";
+        text-fill-color: purple;
+        color: #b38d22;
+        font-size: 1.1em;
+        -webkit-text-stroke: 1px #b38d22;
+        -webkit-text-fill-color: #ffff44;
+        
+    }
+    .package:before {
+        display: inline-block;
+        width: 1em;
+        text-align:center;
+        content: "▲";
+        color: #105c9c;
+        font-size: 1.1em;
+        -webkit-text-stroke: 1px #105c9c;
+        -webkit-text-fill-color: #1fbbff;
+    }
+    .public:before {
+        display: inline-block;
+        width: 1em;
+        text-align:center;
+        content: "●";
+        color: #168952;
+        font-size: 1.1em;
+        -webkit-text-stroke: 1px #168952;
+        -webkit-text-fill-color: #1fff9d;
+    }
+    td {
+        display: table-cell;
+        padding: 0 .3em .2em .3em;
+    }
+</style>
+<td class$="{{visibility}}"> <content></content></td>
+</template>
+<script>
+    Polymer({
+        is: "oo-method",
+        properties: {
+            visibility: {
+                type: String,
+                value: "private"
+            },
+        }
+    });
+</script>
+</dom-module>

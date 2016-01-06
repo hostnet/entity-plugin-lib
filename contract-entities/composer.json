@@ -1,0 +1,8 @@
+{
+    "name": "hostnet/contract-entities",
+    "type": "hostnet-entity",
+    "require": {
+        "hostnet/client-entities":   "^15.0.0",
+        "hostnet/entity-plugin-lib": "^1.0.0"
+    }
+}

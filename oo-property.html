@@ -1,0 +1,61 @@
+<link rel="import" href="/components/polymer/polymer.html">
+
+<dom-module id="oo-property">
+<template>
+<style>
+    :host {
+        display: block;
+        width: 100%;
+    }
+    
+    .private:before {
+        display: inline-block;
+        width: 1em;
+        text-align:center;
+        content: "□";
+        color: #d8424f;
+        font-size: 1.1em;
+    }
+    .protected:before {
+        display: inline-block;
+        width: 1em;
+        text-align:center;
+        content: "◇";
+        color: #b38d22;
+        font-size: 1.1em;
+    }
+    .package:before {
+        display: inline-block;
+        width: 1em;
+        text-align:center;
+        content: "△";
+        color: #105c9c;
+        font-size: 1.1em;
+    }
+    .public:before {
+        display: inline-block;
+        width: 1em;
+        text-align:center;
+        content: "○";
+        color: #168952;
+        font-size: 1.1em;
+    }
+    td {
+        display: table-cell;
+        padding: 0 .3em .2em .3em;
+    }
+</style>
+<td class$="{{visibility}}"> <content></content></td>
+</template>
+<script>
+    Polymer({
+        is: "oo-property",
+        properties: {
+            visibility: {
+                type: String,
+                value: "private"
+            },
+        }
+    });
+</script>
+</dom-module>

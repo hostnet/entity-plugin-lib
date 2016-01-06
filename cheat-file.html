@@ -1,0 +1,56 @@
+<link rel="import" href="/components/polymer/polymer.html">
+<link rel="import" href="/components/iron-ajax/iron-ajax.html">
+<link rel="import" href="/components/highlightjs-element/highlightjs-element.html">
+
+<dom-module id="cheat-file">
+<template>
+    <style>
+        :host {
+            display: block;
+            position: relative;
+            padding: .2em 1em .2em 1em;
+            margin-top: .75em;
+        }
+        
+        h1 {
+            font-family: monospace;
+            position: absolute;
+            right: -.5em;
+            top: -.5em;
+            padding: .3em;
+            margin: 0;
+            font-size: 1em;
+            background: var(--header-color, WhiteSmoke);
+        }
+        
+        @media screen {
+            h1 {
+                box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12);
+            }
+        }
+        
+    </style>
+    <iron-ajax auto url="{{src}}" last-response="{{code}}" handle-as="text"></iron-ajax>
+    <h1>{{name}}</h1>
+    <highlightjs-element text="{{code}}"></highlightjs-element>
+</template>
+<script>
+    Polymer({
+        is : "cheat-file",
+        properties : {
+            name: {
+                type: String,
+                value: "unknown"
+            },
+            src: {
+                type: String,
+                value: null
+            },
+            code: {
+                type: String,
+                value: ''
+            }
+        }
+    });
+</script>
+</dom-module>

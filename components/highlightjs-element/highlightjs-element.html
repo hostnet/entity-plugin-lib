@@ -1,0 +1,96 @@
+<!--
+    @license
+    Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
+    This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+    The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+    The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+    Code distributed by Google as part of the polymer project is also
+    subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../polymer/polymer.html">
+
+<link rel="import" href="highlightjs-import.html">
+<link rel="import" href="syntax-colors.html">
+
+<!--
+Element wrapper for the `highlightjs` (http://highlightjs.org/) library.
+
+##### Example
+
+    <highlightjs-element text="def somefunc(param1='', param2=0):"></highlightjs-element>
+
+##### Example
+
+    <highlightjs-element>
+      <template>
+
+        <link rel="import" href="/components/polymer/polymer.html">
+        <dom-module name="my-element">
+          <template>
+            <span>I'm <b>my-element</b>. Check out my prototype.</span>
+          </template>
+          <script>
+            Polymer({is: 'my-element'});
+          </script>
+        </dom-module>
+
+      </template>
+    </highlightjs-element>
+
+@element highlightjs-element
+@group Molecules
+@hero hero.svg
+@demo demo/index.html
+-->
+
+<dom-module id="highlightjs-element">
+  <template>
+    <style include="solarized-theme">
+        :host {
+            display: block;
+        }
+        
+        pre {
+            margin: 0;
+        }
+    </style>
+    <pre><code id="content" class="hljs"></code></pre>
+  </template>
+  <script>
+    Polymer({
+      is: 'highlightjs-element',
+      properties: {
+        /**
+         * The code text to syntax highlight. If missing, a `<template>` should
+         * be used in the light dom that provides the markup to highlight. See the
+         * example above.
+         */
+        text: {
+          type: String,
+          notify: true,
+          observer: '_textChanged'
+        },
+      },
+
+      _textChanged: function() {
+        this.$.content.innerHTML = hljs.highlightAuto(this.text || '').value;
+      },
+
+      ready: function() {
+        // Ensures proper local DOM CSS scoping for elements created by
+        // higlight JS. Needed because it doesn't know about Polymer.dom();
+        this.scopeSubtree(this.$.content, true);
+
+        if (!this.text) {
+          if (Polymer.dom(this).firstElementChild &&
+              Polymer.dom(this).firstElementChild.localName === 'template') {
+            this.text = Polymer.dom(this).firstElementChild.innerHTML;
+          } else {
+            this.text = Polymer.dom(this).innerHTML;
+          }
+        }
+      }
+    });
+  </script>
+</dom-module>

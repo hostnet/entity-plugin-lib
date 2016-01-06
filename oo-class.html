@@ -1,0 +1,73 @@
+<link rel="import" href="/components/polymer/polymer.html">
+
+<dom-module id="oo-class">
+<template>
+    <style>
+        :host {
+            display: inline-table;
+            border-collapse: collapse;
+            border: solid 1px #A80036;
+            background: #FEFECE;
+            margin: 1em;
+            font-family: Sans-Serif;
+            text-align: left;
+            vertical-align: top;
+            
+        }
+
+        th {
+            border-bottom: solid 1px #A80036;
+            font-weight: normal;
+            padding-right: .5em;
+            margin-bottom: .2em;
+        }
+
+        
+        #methods {
+            display: table-row-group;
+            border-top: solid 1px #A80036;
+        }
+
+        #icon {
+            background: #ADD1B2;
+            font-weight: 900;
+            font-family: Courier;
+            border: solid #A80036 1px;
+            border-radius: 50%;
+            padding: .4em;
+            line-height: .6em;
+            margin: .2em .2em .1em .1em;
+            display: inline-block;
+            font-size: 1.2em;
+            margin: .2em;
+        }
+   
+    
+    </style>
+    
+    
+    <tr><th><span id="icon">C</span>{{name}}</th></tr>
+    <div id="properties"><content select="oo-property"></content></div>
+    <div id="methods"><content select="oo-method"></content></div>
+</template>
+<script>
+    Polymer({
+        is : "oo-class",
+        properties : {
+            name: {
+                type: String,
+                value: "unknown"
+            }//,
+            //fields: {
+            //    type: Array,
+            //    value: []
+            //}
+        },
+        ready: function() {
+            //nodes = Polymer.dom(this.$.fields).getDistributedNodes();
+            //console.log(nodes); 
+            //this.fields = nodes;
+        }
+    });
+</script>
+</dom-module>

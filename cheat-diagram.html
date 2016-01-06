@@ -1,0 +1,87 @@
+<link rel="import" href="/components/polymer/polymer.html">
+<link rel="import" href="/oo-class.html"></link>
+<link rel="import" href="/oo-property.html"></link>
+<link rel="import" href="/oo-method.html"></link>
+    
+<dom-module id="cheat-diagram">
+<template>
+    <style>
+        @media screen {
+            :host {
+                box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12);
+                
+            }
+        }
+        
+        :host {
+            display: block;
+            background: WhiteSmoke;
+        }
+        
+        cheat-file.depends_client {
+            --header-color: #FBB;
+        }
+        
+        cheat-file.depends_contract {
+            --header-color: #BFB;
+        }
+        
+        cheat-file.depends_client.depends_contract {
+            --header-color: linear-gradient(to right, #FBB, #BFB);
+        }
+        
+        oo-method.depends_client, oo-property.depends_client, .legend .depends_client {
+            background: #FBB;
+        }
+        
+        oo-method.depends_contract, oo-property.depends_contract, .legend .depends_contract {
+            background: #BFB;
+        }
+        
+        oo-method.depends_invoice, oo-property.depends_invoice, .legend .depends_invoice {
+            background: #BBF;
+        }
+        
+        oo-method.depends_invoice.depends_contract,
+        oo-property.depends_invoice.depends_contract,
+        .legend .depends_invoice.depends_contract {
+            background: linear-gradient(to right, #BBF, #BFB);
+        }
+    </style>
+
+    <!--
+    <oo-class name="Class">
+        <oo-method visibility="private">private(): return type</oo-method>
+        <oo-method visibility="protected">protected(): return type</oo-method>
+        <oo-method visibility="package">package(): return type</oo-method>
+        <oo-method visibility="public">public(): return type</oo-method>
+        <oo-property visibility="private">$private: type</oo-property>
+        <oo-property visibility="protected">$protected: type</oo-property>
+        <oo-property visibility="package">$package: type</oo-property>
+        <oo-property visibility="public">$public: type</oo-property>
+    </oo-class>
+     -->
+    
+    <oo-class name="Hostnet\Entity\Client\Client">
+        <oo-property class="depends_contract">$contracts: Contract[]</oo-property>
+        <oo-method visibility="public" class="depends_contract">getContracts(): Contract[]</oo-method>
+        <oo-method visibility="public" class="depends_invoice depends_contract">getInvoicedContracts(): Contract[]</oo-method>
+    </oo-class>
+    
+    <oo-class class="depends_client" name="Hostnet\Entity\Contract\Contract">
+        <oo-property>$product: Product</oo-property>
+        <oo-property class="depends_client">$client: Client</oo-property>
+        <oo-property class="depends_invoice">$invoices: Invoice[]</oo-property>
+    </oo-class>
+
+    <oo-class class="depends_client" name="Hostnet\Entity\Invoice\Invoice">
+        <oo-property class="depends_contract">$contracts: Contract[]</oo-property>
+        <oo-property class="depends_client">$client: Client</oo-property>
+    </oo-class>
+</template>
+<script>
+    Polymer({
+        is : "cheat-diagram"
+    });
+</script>
+</dom-module>

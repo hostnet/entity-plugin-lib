@@ -1,0 +1,109 @@
+@CHARSET "UTF-8";
+
+h1, h2 {
+	font-family: monospace;
+	margin: 0;
+	padding: 0;
+	font-size: 1em;
+}
+
+.file {
+	position: relative;
+}
+
+.file h2 {
+	position: absolute;
+	right: -.5em;
+	top: -.5em;
+	padding: .2em;
+	box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0
+		rgba(0, 0, 0, 0.12);
+	background: WhiteSmoke;
+}
+
+body {
+	background: #EEE;
+	margin: 0;
+	padding: 0;
+	font-size: 9pt;
+}
+
+.valid {
+	display: none;
+}
+
+code {
+	margin: 0 .5em 0 .5em;
+}
+
+.diagram:after {
+	content: " ";
+	float: left;
+	clear: both;
+}
+
+.oo-class {
+	font-size: 10pt;
+	border-collapse: collapse;
+	border: solid 1px #A80036;
+	background: #FEFECE;
+	margin: 1em;
+	padding: .5em;
+	font-family: Sans-Serif;
+	float: left;
+}
+
+.oo-class th {
+	border-bottom: solid 1px #A80036;
+	font-weight: normal;
+	padding-right: .5em;
+}
+
+.oo-class td {
+	padding: .1em .5em .1em .5em;
+}
+
+.oo-class tr.seperator td {
+	border-top: solid 1px #A80036;
+	padding-bottom: .5em;
+}
+
+.oo-class th:before {
+	content: 'C';
+	background: #ADD1B2;
+	font-weight: 900;
+	font-family: Courier;
+	border: solid #A80036 1px;
+	border-radius: 50%;
+	padding: .4em;
+	line-height: .6em;
+	margin: .2em .2em .1em .1em;
+	display: inline-block;
+	font-size: 1.2em;
+}
+
+.oo-class .depends-contract {
+	background: rgba(255, 0, 0, .2);
+}
+
+#package-contract h1, .file.depends-contract h2 {
+	background: #FAA;
+}
+
+.oo-class .depends-client {
+	background: rgba(0, 255, 0, .2);
+}
+
+#package-client h1, .file.depends-client h2 {
+	background: #AFA;
+	color: #555;
+}
+
+.oo-class .depends-invoice {
+	background: rgba(0, 0, 255, .2);
+}
+
+#package-invoice h1, .file.depends-invoice h2 {
+	background: #33F;
+	color: #DDD;
+}

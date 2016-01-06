@@ -1,0 +1,7 @@
+{
+    "name": "hostnet/client-entities",
+    "type": "hostnet-entity",
+    "require": {
+        "hostnet/entity-plugin-lib": "^1.0.0"
+    }
+}
