@@ -62,6 +62,8 @@ If you run the composer.phar with ```-v``` or ```-vv``` or ```-vvv``` it will sh
 
 If you want to extend an entity from your main application, you can use the ```entity-bundle-dir``` setting in the extra section of your composer.json.
 
+For a quick overview hava a look at the [cheatsheet][cheatsheet].
+
 [aop]: http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.95.2500&rep=rep1&type=pdf "Aspect-oriented programming"
 [oop]: http://148.204.64.201/paginas%20anexas/POO/papers/papers%20de%20POO/p96-pokkunuri.pdf "Object Oriented Programming"
 [composer]: http://getcomposer.org/doc/00-intro.md
