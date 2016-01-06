@@ -67,3 +67,4 @@ If you want to extend an entity from your main application, you can use the ```e
 [composer]: http://getcomposer.org/doc/00-intro.md
 [type]: https://getcomposer.org/doc/04-schema.md#type
 [autoload]: https://getcomposer.org/doc/04-schema.md#autoload
+[cheatsheet]: https://hostnet.github.io/entity-plugin-lib/
