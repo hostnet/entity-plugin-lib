@@ -26,6 +26,37 @@ class ReflectionGeneratorTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($actual, file_get_contents(__DIR__ . '/Functional/Tests/expected/BaseClassInterface.php'));
     }
 
+    public function testGenerateInIsolationWithParent()
+    {
+        $base_dir    = __DIR__ . '/Functional/src/Entity';
+
+        ReflectionGenerator::generateInIsolation('Hostnet\\FunctionalFixtures\\Entity\\ExtendedClass');
+
+        $actual = file_get_contents($base_dir . '/Generated/ExtendedClassInterface.php');
+
+        unlink($base_dir . '/Generated/ExtendedClassInterface.php');
+        rmdir($base_dir . '/Generated');
+
+        $this->assertEquals($actual, file_get_contents(__DIR__ . '/Functional/Tests/expected/ExtendedClassInterface.php'));
+    }
+
+    public function testGenerateInIsolationWithMissingParent()
+    {
+        $base_dir    = __DIR__ . '/Functional/src/Entity';
+
+        ReflectionGenerator::generateInIsolation('Hostnet\\FunctionalFixtures\\Entity\\ExtendedMissingParentClass');
+
+        $actual = file_get_contents($base_dir . '/Generated/ExtendedMissingParentClassInterface.php');
+
+        unlink($base_dir . '/Generated/ExtendedMissingParentClassInterface.php');
+        rmdir($base_dir . '/Generated');
+
+        $this->assertEquals(
+            $actual, 
+            file_get_contents(__DIR__ . '/Functional/Tests/expected/ExtendedMissingParentClassInterface.php')
+        );
+    }
+
     public function testGenerate()
     {
         //include_once __DIR__ . '/EdgeCases/' . $package_class->getShortName() . '.php';
@@ -53,6 +84,19 @@ class ReflectionGeneratorTest extends \PHPUnit_Framework_TestCase
         $base_dir = __DIR__ . '/Functional/src/Entity';
 
         unlink($base_dir . '/Generated/BaseClassInterface.php');
+        rmdir($base_dir . '/Generated');
+    }
+
+    public function testMainWithParent()
+    {
+        // functionallity is already tested, test for smoke...
+        ReflectionGenerator::main(
+            'Hostnet\\FunctionalFixtures\\Entity\\ExtendedClass'
+        );
+
+        $base_dir = __DIR__ . '/Functional/src/Entity';
+
+        unlink($base_dir . '/Generated/ExtendedClassInterface.php');
         rmdir($base_dir . '/Generated');
     }
 }

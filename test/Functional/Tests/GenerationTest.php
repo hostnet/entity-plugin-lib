@@ -82,6 +82,10 @@ class GenerationTest extends \PHPUnit_Framework_TestCase
             file_get_contents(__DIR__ . '/expected/TypedParametersInterface.php'),
             file_get_contents($dir . '/TypedParametersInterface.php')
         );
+        self::assertEquals(
+            file_get_contents(__DIR__ . '/expected/ExtendedMissingParentClassInterface.php'),
+            file_get_contents($dir . '/ExtendedMissingParentClassInterface.php')
+        );
     }
 
     protected function tearDown()
