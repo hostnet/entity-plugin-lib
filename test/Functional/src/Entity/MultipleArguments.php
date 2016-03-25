@@ -1,5 +1,5 @@
 <?php
-namespace Hostnet\EdgeCases\Entity;
+namespace Hostnet\FunctionalFixtures\Entity;
 
 class MultipleArguments
 {

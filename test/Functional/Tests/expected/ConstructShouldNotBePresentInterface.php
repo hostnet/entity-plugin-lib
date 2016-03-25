@@ -1,5 +1,5 @@
 <?php
-namespace Hostnet\EdgeCases\Entity\Generated;
+namespace Hostnet\FunctionalFixtures\Entity\Generated;
 
 /**
  * Implement this interface in ConstructShouldNotBePresent!

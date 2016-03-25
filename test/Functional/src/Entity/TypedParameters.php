@@ -1,21 +1,11 @@
 <?php
-namespace Hostnet\EdgeCases\Entity;
+namespace Hostnet\FunctionalFixtures\Entity;
 
 use Hostnet\Component\EntityPlugin\ReflectionGenerator;
 
-trait extra
-{
-    /**
-     * I am from a trait
-     */
-    public function extra()
-    {
-    }
-}
-
 class TypedParameters
 {
-    use extra;
+    use ExtraTrait;
 
     /**
      */

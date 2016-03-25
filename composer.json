@@ -20,7 +20,9 @@
     "autoload-dev": {
         "psr-4": {
             "Hostnet\\Component\\EntityPlugin\\Mock\\": "test/Mock",
-            "Hostnet\\EdgeCases\\Entity\\": "test/EdgeCases"
+            "Hostnet\\EdgeCases\\Entity\\": "test/EdgeCases",
+            "Hostnet\\FunctionalFixtures\\": "test/Functional/src",
+            "Hostnet\\Component\\EntityPlugin\\Functional\\": "test/Functional/Tests"
         }
     },
     "extra": {
