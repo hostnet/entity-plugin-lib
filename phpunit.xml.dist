@@ -1,4 +1,4 @@
-<phpunit colors="true" bootstrap="vendor/autoload.php">
+<phpunit colors="true" bootstrap="vendor/autoload.php" forceCoversAnnotation="true">
     <testsuites>
         <testsuite name="hostnet/entity-installer test suite">
             <directory>./test</directory>
