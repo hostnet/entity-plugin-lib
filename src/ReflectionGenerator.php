@@ -28,9 +28,11 @@ class ReflectionGenerator
     /**
      * Generates the interface
      *
-     * @throws \RuntimeException
+     * @param PackageClass $package_class
+     * @param PackageClass $parent
+     * @throws \Twig_Error
      */
-    public function generate(PackageClass $package_class)
+    public function generate(PackageClass $package_class, PackageClass $parent = null)
     {
         $class_name          = $package_class->getShortName();
         $generated_namespace = $package_class->getGeneratedNamespaceName();
@@ -39,7 +41,8 @@ class ReflectionGenerator
             'class_name' => $class_name,
             'namespace' => $generated_namespace,
             'type_hinter' => new TypeHinter(),
-            'methods' => $this->getMethods($package_class)
+            'methods' => $this->getMethods($package_class),
+            'parent' => $parent ? $parent->getShortName() : null
         ];
 
         $interface = $this->environment->render('interface.php.twig', $params);
@@ -79,8 +82,22 @@ class ReflectionGenerator
         $php       = '/usr/bin/env php -r';
         $namespace = 'namespace Hostnet\\Component\\EntityPlugin;';
         $require   = 'require \'' . __FILE__ . '\';';
-        $main      = 'ReflectionGenerator::main(\'' . $class . '\');';
+        $main      = sprintf(
+            "ReflectionGenerator::main('%s');",
+            $class
+        );
         echo `$php "$namespace $require $main"`;
+    }
+    
+    private static function getParentClass(\ReflectionClass $base_class)
+    {
+        if (false === ($parent_reflection = $base_class->getParentClass())
+            || dirname($parent_reflection->getFileName()) !== dirname($base_class->getFileName())
+        ) {
+            return null;
+        }
+        
+        return new PackageClass($parent_reflection->getName(), $parent_reflection->getFileName());
     }
 
     /**
@@ -109,15 +126,16 @@ class ReflectionGenerator
         // @codeCoverageIgnoreEnd
 
         // setup all the dependencies
-        $reflection    = new \ReflectionClass($class);
-        $path          = $reflection->getFileName();
-        $package_class = new PackageClass($class, $path);
-        $loader        = new \Twig_Loader_Filesystem(__DIR__ . '/Resources/templates/');
-        $environment   = new \Twig_Environment($loader);
-        $writer        = new Writer();
+        $reflection           = new \ReflectionClass($class);
+        $package_class        = new PackageClass($class, $reflection->getFileName());
+        $parent_package_class = self::getParentClass($reflection);
+        
+        $loader      = new \Twig_Loader_Filesystem(__DIR__ . '/Resources/templates/');
+        $environment = new \Twig_Environment($loader);
+        $writer      = new Writer();
 
         // generate the files
         $generator = new ReflectionGenerator($environment, $writer);
-        $generator->generate($package_class);
+        $generator->generate($package_class, $parent_package_class);
     }
 }

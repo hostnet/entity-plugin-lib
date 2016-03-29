@@ -5,7 +5,8 @@ namespace {{ namespace }};
  * Implement this interface in {{ class_name }}!
  * This is a combined interface that will automatically extend to contain the required functions.
  */
-interface {{ class_name }}Interface
+interface {{ class_name }}Interface{% if parent %} extends {{ parent }}Interface{% endif %}
+
 {
 {% for method in methods %}
 {% if method.isPublic() and not method.isStatic() %}
