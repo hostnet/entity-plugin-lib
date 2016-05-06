@@ -11,6 +11,7 @@ class ReflectionMethodTest extends \PHPUnit_Framework_TestCase
     /**
      * Blaah Blaah Blaaaah Cloud...
      *
+     * @param Generated\Foo $foo
      * @param unknown $empty
      * @return Generated\Blyp
      */
@@ -50,6 +51,7 @@ class ReflectionMethodTest extends \PHPUnit_Framework_TestCase
 /**
      * Blaah Blaah Blaaaah Cloud...
      *
+     * @param Foo $foo
      * @param unknown $empty
      * @return Blyp
      */
