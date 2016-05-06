@@ -2,19 +2,15 @@
 namespace Hostnet\Component\EntityPlugin;
 
 /**
- * Wrapper around \RefelectionMethod
- * to overload getDocComment to allow
- * changes to the @return statement.
+ * Wrapper around \ReflectionMethod to overload getDocComment to allow changes
+ * to the @param/@return statements.
  *
- * Since Entities want to return the
- * Generated interface they would add
- * a @return Generated\FooInterface.
+ * Since Entities want to return the Generated interface they would add a
+ * @return Generated\FooInterface.
  *
- * This @return statement is copied
- * over to the gererated interface
- * that is already in the Generated
- * sub-namespace. Thus the Generated\
- * part should be stripped.
+ * This @return statement is copied over to the generated interface that is
+ * already in the Generated sub-namespace. Thus the Generated\ part should be
+ * stripped.
  */
 class ReflectionMethod
 {
@@ -47,6 +43,10 @@ class ReflectionMethod
 
     public function getDocComment()
     {
-        return preg_replace('/@return Generated\\\\/', '@return ', $this->method->getDocComment());
+        return preg_replace(
+            '/@(return|param) Generated\\\\/',
+            '@${1} ',
+            $this->method->getDocComment()
+        );
     }
 }
