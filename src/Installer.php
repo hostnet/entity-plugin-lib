@@ -223,7 +223,7 @@ class Installer extends LibraryInstaller implements PackagePathResolverInterface
                 $this->writeIfVeryVerbose(
                     '        - Generating interface for <info>' . $entity->getName() . '</info>'
                 );
-                ReflectionGenerator::generateInIsolation($entity->getName());
+                ReflectionGenerator::main($entity->getName());
             }
         }
     }

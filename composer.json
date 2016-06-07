@@ -6,7 +6,8 @@
     "require": {
         "php":                 ">=5.5",
         "composer-plugin-api": "^1.0.0",
-        "twig/twig":           "1.*, >=1.13"
+        "twig/twig":           "1.*, >=1.13",
+        "symfony/filesystem":  "^2.3.0 | ^3.0.0"
     },
     "require-dev": {
         "composer/composer":  "^1.1.0",

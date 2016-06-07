@@ -1,11 +1,13 @@
 <?php
 namespace Hostnet\Component\EntityPlugin\Compound;
 
+use Composer\IO\IOInterface;
 use Composer\Package\Package;
 use Hostnet\Component\EntityPlugin\EntityPackage;
 use Hostnet\Component\EntityPlugin\PackageContent;
 use Hostnet\Component\EntityPlugin\WriterInterface;
 use Prophecy\Argument\Token\AnyValuesToken;
+use Prophecy\Argument\Token\AnyValueToken;
 
 /**
  * More of a functional-like test to check the outputted html.
@@ -25,7 +27,14 @@ class CompoundGeneratorTest extends \PHPUnit_Framework_TestCase
         array $entity_writer_input,
         array $repo_writer_input
     ) {
-        $io            = self::createMock('Composer\IO\IOInterface');
+        $io = $this->prophesize(IOInterface::class);
+        $io->isDebug()->willReturn(true);
+        $io->isVeryVerbose()->willReturn(true);
+        if (count($entity_writer_input) || count($repo_writer_input)) {
+            $io->write(new AnyValueToken())->shouldBeCalled();
+        }
+        $io = $io->reveal();
+
         $loader        = new \Twig_Loader_Filesystem(__DIR__ . '/../../src/Resources/templates/');
         $environment   = new \Twig_Environment($loader);
         $provider      = new PackageContentProvider(PackageContent::ENTITY);
@@ -125,11 +134,14 @@ class CompoundGeneratorTest extends \PHPUnit_Framework_TestCase
         $app_package->addRequiredPackage($contract_package);
         $app_package->addRequiredPackage($client_package);
         $app_package->addRequiredPackage($product_package);
-        $app_package->addRequiredPackage($death_package);
+        $app_package->addDependentPackage($death_package);
+
 
         $death_package->addRequiredPackage($contract_package);
         $death_package->addRequiredPackage($client_package);
         $death_package->addRequiredPackage($product_package);
+
+        $death_package->addDependentPackage($app_package);
 
         $contract_package->addRequiredPackage($client_package);
         $contract_package->addRequiredPackage($product_package);
@@ -153,7 +165,7 @@ class CompoundGeneratorTest extends \PHPUnit_Framework_TestCase
     private function mockWriter(array $writes)
     {
         $writer = $this->prophesize(WriterInterface::class);
-        if(!count($writes)){
+        if (!count($writes)) {
             $writer->writeFile(new AnyValuesToken())->shouldNotBeCalled();
         }
         foreach ($writes as $path => $fixture_file) {

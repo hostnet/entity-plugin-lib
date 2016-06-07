@@ -7,8 +7,7 @@ namespace Hostnet\Component\EntityPlugin;
  *
  * Why on earth would we do this?
  * In order to use reflection we have to have valid classes. So we first generate
- * empty interfaces and traits. Secondly we fill the interfaces with their methods
- * in process isolation.
+ * empty interfaces and traits. Secondly we fill the interfaces with their methods.
  *
  * @author Hidde Boomsma <hboomsma@hostnet.nl>
  * @author Nico Schoenmaker <nschoenmaker@hostnet.nl>

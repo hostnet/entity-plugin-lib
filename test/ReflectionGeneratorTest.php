@@ -12,11 +12,11 @@ use Prophecy\Argument;
  */
 class ReflectionGeneratorTest extends \PHPUnit_Framework_TestCase
 {
-    public function testGenerateInIsolation()
+    public function testGenerateMain()
     {
         $base_dir = __DIR__ . '/Functional/src/Entity';
 
-        ReflectionGenerator::generateInIsolation('Hostnet\\FunctionalFixtures\\Entity\\BaseClass');
+        ReflectionGenerator::main('Hostnet\\FunctionalFixtures\\Entity\\BaseClass');
 
         $actual = file_get_contents($base_dir . '/Generated/BaseClassInterface.php');
 
@@ -26,11 +26,11 @@ class ReflectionGeneratorTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($actual, file_get_contents(__DIR__ . '/Functional/Tests/expected/BaseClassInterface.php'));
     }
 
-    public function testGenerateInIsolationWithParent()
+    public function testGenerateWithParent()
     {
         $base_dir = __DIR__ . '/Functional/src/Entity';
 
-        ReflectionGenerator::generateInIsolation('Hostnet\\FunctionalFixtures\\Entity\\ExtendedClass');
+        ReflectionGenerator::main('Hostnet\\FunctionalFixtures\\Entity\\ExtendedClass');
 
         $actual = file_get_contents($base_dir . '/Generated/ExtendedClassInterface.php');
 
@@ -43,11 +43,11 @@ class ReflectionGeneratorTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    public function testGenerateInIsolationWithMissingParent()
+    public function testGenerateWithMissingParent()
     {
         $base_dir = __DIR__ . '/Functional/src/Entity';
 
-        ReflectionGenerator::generateInIsolation('Hostnet\\FunctionalFixtures\\Entity\\ExtendedMissingParentClass');
+        ReflectionGenerator::main('Hostnet\\FunctionalFixtures\\Entity\\ExtendedMissingParentClass');
 
         $actual = file_get_contents($base_dir . '/Generated/ExtendedMissingParentClassInterface.php');
 

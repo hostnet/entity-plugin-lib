@@ -72,23 +72,6 @@ class ReflectionGenerator
         return $methods;
     }
 
-    /**
-     *
-     * @param string $class Fully Qualified class name to generate interface for
-     * @return string
-     */
-    public static function generateInIsolation($class)
-    {
-        $php       = '/usr/bin/env php -r';
-        $namespace = 'namespace Hostnet\\Component\\EntityPlugin;';
-        $require   = 'require \'' . __FILE__ . '\';';
-        $main      = sprintf(
-            "ReflectionGenerator::main('%s');",
-            $class
-        );
-        echo `$php "$namespace $require $main"`;
-    }
-    
     private static function getParentClass(\ReflectionClass $base_class)
     {
         if (false === ($parent_reflection = $base_class->getParentClass())
@@ -96,40 +79,22 @@ class ReflectionGenerator
         ) {
             return null;
         }
-        
+
         return new PackageClass($parent_reflection->getName(), $parent_reflection->getFileName());
     }
 
     /**
-     * Generated in process isolation entry point.
+     * Generation entry point.
      *
      * @param string $class Fully Qualified class name to generate interface for
      */
     public static function main($class)
     {
-        // enable autoloading
-        // @codeCoverageIgnoreStart
-        if (file_exists(getcwd() . '/vendor/autoload.php')) {
-            // If symlinked this is enables testing using ./composer.phar dump-autoload
-            // in the project root directory.
-            include getcwd() . '/vendor/autoload.php';
-        } elseif (file_exists(__DIR__ . '/../../../autoload.php')) {
-            // We are loaded in a parent project and inside the vendor directory.
-            // Test this before a standalone checkout to not accidentially pick
-            // the autoload created by running ./composer.phar dump-autmoload in
-            // or install in the vendor directory for this package.
-            include __DIR__ . '/../../../autoload.php';
-        } else {
-            // Stand alone checkout
-            include __DIR__ . '/../vendor/autoload.php';
-        }
-        // @codeCoverageIgnoreEnd
-
         // setup all the dependencies
         $reflection           = new \ReflectionClass($class);
         $package_class        = new PackageClass($class, $reflection->getFileName());
         $parent_package_class = self::getParentClass($reflection);
-        
+
         $loader      = new \Twig_Loader_Filesystem(__DIR__ . '/Resources/templates/');
         $environment = new \Twig_Environment($loader);
         $writer      = new Writer();
