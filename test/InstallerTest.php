@@ -32,7 +32,7 @@ class InstallerTest extends \PHPUnit_Framework_TestCase
 
         $installer = new MockInstaller($this->mockIO(), $this->mockComposer(), [], $empty);
 
-        $package = $this->getMock('Composer\Package\PackageInterface');
+        $package = self::createMock('Composer\Package\PackageInterface');
         $package->expects($this->once())->method('getPrettyName')->will($this->returnValue('prettyName'));
         $this->assertEquals($this->working_dir . '/vendor/prettyName', $installer->getInstallPath($package));
         $this->assertEquals(1, $installer->initialize_vendor_dir_called);

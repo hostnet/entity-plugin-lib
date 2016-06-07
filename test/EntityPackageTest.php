@@ -19,21 +19,21 @@ class EntityPackageTest extends \PHPUnit_Framework_TestCase
 
     public function testGetEntityContent()
     {
-        $entity_content = $this->getMock('Hostnet\Component\EntityPlugin\PackageContentInterface');
+        $entity_content = self::createMock('Hostnet\Component\EntityPlugin\PackageContentInterface');
         $entity_package = new EntityPackage(
             new Package('hostnet/foo', 1.0, 1.0),
             $entity_content,
-            $this->getMock('Hostnet\Component\EntityPlugin\PackageContentInterface')
+            self::createMock('Hostnet\Component\EntityPlugin\PackageContentInterface')
         );
         $this->assertSame($entity_content, $entity_package->getEntityContent());
     }
 
     public function testGetRepositoryContent()
     {
-        $repo_content   = $this->getMock('Hostnet\Component\EntityPlugin\PackageContentInterface');
+        $repo_content   = self::createMock('Hostnet\Component\EntityPlugin\PackageContentInterface');
         $entity_package = new EntityPackage(
             new Package('hostnet/foo', 1.0, 1.0),
-            $this->getMock('Hostnet\Component\EntityPlugin\PackageContentInterface'),
+            self::createMock('Hostnet\Component\EntityPlugin\PackageContentInterface'),
             $repo_content
         );
         $this->assertSame($repo_content, $entity_package->getRepositoryContent());
@@ -42,7 +42,7 @@ class EntityPackageTest extends \PHPUnit_Framework_TestCase
     public function testGetRequires()
     {
         $package        = new Package('hostnet/foo', 1.0, 1.0);
-        $content        = $this->getMock('Hostnet\Component\EntityPlugin\PackageContentInterface');
+        $content        = self::createMock('Hostnet\Component\EntityPlugin\PackageContentInterface');
         $entity_package = new EntityPackage($package, $content, $content);
         $this->assertEquals([], $entity_package->getRequires());
         $link = new Link('hostnet/a', 'hostnet/foo');
@@ -125,8 +125,8 @@ class EntityPackageTest extends \PHPUnit_Framework_TestCase
         // Lets change this to ::class after 14 Sep '15 once PHP 5.4 is unsupported.
         return new EntityPackage(
             $package,
-            $this->getMock('Hostnet\Component\EntityPlugin\PackageContentInterface'),
-            $this->getMock('Hostnet\Component\EntityPlugin\PackageContentInterface')
+            self::createMock('Hostnet\Component\EntityPlugin\PackageContentInterface'),
+            self::createMock('Hostnet\Component\EntityPlugin\PackageContentInterface')
         );
     }
 }

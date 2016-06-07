@@ -3,8 +3,9 @@ namespace Hostnet\Component\EntityPlugin\Compound;
 
 use Composer\Package\Package;
 use Hostnet\Component\EntityPlugin\EntityPackage;
-use Hostnet\Component\EntityPlugin\WriterInterface;
 use Hostnet\Component\EntityPlugin\PackageContent;
+use Hostnet\Component\EntityPlugin\WriterInterface;
+use Prophecy\Argument\Token\AnyValuesToken;
 
 /**
  * More of a functional-like test to check the outputted html.
@@ -21,42 +22,43 @@ class CompoundGeneratorTest extends \PHPUnit_Framework_TestCase
      */
     public function testGenerate(
         EntityPackage $entity_package,
-        WriterInterface $entity_writer,
-        WriterInterface $repo_writer
+        array $entity_writer_input,
+        array $repo_writer_input
     ) {
-        $io          = $this->getMock('Composer\IO\IOInterface');
-        $loader      = new \Twig_Loader_Filesystem(__DIR__ . '/../../src/Resources/templates/');
-        $environment = new \Twig_Environment($loader);
-        $provider    = new PackageContentProvider(PackageContent::ENTITY);
-        $generator   = new CompoundGenerator($io, $environment, $entity_writer, $provider);
+        $io            = self::createMock('Composer\IO\IOInterface');
+        $loader        = new \Twig_Loader_Filesystem(__DIR__ . '/../../src/Resources/templates/');
+        $environment   = new \Twig_Environment($loader);
+        $provider      = new PackageContentProvider(PackageContent::ENTITY);
+        $entity_writer = $this->mockWriter($entity_writer_input);
+        $generator     = new CompoundGenerator($io, $environment, $entity_writer, $provider);
         $generator->generate($entity_package);
 
-        $provider  = new PackageContentProvider(PackageContent::REPOSITORY);
-        $generator = new CompoundGenerator($io, $environment, $repo_writer, $provider);
+        $provider = new PackageContentProvider(PackageContent::REPOSITORY);
+
+        $repo_writer = $this->mockWriter($repo_writer_input);
+        $generator   = new CompoundGenerator($io, $environment, $repo_writer, $provider);
         $generator->generate($entity_package);
     }
 
     public function generateProvider()
     {
-        // Test case 1: Empty test case
-        $writer_empty = $this->mockWriter([]);
 
         // Test case 2: Contract(repository) will be extended with client(repository)
         // While leaving Easter(repository) out
 
         $writes = [
-            'src/Entity/Generated/ContractTraits.php' => 'ContractTraits.php',
-            'src/Entity/Generated/ProductTraits.php' => 'ProductTraits.php',
-            'src/Entity/Generated/DeathContractTraits.php' =>  'DeathContractTraits.php',
+            'src/Entity/Generated/ClientTrait.php' => 'ClientTrait.php',
+            'src/Entity/Generated/ContractTrait.php' => 'ContractTrait.php',
+            'src/Entity/Generated/ProductTrait.php' => 'ProductTrait.php',
+            'src/Entity/Generated/DeathContractTrait.php' =>  'DeathContractTrait.php',
         ];
 
         $repo_writes = [
-            'src/Repository/Generated/ContractRepositoryTraits.php' => 'ContractRepositoryTraits.php',
-            'src/Repository/Generated/ProductRepositoryTraits.php' => 'ProductRepositoryTraits.php',
+            'src/Repository/Generated/ContractRepositoryTrait.php' => 'ContractRepositoryTrait.php',
+            'src/Repository/Generated/ProductRepositoryTrait.php' => 'ProductRepositoryTrait.php',
         ];
 
-        $contract_package = $this->mockEntityPackage(
-            [
+        $contract_class_map = [
                 'Hostnet\Contract\Entity\Contract' => 'src/Entity/Contract.php',
                 'Hostnet\Contract\Entity\DeathContract' => 'src/Entity/DeathContract.php',
                 'Hostnet\Contract\Entity\ContractWhenClientTrait' => 'src/Entity/ContractWhenClientTrait.php',
@@ -66,28 +68,33 @@ class CompoundGeneratorTest extends \PHPUnit_Framework_TestCase
                     'src/Repository/ContractRepositoryWhenClientTrait.php',
                 'Hostnet\Contract\Repository\ContractRepositoryWhenEasterTrait' =>
                     'src/Repository/ContractRepositoryWhenEasterTrait.php',
-            ],
+            ];
+        $contract_package   = $this->mockEntityPackage(
+            $contract_class_map,
             'hostnet/contract'
         );
 
-        $client_package = $this->mockEntityPackage(
-            ['Hostnet\Client\Entity\Client' => 'src/Entity/Client.php'],
+        $client_class_map = ['Hostnet\Client\Entity\Client' => 'src/Entity/Client.php'];
+        $client_package   = $this->mockEntityPackage(
+            $client_class_map,
             'hostnet/client'
         );
 
-        $product_package = $this->mockEntityPackage(
-            [
+        $product_class_map = [
                 'Hostnet\Product\Entity\Product' => 'src/Entity/Product.php',
                 'Hostnet\Product\Repository\ProductRepository' => 'src/Repository/ProductRepository.php',
-            ],
+            ];
+        $product_package   = $this->mockEntityPackage(
+            $product_class_map,
             'hostnet/product'
         );
 
-        $death_package = $this->mockEntityPackage(
-            [
+        $death_class_map = [
                 'Hostnet\Death\Entity\DeathContractWhenProductTrait' => 'src/Entity/DeathContractWhenProductTrait.php',
                 'Hostnet\Death\Entity\DeathContractWhenClientTrait' => 'src/Entity/DeathContractWhenClientTrait.php'
-            ],
+            ];
+        $death_package   = $this->mockEntityPackage(
+            $death_class_map,
             'hostnet/death'
         );
 
@@ -105,7 +112,15 @@ class CompoundGeneratorTest extends \PHPUnit_Framework_TestCase
          *  \---------req---> DEATH --sug--- ----------/
          */
 
-        $app_package = $this->mockEntityPackage([], 'hostnet/app');
+        $app_package = $this->mockEntityPackage(
+            array_merge(
+                $contract_class_map,
+                $client_class_map,
+                $product_class_map,
+                $death_class_map
+            ),
+            'hostnet/app'
+        );
 
         $app_package->addRequiredPackage($contract_package);
         $app_package->addRequiredPackage($client_package);
@@ -119,12 +134,9 @@ class CompoundGeneratorTest extends \PHPUnit_Framework_TestCase
         $contract_package->addRequiredPackage($client_package);
         $contract_package->addRequiredPackage($product_package);
 
-        $writer      = $this->mockWriter($writes);
-        $repo_writer = $this->mockWriter($repo_writes);
-
         return [
-            [$this->mockEntityPackage([], 'hostnet/package'), $writer_empty, $writer_empty],
-            [$app_package, $writer, $repo_writer],
+            [$this->mockEntityPackage([], 'hostnet/package'), [], []],
+            [$app_package, $writes, $repo_writes],
         ];
     }
 
@@ -140,16 +152,16 @@ class CompoundGeneratorTest extends \PHPUnit_Framework_TestCase
 
     private function mockWriter(array $writes)
     {
-        $writer = $this->getMock('Hostnet\Component\EntityPlugin\WriterInterface');
-        $that   = $this;
-        $writer->expects($this->exactly(count($writes)))
-        ->method('writeFile')
-        ->will($this->returnCallback(function ($path, $data) use ($writes, $that) {
-            $that->assertTrue(isset($writes[$path]), 'No write expected to ' . $path);
-            $contents = file_get_contents(__DIR__ . '/CompoundEdgeCases/'.$writes[$path]);
-            $that->assertEquals($contents, $data);
-        }));
-
-        return $writer;
+        $writer = $this->prophesize(WriterInterface::class);
+        if(!count($writes)){
+            $writer->writeFile(new AnyValuesToken())->shouldNotBeCalled();
+        }
+        foreach ($writes as $path => $fixture_file) {
+            $writer->writeFile(
+                $path,
+                file_get_contents(__DIR__ . '/CompoundEdgeCases/'. $fixture_file)
+            )->shouldBeCalled();
+        }
+        return $writer->reveal();
     }
 }

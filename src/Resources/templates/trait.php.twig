@@ -12,7 +12,7 @@ use {{ use_statement.name}} as {{ use_statement.alias }};
  * This is the guy that the main class needs to require, and ensures that everything is glued
  * together
  */
-trait {{ class_name }}Traits
+trait {{ class_name }}Trait
 {
 {% for use_statement in use_statements %}
     use {{ use_statement.alias }};

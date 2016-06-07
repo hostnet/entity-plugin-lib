@@ -14,7 +14,7 @@ class ReflectionGeneratorTest extends \PHPUnit_Framework_TestCase
 {
     public function testGenerateInIsolation()
     {
-        $base_dir    = __DIR__ . '/Functional/src/Entity';
+        $base_dir = __DIR__ . '/Functional/src/Entity';
 
         ReflectionGenerator::generateInIsolation('Hostnet\\FunctionalFixtures\\Entity\\BaseClass');
 
@@ -28,7 +28,7 @@ class ReflectionGeneratorTest extends \PHPUnit_Framework_TestCase
 
     public function testGenerateInIsolationWithParent()
     {
-        $base_dir    = __DIR__ . '/Functional/src/Entity';
+        $base_dir = __DIR__ . '/Functional/src/Entity';
 
         ReflectionGenerator::generateInIsolation('Hostnet\\FunctionalFixtures\\Entity\\ExtendedClass');
 
@@ -37,12 +37,15 @@ class ReflectionGeneratorTest extends \PHPUnit_Framework_TestCase
         unlink($base_dir . '/Generated/ExtendedClassInterface.php');
         rmdir($base_dir . '/Generated');
 
-        $this->assertEquals($actual, file_get_contents(__DIR__ . '/Functional/Tests/expected/ExtendedClassInterface.php'));
+        $this->assertEquals(
+            $actual,
+            file_get_contents(__DIR__ . '/Functional/Tests/expected/ExtendedClassInterface.php')
+        );
     }
 
     public function testGenerateInIsolationWithMissingParent()
     {
-        $base_dir    = __DIR__ . '/Functional/src/Entity';
+        $base_dir = __DIR__ . '/Functional/src/Entity';
 
         ReflectionGenerator::generateInIsolation('Hostnet\\FunctionalFixtures\\Entity\\ExtendedMissingParentClass');
 
@@ -52,7 +55,7 @@ class ReflectionGeneratorTest extends \PHPUnit_Framework_TestCase
         rmdir($base_dir . '/Generated');
 
         $this->assertEquals(
-            $actual, 
+            $actual,
             file_get_contents(__DIR__ . '/Functional/Tests/expected/ExtendedMissingParentClassInterface.php')
         );
     }
@@ -63,7 +66,7 @@ class ReflectionGeneratorTest extends \PHPUnit_Framework_TestCase
         $package_class = new PackageClass('\stdClass', __DIR__);
         $loader        = new \Twig_Loader_Filesystem(__DIR__ . '/../src/Resources/templates/');
         $environment   = new \Twig_Environment($loader);
-        $package_io    = $this->getMock(WriterInterface::class);
+        $package_io    = self::createMock(WriterInterface::class);
 
         $package_io->expects($this->once())
             ->method('writeFile')

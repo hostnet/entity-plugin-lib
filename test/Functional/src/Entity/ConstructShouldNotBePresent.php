@@ -3,7 +3,7 @@ namespace Hostnet\FunctionalFixtures\Entity;
 
 class ConstructShouldNotBePresent
 {
-  public function __construct()
-  {
-  }
+    public function __construct()
+    {
+    }
 }

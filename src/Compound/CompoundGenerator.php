@@ -159,22 +159,25 @@ class CompoundGenerator
 
         $generated_namespace = $package_class->getGeneratedNamespaceName();
 
+        $use_statements = array_filter(
+            $traits,
+            function (PackageClass $stmt) {
+                return $stmt->isTrait();
+            }
+        );
+        sort($use_statements);
+
         $data = $this->environment->render(
-            'traits.php.twig',
+            'trait.php.twig',
             [
                 'class_name' => $short_name,
                 'namespace' => $generated_namespace,
-                'use_statements' => array_filter(
-                    $traits,
-                    function (PackageClass $stmt) {
-                        return $stmt->isTrait();
-                    }
-                )
+                'use_statements' => $use_statements
             ]
         );
 
         $this->writer->writeFile(
-            $package_class->getGeneratedDirectory() . $short_name . 'Traits.php',
+            $package_class->getGeneratedDirectory() . $short_name . 'Trait.php',
             $data
         );
     }

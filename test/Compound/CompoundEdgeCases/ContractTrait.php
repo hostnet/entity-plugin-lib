@@ -8,7 +8,7 @@ use Hostnet\Contract\Entity\ContractWhenClientTrait as HostnetContractEntityBeca
  * This is the guy that the main class needs to require, and ensures that everything is glued
  * together
  */
-trait ContractTraits
+trait ContractTrait
 {
     use HostnetContractEntityBecauseClient;
 }

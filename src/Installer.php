@@ -18,7 +18,7 @@ use Composer\Package\RootPackageInterface;
  * @todo Cut the dependency to LibraryInstaller, this does not make sense now we are a plugin.
  * @author Nico Schoenmaker <nschoenmaker@hostnet.nl>
  */
-class Installer extends LibraryInstaller implements PackagePathResolver
+class Installer extends LibraryInstaller implements PackagePathResolverInterface
 {
     const PACKAGE_TYPE            = 'hostnet-entity';
     const EXTRA_ENTITY_BUNDLE_DIR = 'entity-bundle-dir';
@@ -43,7 +43,7 @@ class Installer extends LibraryInstaller implements PackagePathResolver
     }
 
     /**
-     * @see \Hostnet\Component\EntityPlugin\PackagePathResolver::getSourcePath()
+     * @see \Hostnet\Component\EntityPlugin\PackagePathResolverInterface::getSourcePath()
      */
     public function getSourcePath(PackageInterface $package)
     {

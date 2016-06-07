@@ -1,27 +1,29 @@
 {
-    "name": "hostnet/entity-plugin-lib",
-    "type": "composer-plugin",
-    "description": "Installer for all the Hostnet Doctrine entity libraries",
-    "license": "MIT",
+    "name":              "hostnet/entity-plugin-lib",
+    "type":              "composer-plugin",
+    "description":       "Installer for all the Hostnet Doctrine entity libraries",
+    "license":           "MIT",
     "require": {
-        "php": ">=5.5",
-        "twig/twig": "1.*, >=1.13",
-        "composer-plugin-api": "^1.0"
+        "php":                 ">=5.5",
+        "composer-plugin-api": "^1.0.0",
+        "twig/twig":           "1.*, >=1.13"
     },
     "require-dev": {
-        "composer/composer": "master@dev",
-        "phpunit/phpunit": "4.*",
-        "squizlabs/php_codesniffer": "^2.5"
+        "composer/composer":  "^1.1.0",
+        "hostnet/phpcs-tool": "^4.0.8",
+        "phpunit/phpunit":    "^5.4.2"
     },
     "minimum-stability": "stable",
     "autoload": {
-        "psr-4": { "Hostnet\\Component\\EntityPlugin\\": "src/" }
+        "psr-4": {
+            "Hostnet\\Component\\EntityPlugin\\": "src/"
+        }
     },
     "autoload-dev": {
         "psr-4": {
-            "Hostnet\\Component\\EntityPlugin\\Mock\\": "test/Mock",
-            "Hostnet\\EdgeCases\\Entity\\": "test/EdgeCases",
-            "Hostnet\\FunctionalFixtures\\": "test/Functional/src",
+            "Hostnet\\Component\\EntityPlugin\\Mock\\":       "test/Mock",
+            "Hostnet\\EdgeCases\\Entity\\":                   "test/EdgeCases",
+            "Hostnet\\FunctionalFixtures\\":                  "test/Functional/src",
             "Hostnet\\Component\\EntityPlugin\\Functional\\": "test/Functional/Tests"
         }
     },
