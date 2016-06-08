@@ -2,6 +2,7 @@
 namespace Hostnet\Component\EntityPlugin;
 
 use \Hostnet\Component\EntityPlugin\ReflectionGenerator;
+use phpunit\framework\TestCase;
 
 function parameterHints(
     array $array,
@@ -17,7 +18,7 @@ function parameterHints(
 /**
  * @covers Hostnet\Component\EntityPlugin\TypeHinter
  */
-class TypeHinterTest extends \PHPUnit_Framework_TestCase
+class TypeHinterTest extends TestCase
 {
 
     /**

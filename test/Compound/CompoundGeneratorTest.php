@@ -5,6 +5,7 @@ use Composer\IO\IOInterface;
 use Composer\Package\Package;
 use Hostnet\Component\EntityPlugin\EntityPackage;
 use Hostnet\Component\EntityPlugin\PackageContent;
+use phpunit\framework\TestCase;
 use Prophecy\Argument\Token\AnyValuesToken;
 use Prophecy\Argument\Token\AnyValueToken;
 use Symfony\Component\Filesystem\Filesystem;
@@ -14,7 +15,7 @@ use Symfony\Component\Filesystem\Filesystem;
  * @author Nico Schoenmaker <nschoenmaker@hostnet.nl>
  * @covers Hostnet\Component\EntityPlugin\Compound\CompoundGenerator
  */
-class CompoundGeneratorTest extends \PHPUnit_Framework_TestCase
+class CompoundGeneratorTest extends TestCase
 {
     /**
      * @dataProvider generateProvider

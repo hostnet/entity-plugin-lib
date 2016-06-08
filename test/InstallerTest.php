@@ -9,11 +9,12 @@ use Composer\Package\RootPackage;
 use Composer\Repository\RepositoryManager;
 use Composer\Repository\WritableArrayRepository;
 use Hostnet\Component\EntityPlugin\Mock\Installer as MockInstaller;
+use phpunit\framework\TestCase;
 
 /**
  * @covers Hostnet\Component\EntityPlugin\Installer
  */
-class InstallerTest extends \PHPUnit_Framework_TestCase
+class InstallerTest extends TestCase
 {
     private $working_dir;
 

@@ -4,11 +4,12 @@ namespace Hostnet\Component\EntityPlugin\Compound;
 use Composer\Package\Package;
 use Hostnet\Component\EntityPlugin\EntityPackage;
 use Hostnet\Component\EntityPlugin\PackageContent;
+use phpunit\framework\TestCase;
 
 /**
  * @covers Hostnet\Component\EntityPlugin\Compound\PackageContentProvider
  */
-class PackageContentProviderTest extends \PHPUnit_Framework_TestCase
+class PackageContentProviderTest extends TestCase
 {
     public function testGetPackageContent()
     {

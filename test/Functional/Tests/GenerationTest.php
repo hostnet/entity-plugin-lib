@@ -10,11 +10,12 @@ use Composer\Package\RootPackage;
 use Composer\Repository\InstalledArrayRepository;
 use Composer\Repository\RepositoryManager;
 use Hostnet\Component\EntityPlugin\Plugin;
+use phpunit\framework\TestCase;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 use Symfony\Component\Console\Output\StreamOutput;
 
-class GenerationTest extends \PHPUnit_Framework_TestCase
+class GenerationTest extends TestCase
 {
     /**
      * @var Plugin

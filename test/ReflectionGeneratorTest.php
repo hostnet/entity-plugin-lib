@@ -1,6 +1,7 @@
 <?php
 namespace Hostnet\Component\EntityPlugin;
 
+use phpunit\framework\TestCase;
 use Symfony\Component\Filesystem\Filesystem;
 
 /**
@@ -10,7 +11,7 @@ use Symfony\Component\Filesystem\Filesystem;
  * @covers Hostnet\Component\EntityPlugin\ReflectionGenerator
  * @author Nico Schoenmaker <nschoenmaker@hostnet.nl>
  */
-class ReflectionGeneratorTest extends \PHPUnit_Framework_TestCase
+class ReflectionGeneratorTest extends TestCase
 {
 
     /**

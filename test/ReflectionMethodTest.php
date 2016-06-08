@@ -1,10 +1,12 @@
 <?php
 namespace Hostnet\Component\EntityPlugin;
 
+use phpunit\framework\TestCase;
+
 /**
  * @covers Hostnet\Component\EntityPlugin\ReflectionMethod
  */
-class ReflectionMethodTest extends \PHPUnit_Framework_TestCase
+class ReflectionMethodTest extends TestCase
 {
     private $method;
 
