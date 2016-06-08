@@ -1,6 +1,8 @@
 <?php
 namespace Hostnet\Component\EntityPlugin;
 
+use Symfony\Component\Filesystem\Filesystem;
+
 /**
  * A simple, light-weight generator that can be used runtime during development
  * It does not know about the composer structure, since thats expensive to build
@@ -11,29 +13,29 @@ class ReflectionGenerator
 {
     private $environment;
 
-    private $writer;
+    private $filesystem;
 
     /**
      * @param \Twig_Environment $environment
-     * @param WriterInterface $writer
+     * @param Filesystem $filesystem
      */
     public function __construct(
         \Twig_Environment $environment,
-        WriterInterface $writer
+        Filesystem $filesystem
     ) {
         $this->environment = $environment;
-        $this->writer      = $writer;
+        $this->filesystem  = $filesystem;
     }
 
     /**
      * Generates the interface
      *
      * @param PackageClass $package_class
-     * @param PackageClass $parent
      * @throws \Twig_Error
      */
-    public function generate(PackageClass $package_class, PackageClass $parent = null)
+    public function generate(PackageClass $package_class)
     {
+        $parent              = $this->getParentClass($package_class);
         $class_name          = $package_class->getShortName();
         $generated_namespace = $package_class->getGeneratedNamespaceName();
 
@@ -47,7 +49,7 @@ class ReflectionGenerator
 
         $interface = $this->environment->render('interface.php.twig', $params);
         $path      = $package_class->getGeneratedDirectory();
-        $this->writer->writeFile($path . $class_name . 'Interface.php', $interface);
+        $this->filesystem->dumpFile($path . $class_name . 'Interface.php', $interface);
     }
 
     /**
@@ -73,69 +75,23 @@ class ReflectionGenerator
     }
 
     /**
+     * Get the Parent of the given base class, if any.
      *
-     * @param string $class Fully Qualified class name to generate interface for
-     * @return string
+     * @param PackageClass $package_class the base for which the parent needs to be extracted.
+     * @return NULL|\Hostnet\Component\EntityPlugin\PackageClass the parent class if any, otherwise null is returned.
      */
-    public static function generateInIsolation($class)
+    private function getParentClass(PackageClass $package_class)
     {
-        $php       = '/usr/bin/env php -r';
-        $namespace = 'namespace Hostnet\\Component\\EntityPlugin;';
-        $require   = 'require \'' . __FILE__ . '\';';
-        $main      = sprintf(
-            "ReflectionGenerator::main('%s');",
-            $class
-        );
-        echo `$php "$namespace $require $main"`;
-    }
-    
-    private static function getParentClass(\ReflectionClass $base_class)
-    {
+        try {
+            $base_class = new \ReflectionClass($package_class->getName());
+        } catch (\ReflectionException $e) {
+            return null;
+        }
         if (false === ($parent_reflection = $base_class->getParentClass())
             || dirname($parent_reflection->getFileName()) !== dirname($base_class->getFileName())
         ) {
             return null;
         }
-        
         return new PackageClass($parent_reflection->getName(), $parent_reflection->getFileName());
-    }
-
-    /**
-     * Generated in process isolation entry point.
-     *
-     * @param string $class Fully Qualified class name to generate interface for
-     */
-    public static function main($class)
-    {
-        // enable autoloading
-        // @codeCoverageIgnoreStart
-        if (file_exists(getcwd() . '/vendor/autoload.php')) {
-            // If symlinked this is enables testing using ./composer.phar dump-autoload
-            // in the project root directory.
-            include getcwd() . '/vendor/autoload.php';
-        } elseif (file_exists(__DIR__ . '/../../../autoload.php')) {
-            // We are loaded in a parent project and inside the vendor directory.
-            // Test this before a standalone checkout to not accidentially pick
-            // the autoload created by running ./composer.phar dump-autmoload in
-            // or install in the vendor directory for this package.
-            include __DIR__ . '/../../../autoload.php';
-        } else {
-            // Stand alone checkout
-            include __DIR__ . '/../vendor/autoload.php';
-        }
-        // @codeCoverageIgnoreEnd
-
-        // setup all the dependencies
-        $reflection           = new \ReflectionClass($class);
-        $package_class        = new PackageClass($class, $reflection->getFileName());
-        $parent_package_class = self::getParentClass($reflection);
-        
-        $loader      = new \Twig_Loader_Filesystem(__DIR__ . '/Resources/templates/');
-        $environment = new \Twig_Environment($loader);
-        $writer      = new Writer();
-
-        // generate the files
-        $generator = new ReflectionGenerator($environment, $writer);
-        $generator->generate($package_class, $parent_package_class);
     }
 }

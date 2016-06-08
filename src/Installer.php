@@ -18,7 +18,7 @@ use Composer\Package\RootPackageInterface;
  * @todo Cut the dependency to LibraryInstaller, this does not make sense now we are a plugin.
  * @author Nico Schoenmaker <nschoenmaker@hostnet.nl>
  */
-class Installer extends LibraryInstaller implements PackagePathResolver
+class Installer extends LibraryInstaller implements PackagePathResolverInterface
 {
     const PACKAGE_TYPE            = 'hostnet-entity';
     const EXTRA_ENTITY_BUNDLE_DIR = 'entity-bundle-dir';
@@ -31,19 +31,27 @@ class Installer extends LibraryInstaller implements PackagePathResolver
 
     private $graph = null;
 
+    /**
+     *
+     * @var ReflectionGenerator
+     */
+    private $reflection_generator;
+
     public function __construct(
         IOInterface $io,
         Composer $composer,
         array $compound_generators,
-        EmptyGenerator $empty_generator
+        EmptyGenerator $empty_generator,
+        ReflectionGenerator $reflection_generator
     ) {
         parent::__construct($io, $composer);
-        $this->compound_generators = $compound_generators;
-        $this->empty_generator     = $empty_generator;
+        $this->compound_generators  = $compound_generators;
+        $this->empty_generator      = $empty_generator;
+        $this->reflection_generator = $reflection_generator;
     }
 
     /**
-     * @see \Hostnet\Component\EntityPlugin\PackagePathResolver::getSourcePath()
+     * @see \Hostnet\Component\EntityPlugin\PackagePathResolverInterface::getSourcePath()
      */
     public function getSourcePath(PackageInterface $package)
     {
@@ -223,7 +231,7 @@ class Installer extends LibraryInstaller implements PackagePathResolver
                 $this->writeIfVeryVerbose(
                     '        - Generating interface for <info>' . $entity->getName() . '</info>'
                 );
-                ReflectionGenerator::generateInIsolation($entity->getName());
+                $this->reflection_generator->generate($entity);
             }
         }
     }

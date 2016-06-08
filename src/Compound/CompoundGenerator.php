@@ -4,7 +4,7 @@ namespace Hostnet\Component\EntityPlugin\Compound;
 use Composer\IO\IOInterface;
 use Hostnet\Component\EntityPlugin\EntityPackage;
 use Hostnet\Component\EntityPlugin\PackageClass;
-use Hostnet\Component\EntityPlugin\WriterInterface;
+use Symfony\Component\Filesystem\Filesystem;
 
 /**
  * The generator for pass 1/3: Generating compound traits and interfaces
@@ -21,25 +21,25 @@ class CompoundGenerator
 
     private $environment;
 
-    private $writer;
+    private $filesystem;
 
     private $content_provider;
 
     /**
      * @param IOInterface $io
      * @param \Twig_Environment $environment
-     * @param WriterInterface $writer
+     * @param Filesystem $filesystem
      * @param PackageContentProvider $content_provider
      */
     public function __construct(
         IOInterface $io,
         \Twig_Environment $environment,
-        WriterInterface $writer,
+        Filesystem $filesystem,
         PackageContentProvider $content_provider
     ) {
         $this->io               = $io;
         $this->environment      = $environment;
-        $this->writer           = $writer;
+        $this->filesystem       = $filesystem;
         $this->content_provider = $content_provider;
     }
 
@@ -159,22 +159,25 @@ class CompoundGenerator
 
         $generated_namespace = $package_class->getGeneratedNamespaceName();
 
+        $use_statements = array_filter(
+            $traits,
+            function (PackageClass $stmt) {
+                return $stmt->isTrait();
+            }
+        );
+        sort($use_statements);
+
         $data = $this->environment->render(
-            'traits.php.twig',
+            'trait.php.twig',
             [
                 'class_name' => $short_name,
                 'namespace' => $generated_namespace,
-                'use_statements' => array_filter(
-                    $traits,
-                    function (PackageClass $stmt) {
-                        return $stmt->isTrait();
-                    }
-                )
+                'use_statements' => $use_statements
             ]
         );
 
-        $this->writer->writeFile(
-            $package_class->getGeneratedDirectory() . $short_name . 'Traits.php',
+        $this->filesystem->dumpFile(
+            $package_class->getGeneratedDirectory() . $short_name . 'Trait.php',
             $data
         );
     }

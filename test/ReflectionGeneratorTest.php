@@ -1,7 +1,7 @@
 <?php
 namespace Hostnet\Component\EntityPlugin;
 
-use Prophecy\Argument;
+use Symfony\Component\Filesystem\Filesystem;
 
 /**
  * More a functiononal test then a unit-test
@@ -12,11 +12,41 @@ use Prophecy\Argument;
  */
 class ReflectionGeneratorTest extends \PHPUnit_Framework_TestCase
 {
-    public function testGenerateInIsolation()
-    {
-        $base_dir    = __DIR__ . '/Functional/src/Entity';
 
-        ReflectionGenerator::generateInIsolation('Hostnet\\FunctionalFixtures\\Entity\\BaseClass');
+    /**
+     * The ReflectionGenerator under test
+     *
+     * @var ReflectionGenerator
+     */
+    private $reflection_generator;
+
+    /**
+     * The Twig enviroment used to load the twig templates from.
+     *
+     * @var \Twig_Environment
+     */
+    private $environment;
+
+    /**
+     * {@inheritDoc}
+     */
+    protected function setUp()
+    {
+        $loader            = new \Twig_Loader_Filesystem(__DIR__ . '/../src/Resources/templates/');
+        $this->environment = new \Twig_Environment($loader);
+        $filesystem        = new Filesystem();
+
+        // generate the files
+        $this->reflection_generator = new ReflectionGenerator($this->environment, $filesystem);
+    }
+
+    public function testGenerateMain()
+    {
+        $base_dir = __DIR__ . '/Functional/src/Entity';
+
+        $reflection    = new \ReflectionClass('Hostnet\\FunctionalFixtures\\Entity\\BaseClass');
+        $package_class = new PackageClass('Hostnet\\FunctionalFixtures\\Entity\\BaseClass', $reflection->getFileName());
+        $this->reflection_generator->generate($package_class);
 
         $actual = file_get_contents($base_dir . '/Generated/BaseClassInterface.php');
 
@@ -26,25 +56,38 @@ class ReflectionGeneratorTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($actual, file_get_contents(__DIR__ . '/Functional/Tests/expected/BaseClassInterface.php'));
     }
 
-    public function testGenerateInIsolationWithParent()
+    public function testGenerateWithParent()
     {
-        $base_dir    = __DIR__ . '/Functional/src/Entity';
+        $base_dir = __DIR__ . '/Functional/src/Entity';
 
-        ReflectionGenerator::generateInIsolation('Hostnet\\FunctionalFixtures\\Entity\\ExtendedClass');
+        $reflection    = new \ReflectionClass('Hostnet\\FunctionalFixtures\\Entity\\ExtendedClass');
+        $package_class = new PackageClass(
+            'Hostnet\\FunctionalFixtures\\Entity\\ExtendedClass',
+            $reflection->getFileName()
+        );
+        $this->reflection_generator->generate($package_class);
 
         $actual = file_get_contents($base_dir . '/Generated/ExtendedClassInterface.php');
 
         unlink($base_dir . '/Generated/ExtendedClassInterface.php');
         rmdir($base_dir . '/Generated');
 
-        $this->assertEquals($actual, file_get_contents(__DIR__ . '/Functional/Tests/expected/ExtendedClassInterface.php'));
+        $this->assertEquals(
+            $actual,
+            file_get_contents(__DIR__ . '/Functional/Tests/expected/ExtendedClassInterface.php')
+        );
     }
 
-    public function testGenerateInIsolationWithMissingParent()
+    public function testGenerateWithMissingParent()
     {
-        $base_dir    = __DIR__ . '/Functional/src/Entity';
+        $base_dir = __DIR__ . '/Functional/src/Entity';
 
-        ReflectionGenerator::generateInIsolation('Hostnet\\FunctionalFixtures\\Entity\\ExtendedMissingParentClass');
+        $reflection    = new \ReflectionClass('Hostnet\\FunctionalFixtures\\Entity\\ExtendedMissingParentClass');
+        $package_class = new PackageClass(
+            'Hostnet\\FunctionalFixtures\\Entity\\ExtendedMissingParentClass',
+            $reflection->getFileName()
+        );
+        $this->reflection_generator->generate($package_class);
 
         $actual = file_get_contents($base_dir . '/Generated/ExtendedMissingParentClassInterface.php');
 
@@ -52,7 +95,7 @@ class ReflectionGeneratorTest extends \PHPUnit_Framework_TestCase
         rmdir($base_dir . '/Generated');
 
         $this->assertEquals(
-            $actual, 
+            $actual,
             file_get_contents(__DIR__ . '/Functional/Tests/expected/ExtendedMissingParentClassInterface.php')
         );
     }
@@ -61,42 +104,29 @@ class ReflectionGeneratorTest extends \PHPUnit_Framework_TestCase
     {
         //include_once __DIR__ . '/EdgeCases/' . $package_class->getShortName() . '.php';
         $package_class = new PackageClass('\stdClass', __DIR__);
-        $loader        = new \Twig_Loader_Filesystem(__DIR__ . '/../src/Resources/templates/');
-        $environment   = new \Twig_Environment($loader);
-        $package_io    = $this->getMock(WriterInterface::class);
+        $package_io    = self::createMock(Filesystem::class);
 
         $package_io->expects($this->once())
-            ->method('writeFile')
+            ->method('dumpFile')
             ->with(
                 dirname(__DIR__) . '/Generated/stdClassInterface.php',
                 $this->matchesRegularExpression('/interface stdClassInterface/')
             );
 
-        $generator = new ReflectionGenerator($environment, $package_io);
+        $generator = new ReflectionGenerator($this->environment, $package_io);
         $this->assertNull($generator->generate($package_class));
     }
 
-    public function testMain()
+    /**
+     * @expectedException \ReflectionException
+     */
+    public function testGenerateReflectionErrorOnClass()
     {
-        // functionallity is already tested, test for smoke...
-        ReflectionGenerator::main('Hostnet\\FunctionalFixtures\\Entity\\BaseClass');
+        $filesystem           = $this->prophesize(Filesystem::class);
+        $reflection_generator = new ReflectionGenerator($this->environment, $filesystem->reveal());
 
-        $base_dir = __DIR__ . '/Functional/src/Entity';
+        $package_class = new PackageClass('A\Non\Exsisting\Class', sys_get_temp_dir() . '/file.php');
+        $reflection_generator->generate($package_class);
 
-        unlink($base_dir . '/Generated/BaseClassInterface.php');
-        rmdir($base_dir . '/Generated');
-    }
-
-    public function testMainWithParent()
-    {
-        // functionallity is already tested, test for smoke...
-        ReflectionGenerator::main(
-            'Hostnet\\FunctionalFixtures\\Entity\\ExtendedClass'
-        );
-
-        $base_dir = __DIR__ . '/Functional/src/Entity';
-
-        unlink($base_dir . '/Generated/ExtendedClassInterface.php');
-        rmdir($base_dir . '/Generated');
     }
 }

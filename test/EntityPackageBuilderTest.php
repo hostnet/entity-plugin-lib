@@ -18,7 +18,7 @@ class EntityPackageBuilderTest extends \PHPUnit_Framework_TestCase
         array $expected_required_packages = [],
         array $expected_dependent_packages = []
     ) {
-        $mock = $this->getMock('Hostnet\Component\EntityPlugin\PackagePathResolver');
+        $mock = self::createMock('Hostnet\Component\EntityPlugin\PackagePathResolverInterface');
         $mock->expects($this->any())
              ->method('getSourcePath')
              ->will($this->returnValue(__DIR__));

@@ -8,6 +8,7 @@ use Composer\Plugin\PluginInterface;
 use Composer\Script\ScriptEvents;
 use Hostnet\Component\EntityPlugin\Compound\CompoundGenerator;
 use Hostnet\Component\EntityPlugin\Compound\PackageContentProvider;
+use Symfony\Component\Filesystem\Filesystem;
 
 class Plugin implements PluginInterface, EventSubscriberInterface
 {
@@ -16,7 +17,7 @@ class Plugin implements PluginInterface, EventSubscriberInterface
     public function activate(Composer $composer, IOInterface $io)
     {
         // We don't really have a DI container, so lets create the "services" here.
-        $writer           = new Writer();
+        $filesystem       = new Filesystem();
         $loader           = new \Twig_Loader_Filesystem(__DIR__ . '/Resources/templates/');
         $twig_environment = new \Twig_Environment($loader);
 
@@ -24,19 +25,20 @@ class Plugin implements PluginInterface, EventSubscriberInterface
         $compound_generators[] = new CompoundGenerator(
             $io,
             $twig_environment,
-            $writer,
+            $filesystem,
             new PackageContentProvider(PackageContent::ENTITY)
         );
         $compound_generators[] = new CompoundGenerator(
             $io,
             $twig_environment,
-            $writer,
+            $filesystem,
             new PackageContentProvider(PackageContent::REPOSITORY)
         );
 
-        $empty_generator = new EmptyGenerator($twig_environment, $writer);
+        $empty_generator      = new EmptyGenerator($twig_environment, $filesystem);
+        $reflection_generator = new ReflectionGenerator($twig_environment, $filesystem);
 
-        $this->installer = new Installer($io, $composer, $compound_generators, $empty_generator);
+        $this->installer = new Installer($io, $composer, $compound_generators, $empty_generator, $reflection_generator);
     }
 
     public static function getSubscribedEvents()

@@ -8,7 +8,7 @@ use Composer\Package\PackageInterface;
  *
  * @author Nico Schoenmaker <nschoenmaker@hostnet.nl>
  */
-interface PackagePathResolver
+interface PackagePathResolverInterface
 {
 
     /**

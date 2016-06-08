@@ -17,7 +17,7 @@ class EntityPackageBuilder
 
     private $tree_nodes = [];
 
-    public function __construct(PackagePathResolver $resolver, array $packages)
+    public function __construct(PackagePathResolverInterface $resolver, array $packages)
     {
         $this->resolver = $resolver;
         // First create a hash map for quicker lookup, with fancier objects to store the graph
@@ -25,7 +25,6 @@ class EntityPackageBuilder
             $this->addPackage($package);
         }
         foreach ($this->tree_nodes as $entity_package) {
-
             /* @var $entity_package EntityPackage */
             $links = array_merge($entity_package->getRequires(), array_map(function ($str) use ($entity_package) {
                 return new \Composer\Package\Link($entity_package->getPackage()->getName(), $str);
