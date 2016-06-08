@@ -31,15 +31,23 @@ class Installer extends LibraryInstaller implements PackagePathResolverInterface
 
     private $graph = null;
 
+    /**
+     *
+     * @var ReflectionGenerator
+     */
+    private $reflection_generator;
+
     public function __construct(
         IOInterface $io,
         Composer $composer,
         array $compound_generators,
-        EmptyGenerator $empty_generator
+        EmptyGenerator $empty_generator,
+        ReflectionGenerator $reflection_generator
     ) {
         parent::__construct($io, $composer);
-        $this->compound_generators = $compound_generators;
-        $this->empty_generator     = $empty_generator;
+        $this->compound_generators  = $compound_generators;
+        $this->empty_generator      = $empty_generator;
+        $this->reflection_generator = $reflection_generator;
     }
 
     /**
@@ -223,7 +231,7 @@ class Installer extends LibraryInstaller implements PackagePathResolverInterface
                 $this->writeIfVeryVerbose(
                     '        - Generating interface for <info>' . $entity->getName() . '</info>'
                 );
-                ReflectionGenerator::main($entity->getName());
+                $this->reflection_generator->generate($entity);
             }
         }
     }

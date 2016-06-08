@@ -5,9 +5,9 @@ use Composer\IO\IOInterface;
 use Composer\Package\Package;
 use Hostnet\Component\EntityPlugin\EntityPackage;
 use Hostnet\Component\EntityPlugin\PackageContent;
-use Hostnet\Component\EntityPlugin\WriterInterface;
 use Prophecy\Argument\Token\AnyValuesToken;
 use Prophecy\Argument\Token\AnyValueToken;
+use Symfony\Component\Filesystem\Filesystem;
 
 /**
  * More of a functional-like test to check the outputted html.
@@ -19,33 +19,33 @@ class CompoundGeneratorTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider generateProvider
      * @param EntityPackage $entity_package
-     * @param WriterInterface $entity_writer
-     * @param WriterInterface $repo_writer
+     * @param array $entity_fs_input
+     * @param array $repo_fs_input
      */
     public function testGenerate(
         EntityPackage $entity_package,
-        array $entity_writer_input,
-        array $repo_writer_input
+        array $entity_fs_input,
+        array $repo_fs_input
     ) {
         $io = $this->prophesize(IOInterface::class);
         $io->isDebug()->willReturn(true);
         $io->isVeryVerbose()->willReturn(true);
-        if (count($entity_writer_input) || count($repo_writer_input)) {
+        if (count($entity_fs_input) || count($repo_fs_input)) {
             $io->write(new AnyValueToken())->shouldBeCalled();
         }
         $io = $io->reveal();
 
-        $loader        = new \Twig_Loader_Filesystem(__DIR__ . '/../../src/Resources/templates/');
-        $environment   = new \Twig_Environment($loader);
-        $provider      = new PackageContentProvider(PackageContent::ENTITY);
-        $entity_writer = $this->mockWriter($entity_writer_input);
-        $generator     = new CompoundGenerator($io, $environment, $entity_writer, $provider);
+        $loader      = new \Twig_Loader_Filesystem(__DIR__ . '/../../src/Resources/templates/');
+        $environment = new \Twig_Environment($loader);
+        $provider    = new PackageContentProvider(PackageContent::ENTITY);
+        $entity_fs   = $this->mockFilesystem($entity_fs_input);
+        $generator   = new CompoundGenerator($io, $environment, $entity_fs, $provider);
         $generator->generate($entity_package);
 
         $provider = new PackageContentProvider(PackageContent::REPOSITORY);
 
-        $repo_writer = $this->mockWriter($repo_writer_input);
-        $generator   = new CompoundGenerator($io, $environment, $repo_writer, $provider);
+        $repo_fs   = $this->mockFilesystem($repo_fs_input);
+        $generator = new CompoundGenerator($io, $environment, $repo_fs, $provider);
         $generator->generate($entity_package);
     }
 
@@ -162,18 +162,18 @@ class CompoundGeneratorTest extends \PHPUnit_Framework_TestCase
         return $entity_package;
     }
 
-    private function mockWriter(array $writes)
+    private function mockFilesystem(array $writes)
     {
-        $writer = $this->prophesize(WriterInterface::class);
+        $filesystem = $this->prophesize(Filesystem::class);
         if (!count($writes)) {
-            $writer->writeFile(new AnyValuesToken())->shouldNotBeCalled();
+            $filesystem->dumpFile(new AnyValuesToken())->shouldNotBeCalled();
         }
         foreach ($writes as $path => $fixture_file) {
-            $writer->writeFile(
+            $filesystem->dumpFile(
                 $path,
                 file_get_contents(__DIR__ . '/CompoundEdgeCases/'. $fixture_file)
             )->shouldBeCalled();
         }
-        return $writer->reveal();
+        return $filesystem->reveal();
     }
 }

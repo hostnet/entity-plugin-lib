@@ -4,7 +4,7 @@
     "description":       "Installer for all the Hostnet Doctrine entity libraries",
     "license":           "MIT",
     "require": {
-        "php":                 ">=5.5",
+        "php":                 ">=5.6",
         "composer-plugin-api": "^1.0.0",
         "twig/twig":           "1.*, >=1.13",
         "symfony/filesystem":  "^2.3.0 | ^3.0.0"

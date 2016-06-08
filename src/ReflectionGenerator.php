@@ -1,6 +1,8 @@
 <?php
 namespace Hostnet\Component\EntityPlugin;
 
+use Symfony\Component\Filesystem\Filesystem;
+
 /**
  * A simple, light-weight generator that can be used runtime during development
  * It does not know about the composer structure, since thats expensive to build
@@ -11,29 +13,29 @@ class ReflectionGenerator
 {
     private $environment;
 
-    private $writer;
+    private $filesystem;
 
     /**
      * @param \Twig_Environment $environment
-     * @param WriterInterface $writer
+     * @param Filesystem $filesystem
      */
     public function __construct(
         \Twig_Environment $environment,
-        WriterInterface $writer
+        Filesystem $filesystem
     ) {
         $this->environment = $environment;
-        $this->writer      = $writer;
+        $this->filesystem  = $filesystem;
     }
 
     /**
      * Generates the interface
      *
      * @param PackageClass $package_class
-     * @param PackageClass $parent
      * @throws \Twig_Error
      */
-    public function generate(PackageClass $package_class, PackageClass $parent = null)
+    public function generate(PackageClass $package_class)
     {
+        $parent              = $this->getParentClass($package_class);
         $class_name          = $package_class->getShortName();
         $generated_namespace = $package_class->getGeneratedNamespaceName();
 
@@ -47,7 +49,7 @@ class ReflectionGenerator
 
         $interface = $this->environment->render('interface.php.twig', $params);
         $path      = $package_class->getGeneratedDirectory();
-        $this->writer->writeFile($path . $class_name . 'Interface.php', $interface);
+        $this->filesystem->dumpFile($path . $class_name . 'Interface.php', $interface);
     }
 
     /**
@@ -72,35 +74,24 @@ class ReflectionGenerator
         return $methods;
     }
 
-    private static function getParentClass(\ReflectionClass $base_class)
+    /**
+     * Get the Parent of the given base class, if any.
+     *
+     * @param PackageClass $package_class the base for which the parent needs to be extracted.
+     * @return NULL|\Hostnet\Component\EntityPlugin\PackageClass the parent class if any, otherwise null is returned.
+     */
+    private function getParentClass(PackageClass $package_class)
     {
+        try {
+            $base_class = new \ReflectionClass($package_class->getName());
+        } catch (\ReflectionException $e) {
+            return null;
+        }
         if (false === ($parent_reflection = $base_class->getParentClass())
             || dirname($parent_reflection->getFileName()) !== dirname($base_class->getFileName())
         ) {
             return null;
         }
-
         return new PackageClass($parent_reflection->getName(), $parent_reflection->getFileName());
-    }
-
-    /**
-     * Generation entry point.
-     *
-     * @param string $class Fully Qualified class name to generate interface for
-     */
-    public static function main($class)
-    {
-        // setup all the dependencies
-        $reflection           = new \ReflectionClass($class);
-        $package_class        = new PackageClass($class, $reflection->getFileName());
-        $parent_package_class = self::getParentClass($reflection);
-
-        $loader      = new \Twig_Loader_Filesystem(__DIR__ . '/Resources/templates/');
-        $environment = new \Twig_Environment($loader);
-        $writer      = new Writer();
-
-        // generate the files
-        $generator = new ReflectionGenerator($environment, $writer);
-        $generator->generate($package_class, $parent_package_class);
     }
 }

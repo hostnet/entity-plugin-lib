@@ -4,7 +4,7 @@ namespace Hostnet\Component\EntityPlugin\Compound;
 use Composer\IO\IOInterface;
 use Hostnet\Component\EntityPlugin\EntityPackage;
 use Hostnet\Component\EntityPlugin\PackageClass;
-use Hostnet\Component\EntityPlugin\WriterInterface;
+use Symfony\Component\Filesystem\Filesystem;
 
 /**
  * The generator for pass 1/3: Generating compound traits and interfaces
@@ -21,25 +21,25 @@ class CompoundGenerator
 
     private $environment;
 
-    private $writer;
+    private $filesystem;
 
     private $content_provider;
 
     /**
      * @param IOInterface $io
      * @param \Twig_Environment $environment
-     * @param WriterInterface $writer
+     * @param Filesystem $filesystem
      * @param PackageContentProvider $content_provider
      */
     public function __construct(
         IOInterface $io,
         \Twig_Environment $environment,
-        WriterInterface $writer,
+        Filesystem $filesystem,
         PackageContentProvider $content_provider
     ) {
         $this->io               = $io;
         $this->environment      = $environment;
-        $this->writer           = $writer;
+        $this->filesystem       = $filesystem;
         $this->content_provider = $content_provider;
     }
 
@@ -176,7 +176,7 @@ class CompoundGenerator
             ]
         );
 
-        $this->writer->writeFile(
+        $this->filesystem->dumpFile(
             $package_class->getGeneratedDirectory() . $short_name . 'Trait.php',
             $data
         );
