@@ -1,12 +1,13 @@
 <?php
 namespace Hostnet\Component\EntityPlugin;
 
+use phpunit\framework\TestCase;
 use Symfony\Component\Filesystem\Filesystem;
 
 /**
  * @covers Hostnet\Component\EntityPlugin\EmptyGenerator
  */
-class EmptyGeneratorTest extends \PHPUnit_Framework_TestCase
+class EmptyGeneratorTest extends TestCase
 {
     /**
      * Test the empty Generator.
@@ -16,7 +17,7 @@ class EmptyGeneratorTest extends \PHPUnit_Framework_TestCase
         $loader = new \Twig_Loader_Filesystem(__DIR__ . '/../src/Resources/templates/');
 
         $environment = new \Twig_Environment($loader);
-        $writer      = $this->prophesize(Filesystem::class);
+        $filesystem  = $this->prophesize(Filesystem::class);
 
         $interface = <<<EOI
 <?php
@@ -32,11 +33,11 @@ interface UnitTestInterface
 
 EOI;
 
-        $writer->dumpFile('/tmp/unit-test/UnitTestInterface.php', $interface)->shouldBeCalled();
+        $filesystem->dumpFile('/tmp/unit-test/UnitTestInterface.php', $interface)->shouldBeCalled();
 
         $empty_generator = new EmptyGenerator(
             $environment,
-            $writer->reveal()
+            $filesystem->reveal()
         );
 
         $package_class = $this->prophesize(PackageClass::class);

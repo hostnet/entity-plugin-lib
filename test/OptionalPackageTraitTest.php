@@ -1,12 +1,14 @@
 <?php
 namespace Hostnet\Component\EntityPlugin;
 
+use phpunit\framework\TestCase;
+
 /**
  * More of a functional-like test to check the outputted html.
  * @author Nico Schoenmaker <nschoenmaker@hostnet.nl>
  * @covers Hostnet\Component\EntityPlugin\OptionalPackageTrait
  */
-class OptionalPackageTraitTest extends \PHPUnit_Framework_TestCase
+class OptionalPackageTraitTest extends TestCase
 {
     public function testConstruct()
     {

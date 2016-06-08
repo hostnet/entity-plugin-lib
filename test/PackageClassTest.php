@@ -1,10 +1,12 @@
 <?php
 namespace Hostnet\Component\EntityPlugin;
 
+use phpunit\framework\TestCase;
+
 /**
  * @covers Hostnet\Component\EntityPlugin\PackageClass
  */
-class PackageClassTest extends \PHPUnit_Framework_TestCase
+class PackageClassTest extends TestCase
 {
 
     public function testGetName()

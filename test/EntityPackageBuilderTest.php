@@ -3,11 +3,12 @@ namespace Hostnet\Component\EntityPlugin;
 
 use Composer\Package\Link;
 use Composer\Package\Package;
+use phpunit\framework\TestCase;
 
 /**
  * @covers Hostnet\Component\EntityPlugin\EntityPackageBuilder
  */
-class EntityPackageBuilderTest extends \PHPUnit_Framework_TestCase
+class EntityPackageBuilderTest extends TestCase
 {
 
     /**

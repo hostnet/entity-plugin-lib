@@ -1,10 +1,12 @@
 <?php
 namespace Hostnet\Component\EntityPlugin;
 
+use phpunit\framework\TestCase;
+
 /**
  * @covers Hostnet\Component\EntityPlugin\PackageContent
  */
-class PackageContentTest extends \PHPUnit_Framework_TestCase
+class PackageContentTest extends TestCase
 {
     private static $map = [
         'Foo\\Bar\\Baz' => 'Baz.php',

@@ -2,11 +2,12 @@
 namespace Hostnet\Component\EntityPlugin;
 
 use Composer\Config;
+use phpunit\framework\TestCase;
 
 /**
  * @covers Hostnet\Component\EntityPlugin\Plugin
  */
-class PluginTest extends \PHPUnit_Framework_TestCase
+class PluginTest extends TestCase
 {
     public function testActivate()
     {
