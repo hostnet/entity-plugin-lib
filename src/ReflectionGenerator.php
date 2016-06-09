@@ -80,7 +80,7 @@ class ReflectionGenerator
      * @param PackageClass $package_class the base for which the parent needs to be extracted.
      * @return NULL|\Hostnet\Component\EntityPlugin\PackageClass the parent class if any, otherwise null is returned.
      */
-    private function getParentClass(PackageClass $package_class)
+    protected function getParentClass(PackageClass $package_class)
     {
         try {
             $base_class = new \ReflectionClass($package_class->getName());

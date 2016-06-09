@@ -23,4 +23,12 @@ class EmptyGenerator extends ReflectionGenerator
     {
         return [];
     }
+
+    /**
+     * {@inheritDoc})
+     */
+    protected function getParentClass(PackageClass $package_class)
+    {
+        return null;
+    }
 }
