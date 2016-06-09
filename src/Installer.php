@@ -2,6 +2,7 @@
 namespace Hostnet\Component\EntityPlugin;
 
 use Composer\Composer;
+use Composer\Installer\InstallationManager;
 use Composer\Installer\LibraryInstaller;
 use Composer\IO\IOInterface;
 use Composer\Package\Package;
@@ -87,7 +88,7 @@ class Installer extends LibraryInstaller implements PackagePathResolverInterface
             $packages           = $local_repository->getPackages();
             $packages[]         = $this->composer->getPackage();
             $supported_packages = $this->getSupportedPackages($packages);
-            $this->setUpAutoloading($supported_packages);
+            $this->setUpAutoloading();
             $this->graph = new EntityPackageBuilder($this, $supported_packages);
         }
         return $this->graph;
@@ -148,27 +149,30 @@ class Installer extends LibraryInstaller implements PackagePathResolverInterface
     }
 
     /**
-     * Ensures all the packages given are autoloaded
-     *
-     * @param PackageInterface[] $supported_packages
+     * Ensures all the packages are autoloaded, needed because classes are read using reflection.
      */
-    private function setUpAutoloading(array $supported_packages)
+    private function setUpAutoloading()
     {
-        foreach ($supported_packages as $package) {
-            $generator     = $this->composer->getAutoloadGenerator();
-            $download_path = $this->getInstallPath($package);
-            $map           = $generator->parseAutoloads(
-                [
-                    [
-                        $package,
-                        $download_path
-                    ]
-                ],
-                new Package('dummy', '1.0.0.0', '1.0.0')
-            );
-            $class_loader  = $generator->createLoader($map);
-            $class_loader->register();
+        //Pre-required variable's
+        $package              = $this->composer->getPackage();
+        $autoload_generator   = $this->composer->getAutoloadGenerator();
+        $local_repository     = $this->composer->getRepositoryManager()->getLocalRepository();
+        $installation_manager = $this->composer->getInstallationManager();
+        if (!$installation_manager) {
+            $installation_manager = new InstallationManager();
         }
+
+        //API stolen from Composer see DumpAutoloadCommand.php
+        $package_map = $autoload_generator->buildPackageMap(
+            $installation_manager,
+            $package,
+            $local_repository->getCanonicalPackages()
+        );
+        $autoloads   = $autoload_generator->parseAutoloads($package_map, $package);
+
+        //Create the classloader and register the classes.
+        $class_loader = $autoload_generator->createLoader($autoloads);
+        $class_loader->register();
     }
 
     /**
