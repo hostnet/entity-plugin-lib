@@ -3,7 +3,7 @@ namespace Hostnet\Component\EntityPlugin;
 
 use Composer\Package\Link;
 use Composer\Package\Package;
-use phpunit\framework\TestCase;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @covers Hostnet\Component\EntityPlugin\EntityPackage

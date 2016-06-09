@@ -2,7 +2,7 @@
 namespace Hostnet\Component\EntityPlugin;
 
 use Composer\Config;
-use phpunit\framework\TestCase;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @covers Hostnet\Component\EntityPlugin\Plugin

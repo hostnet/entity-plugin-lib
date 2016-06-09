@@ -2,7 +2,7 @@
 namespace Hostnet\Component\EntityPlugin;
 
 use \Hostnet\Component\EntityPlugin\ReflectionGenerator;
-use phpunit\framework\TestCase;
+use PHPUnit\Framework\TestCase;
 
 function parameterHints(
     array $array,
