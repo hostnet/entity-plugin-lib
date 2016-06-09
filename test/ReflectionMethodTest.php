@@ -1,7 +1,7 @@
 <?php
 namespace Hostnet\Component\EntityPlugin;
 
-use phpunit\framework\TestCase;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @covers Hostnet\Component\EntityPlugin\ReflectionMethod

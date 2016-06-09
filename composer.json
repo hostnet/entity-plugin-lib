@@ -12,7 +12,7 @@
     "require-dev": {
         "composer/composer":  "^1.1.0",
         "hostnet/phpcs-tool": "^4.0.8",
-        "phpunit/phpunit":    "^5.4.2"
+        "phpunit/phpunit":    "^5.4.3"
     },
     "minimum-stability": "stable",
     "autoload": {

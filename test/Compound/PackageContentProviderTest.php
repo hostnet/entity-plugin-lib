@@ -4,7 +4,7 @@ namespace Hostnet\Component\EntityPlugin\Compound;
 use Composer\Package\Package;
 use Hostnet\Component\EntityPlugin\EntityPackage;
 use Hostnet\Component\EntityPlugin\PackageContent;
-use phpunit\framework\TestCase;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @covers Hostnet\Component\EntityPlugin\Compound\PackageContentProvider
