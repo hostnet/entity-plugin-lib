@@ -5,6 +5,5 @@ class ExtendedClass extends BaseClass
 {
     public function someAnotherMethod()
     {
-        
     }
 }

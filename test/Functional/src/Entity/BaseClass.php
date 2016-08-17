@@ -5,16 +5,13 @@ class BaseClass
 {
     public function __construct()
     {
-
     }
 
     public function someMethod()
     {
-
     }
 
     public function someOtherMethod()
     {
-
     }
 }

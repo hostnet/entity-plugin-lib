@@ -5,6 +5,5 @@ class ExtendedMissingParentClass extends \stdClass
 {
     public function someAnotherMethod()
     {
-        
     }
 }
