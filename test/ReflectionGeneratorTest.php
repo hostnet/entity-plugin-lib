@@ -128,6 +128,5 @@ class ReflectionGeneratorTest extends TestCase
 
         $package_class = new PackageClass('A\Non\Exsisting\Class', sys_get_temp_dir() . '/file.php');
         $reflection_generator->generate($package_class);
-
     }
 }

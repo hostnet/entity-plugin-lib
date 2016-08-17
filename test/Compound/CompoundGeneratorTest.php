@@ -13,7 +13,7 @@ use Symfony\Component\Filesystem\Filesystem;
 /**
  * More of a functional-like test to check the outputted html.
  * @author Nico Schoenmaker <nschoenmaker@hostnet.nl>
- * @covers Hostnet\Component\EntityPlugin\Compound\CompoundGenerator
+ * @covers \Hostnet\Component\EntityPlugin\Compound\CompoundGenerator
  */
 class CompoundGeneratorTest extends TestCase
 {

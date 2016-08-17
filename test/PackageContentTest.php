@@ -4,7 +4,7 @@ namespace Hostnet\Component\EntityPlugin;
 use PHPUnit\Framework\TestCase;
 
 /**
- * @covers Hostnet\Component\EntityPlugin\PackageContent
+ * @covers \Hostnet\Component\EntityPlugin\PackageContent
  */
 class PackageContentTest extends TestCase
 {
@@ -24,6 +24,9 @@ class PackageContentTest extends TestCase
 
     private $empty_content;
 
+    /**
+     * @var PackageContent
+     */
     private $content;
 
     protected function setUp()
