@@ -108,11 +108,11 @@ class ReflectionGeneratorTest extends TestCase
         $package_io    = self::createMock(Filesystem::class);
 
         $package_io->expects($this->once())
-                   ->method('dumpFile')
-                   ->with(
-                       dirname(__DIR__) . '/Generated/stdClassInterface.php',
-                       $this->matchesRegularExpression('/interface stdClassInterface/')
-                   );
+               ->method('dumpFile')
+               ->with(
+                   dirname(__DIR__) . '/Generated/stdClassInterface.php',
+                   $this->matchesRegularExpression('/interface stdClassInterface/')
+               );
 
         $generator = new ReflectionGenerator($this->environment, $package_io);
         $this->assertNull($generator->generate($package_class));
