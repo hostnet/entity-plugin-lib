@@ -5,7 +5,7 @@ use PHPUnit\Framework\TestCase;
 use Symfony\Component\Filesystem\Filesystem;
 
 /**
- * @covers Hostnet\Component\EntityPlugin\EmptyGenerator
+ * @covers \Hostnet\Component\EntityPlugin\EmptyGenerator
  */
 class EmptyGeneratorTest extends TestCase
 {

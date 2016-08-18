@@ -47,19 +47,10 @@ class PackageContent implements PackageContentInterface
             // Now split it into a trait, optional trait or class.
             $matches = [];
             if (preg_match('/\/([A-Z][A-Za-z0-9_]+)When([A-Z][A-Za-z0-9_]+)Trait\.php$/', $file, $matches)) {
-                if (!trait_exists($class_name, true)) {
-                    continue;
-                }
                 $this->optional_traits[$matches[1]][] = new OptionalPackageTrait($class_name, $file, $matches[2]);
             } elseif ($package_class->isTrait()) {
-                if (!trait_exists($class_name, true)) {
-                    continue;
-                }
                 $this->traits[] = $package_class;
             } else {
-                if (!class_exists($class_name, true)) {
-                    continue;
-                }
                 $this->classes[] = $package_class;
             }
         }

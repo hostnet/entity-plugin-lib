@@ -2,14 +2,14 @@
 namespace Hostnet\Component\EntityPlugin;
 
 use PHPUnit\Framework\TestCase;
+use Prophecy\Argument;
 use Symfony\Component\Filesystem\Filesystem;
 
 /**
- * More a functiononal test then a unit-test
+ * More a functional test then a unit-test
  *
  * Tests (minimized versions of) cases that we've found in real-life
- * @covers Hostnet\Component\EntityPlugin\ReflectionGenerator
- * @author Nico Schoenmaker <nschoenmaker@hostnet.nl>
+ * @covers \Hostnet\Component\EntityPlugin\ReflectionGenerator
  */
 class ReflectionGeneratorTest extends TestCase
 {
@@ -108,19 +108,16 @@ class ReflectionGeneratorTest extends TestCase
         $package_io    = self::createMock(Filesystem::class);
 
         $package_io->expects($this->once())
-            ->method('dumpFile')
-            ->with(
-                dirname(__DIR__) . '/Generated/stdClassInterface.php',
-                $this->matchesRegularExpression('/interface stdClassInterface/')
-            );
+               ->method('dumpFile')
+               ->with(
+                   dirname(__DIR__) . '/Generated/stdClassInterface.php',
+                   $this->matchesRegularExpression('/interface stdClassInterface/')
+               );
 
         $generator = new ReflectionGenerator($this->environment, $package_io);
         $this->assertNull($generator->generate($package_class));
     }
 
-    /**
-     * @expectedException \ReflectionException
-     */
     public function testGenerateReflectionErrorOnClass()
     {
         $filesystem           = $this->prophesize(Filesystem::class);
@@ -128,5 +125,7 @@ class ReflectionGeneratorTest extends TestCase
 
         $package_class = new PackageClass('A\Non\Exsisting\Class', sys_get_temp_dir() . '/file.php');
         $reflection_generator->generate($package_class);
+
+        $filesystem->dumpFile(Argument::any())->shouldNotBeCalled();
     }
 }

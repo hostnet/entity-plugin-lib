@@ -1,7 +1,7 @@
 <?php
 namespace Hostnet\FunctionalFixtures\Entity;
 
-class ConstructShouldNotBePresent
+class ConstructShouldNotBePresent implements Generated\ConstructShouldNotBePresentInterface
 {
     public function __construct()
     {
