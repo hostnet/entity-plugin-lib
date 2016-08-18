@@ -38,13 +38,14 @@ class ReflectionGenerator
         $parent              = $this->getParentClass($package_class);
         $class_name          = $package_class->getShortName();
         $generated_namespace = $package_class->getGeneratedNamespaceName();
+        $methods             = $this->getMethods($package_class);
 
         $params = [
-            'class_name' => $class_name,
-            'namespace' => $generated_namespace,
+            'class_name'  => $class_name,
+            'namespace'   => $generated_namespace,
             'type_hinter' => new TypeHinter(),
-            'methods' => $this->getMethods($package_class),
-            'parent' => $parent ? $parent->getShortName() : null
+            'methods'     => $methods,
+            'parent'      => $parent ? $parent->getShortName() : null,
         ];
 
         $interface = $this->environment->render('interface.php.twig', $params);
@@ -59,7 +60,11 @@ class ReflectionGenerator
      */
     protected function getMethods(PackageClass $package_class)
     {
-        $class   = new \ReflectionClass($package_class->getName());
+        try {
+            $class = new \ReflectionClass($package_class->getName());
+        } catch (\ReflectionException $e) {
+            return [];
+        }
         $methods = $class->getMethods();
 
         foreach ($methods as $key => $method) {
@@ -92,6 +97,7 @@ class ReflectionGenerator
         ) {
             return null;
         }
+
         return new PackageClass($parent_reflection->getName(), $parent_reflection->getFileName());
     }
 }
