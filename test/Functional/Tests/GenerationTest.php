@@ -84,6 +84,10 @@ class GenerationTest extends TestCase
             file_get_contents($dir . '/TypedParametersInterface.php')
         );
         self::assertEquals(
+            file_get_contents(__DIR__ . '/expected/VariadicTypedParametersInterface.php'),
+            file_get_contents($dir . '/VariadicTypedParametersInterface.php')
+        );
+        self::assertEquals(
             file_get_contents(__DIR__ . '/expected/ExtendedMissingParentClassInterface.php'),
             file_get_contents($dir . '/ExtendedMissingParentClassInterface.php')
         );

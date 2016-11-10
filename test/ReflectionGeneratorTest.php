@@ -1,6 +1,10 @@
 <?php
 namespace Hostnet\Component\EntityPlugin;
 
+use Hostnet\Component\EntityPlugin\Fixtures\ExtendedReturnType;
+use Hostnet\Component\EntityPlugin\Fixtures\NullableParams;
+use Hostnet\Component\EntityPlugin\Fixtures\ReturnType;
+use Hostnet\Component\EntityPlugin\Fixtures\ScalarParams;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Symfony\Component\Filesystem\Filesystem;
@@ -101,18 +105,98 @@ class ReflectionGeneratorTest extends TestCase
         );
     }
 
+    public function testGenerateWithScalarParams()
+    {
+        if (PHP_MAJOR_VERSION < 7) {
+            $this->markTestSkipped('Return types are not available in PHP <7');
+        }
+
+        $package_class = new PackageClass(ScalarParams::class, __DIR__ . '/Fixtures/ScalarParams.php');
+        $this->reflection_generator->generate($package_class);
+
+        $expected = file_get_contents(__DIR__ . '/Fixtures/ScalarParamsInterface.php');
+        $actual   = file_get_contents(__DIR__ . '/Fixtures/Generated/ScalarParamsInterface.php');
+
+        unlink(__DIR__ . '/Fixtures/Generated/ScalarParamsInterface.php');
+        rmdir(__DIR__ . '/Fixtures/Generated');
+
+        $this->assertSame($expected, $actual);
+    }
+
+    public function testGenerateWithNullableParams()
+    {
+        if (PHP_VERSION_ID < 70100) {
+            $this->markTestSkipped('Return types are not available in PHP <7');
+        }
+
+        $package_class = new PackageClass(NullableParams::class, __DIR__ . '/Fixtures/NullableParams.php');
+        $this->reflection_generator->generate($package_class);
+
+        $expected = file_get_contents(__DIR__ . '/Fixtures/NullableParamsInterface.php');
+        $actual   = file_get_contents(__DIR__ . '/Fixtures/Generated/NullableParamsInterface.php');
+
+        unlink(__DIR__ . '/Fixtures/Generated/NullableParamsInterface.php');
+        rmdir(__DIR__ . '/Fixtures/Generated');
+
+        $this->assertSame($expected, $actual);
+    }
+
+    public function testGenerateWithReturnType()
+    {
+        if (PHP_MAJOR_VERSION < 7) {
+            $this->markTestSkipped('Return types are not available in PHP <7');
+        }
+
+        $empty_generator = new EmptyGenerator($this->environment, new Filesystem());
+        $package_class   = new PackageClass(ReturnType::class, __DIR__ . '/Fixtures/ReturnType.php');
+
+        $empty_generator->generate($package_class);
+        $this->reflection_generator->generate($package_class);
+
+        $expected = file_get_contents(__DIR__ . '/Fixtures/ReturnTypeInterface.php');
+        $actual   = file_get_contents(__DIR__ . '/Fixtures/Generated/ReturnTypeInterface.php');
+
+        unlink(__DIR__ . '/Fixtures/Generated/ReturnTypeInterface.php');
+        rmdir(__DIR__ . '/Fixtures/Generated');
+
+        $this->assertSame($expected, $actual);
+    }
+
+    public function testGenerateWithExtendedReturnType()
+    {
+        if (PHP_VERSION_ID < 70100) {
+            $this->markTestSkipped('Return types are not available in PHP <7.1');
+        }
+
+        $empty_generator = new EmptyGenerator($this->environment, new Filesystem());
+        $package_class   = new PackageClass(ExtendedReturnType::class, __DIR__ . '/Fixtures/ExtendedReturnType.php');
+        $empty_generator->generate($package_class);
+
+        $package_class = new PackageClass(ExtendedReturnType::class, __DIR__ . '/Fixtures/ExtendedReturnType.php');
+        $this->reflection_generator->generate($package_class);
+
+
+        $expected = file_get_contents(__DIR__ . '/Fixtures/ExtendedReturnTypeInterface.php');
+        $actual   = file_get_contents(__DIR__ . '/Fixtures/Generated/ExtendedReturnTypeInterface.php');
+
+        unlink(__DIR__ . '/Fixtures/Generated/ExtendedReturnTypeInterface.php');
+        rmdir(__DIR__ . '/Fixtures/Generated');
+
+        $this->assertSame($expected, $actual);
+    }
+
     public function testGenerate()
     {
-        //include_once __DIR__ . '/EdgeCases/' . $package_class->getShortName() . '.php';
         $package_class = new PackageClass('\stdClass', __DIR__);
         $package_io    = self::createMock(Filesystem::class);
 
-        $package_io->expects($this->once())
-               ->method('dumpFile')
-               ->with(
-                   dirname(__DIR__) . '/Generated/stdClassInterface.php',
-                   $this->matchesRegularExpression('/interface stdClassInterface/')
-               );
+        $package_io
+            ->expects($this->once())
+            ->method('dumpFile')
+            ->with(
+                dirname(__DIR__) . '/Generated/stdClassInterface.php',
+                $this->matchesRegularExpression('/interface stdClassInterface/')
+            );
 
         $generator = new ReflectionGenerator($this->environment, $package_io);
         $this->assertNull($generator->generate($package_class));

@@ -1,9 +1,18 @@
-{% for parameter in parameters %}
-{{ type_hinter.typeHint(parameter) -}}
-{# TODO add typehint for class. Cant call parameter.class because that will trigger the autoloader #}
-${{  parameter.name }}
-{%- if parameter.isOptional() %}
-{%- if parameter.allowsNull() %} = null{% else %} = {{ parameter.defaultValue }}{% endif %}
-{%- endif %}
-{% if not loop.last %}, {% endif %}
+{% for parameter in parameters -%}
+    {% if parameter.hasType -%}
+        {% if parameter.allowsNull() -%}
+            {% set is_obligatory = not parameter.isOptional() -%}
+            {% set has_actual_default_value = parameter.isDefaultValueAvailable() and parameter.defaultValue is not null -%}
+            {% if is_obligatory or has_actual_default_value -%}
+                ?
+            {%- endif -%}
+        {% endif -%}
+        {{ parameter.type.name ~ ' ' -}}
+    {% endif -%}
+    {% if parameter.isPassedByReference() %}&{% endif -%}
+    {% if parameter.isVariadic() %}...{% endif -%}
+    ${{ parameter.name -}}
+
+    {% if parameter.isDefaultValueAvailable() and parameter.defaultValue is null %} = null{% endif -%}
+    {% if not loop.last %}, {% endif -%}
 {% endfor %}

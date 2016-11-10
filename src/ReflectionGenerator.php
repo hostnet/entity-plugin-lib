@@ -43,7 +43,6 @@ class ReflectionGenerator
         $params = [
             'class_name'  => $class_name,
             'namespace'   => $generated_namespace,
-            'type_hinter' => new TypeHinter(),
             'methods'     => $methods,
             'parent'      => $parent ? $parent->getShortName() : null,
         ];
