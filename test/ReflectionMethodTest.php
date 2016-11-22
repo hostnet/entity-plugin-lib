@@ -1,30 +1,23 @@
 <?php
 namespace Hostnet\Component\EntityPlugin;
 
+use Hostnet\Component\EntityPlugin\Fixtures\Reflection;
+use Hostnet\Component\EntityPlugin\Fixtures\ReflectionReturn;
 use PHPUnit\Framework\TestCase;
 
 /**
- * @covers Hostnet\Component\EntityPlugin\ReflectionMethod
+ * @covers \Hostnet\Component\EntityPlugin\ReflectionMethod
  */
 class ReflectionMethodTest extends TestCase
 {
-    private $method;
-
     /**
-     * Blaah Blaah Blaaaah Cloud...
-     *
-     * @param Generated\Foo $foo
-     * @param unknown $empty
-     * @return Generated\Blyp
+     * @var ReflectionMethod
      */
-    public function docBlock($param_1, array $param_2)
-    {
-        return 'quite useless, we only need the docblock...';
-    }
+    private $method;
 
     protected function setUp()
     {
-        $this->method = new ReflectionMethod(new \ReflectionMethod(__CLASS__, 'docBlock'));
+        $this->method = new ReflectionMethod(new \ReflectionMethod(Reflection::class, 'docBlock'));
     }
 
     public function testGetName()
@@ -44,20 +37,29 @@ class ReflectionMethodTest extends TestCase
 
     public function testGetParameters()
     {
-        $this->assertEquals(2, count($this->method->getParameters()));
+        $this->assertCount(3, $this->method->getParameters());
     }
 
     public function testGetDocComment()
     {
-        $expected = <<<'EOS'
-/**
-     * Blaah Blaah Blaaaah Cloud...
-     *
-     * @param Foo $foo
-     * @param unknown $empty
-     * @return Blyp
-     */
-EOS;
-        $this->assertEquals($expected, $this->method->getDocComment());
+        $this->assertEquals(Reflection::getExpected(), $this->method->getDocComment());
+        $method = new ReflectionMethod(new \ReflectionMethod(Reflection::class, 'extra'));
+        $this->assertSame("/**\n     * I am from a trait\n     */", $method->getDocComment());
+    }
+
+    public function testGetDocCommentInvalid()
+    {
+        $method = new ReflectionMethod(new \ReflectionMethod(Reflection::class, 'invalidDocBlock'));
+        $this->assertSame('/** @param ~~~\o/~~~ $param_1 */', $method->getDocComment());
+    }
+
+    public function testGetReturnType()
+    {
+        $this->assertEquals(null, $this->method->getReturnType());
+
+        if (PHP_MAJOR_VERSION >= 7) {
+            $php7_method = new ReflectionMethod(new \ReflectionMethod(ReflectionReturn::class, 'docBlock'));
+            $this->assertEquals('array', $php7_method->getReturnType()->getName());
+        }
     }
 }
