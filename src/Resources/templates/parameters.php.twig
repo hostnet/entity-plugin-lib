@@ -12,7 +12,8 @@
     {% if parameter.isPassedByReference() %}&{% endif -%}
     {% if parameter.isVariadic() %}...{% endif -%}
     ${{ parameter.name -}}
-
-    {% if parameter.isDefaultValueAvailable() and parameter.defaultValue is null %} = null{% endif -%}
+    {% if parameter.isOptional() and parameter.isDefaultValueAvailable() -%}
+        {{- ' = null' -}}
+    {%- endif -%}
     {% if not loop.last %}, {% endif -%}
 {% endfor %}
