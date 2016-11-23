@@ -91,6 +91,10 @@ class GenerationTest extends TestCase
             file_get_contents(__DIR__ . '/expected/ExtendedMissingParentClassInterface.php'),
             file_get_contents($dir . '/ExtendedMissingParentClassInterface.php')
         );
+        self::assertEquals(
+            file_get_contents(__DIR__ . '/expected/DefaultParametersInterface.php'),
+            file_get_contents($dir . '/DefaultParametersInterface.php')
+        );
     }
 
     protected function tearDown()

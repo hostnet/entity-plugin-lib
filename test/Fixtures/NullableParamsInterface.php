@@ -26,17 +26,17 @@ interface NullableParamsInterface
     /**
      * @param int|null $start
      */
-    public function defaultValueNullableParam(?int $start);
+    public function defaultValueNullableParam(?int $start = null);
 
     /**
      * @param string|null $start
      */
-    public function defaultValueStringNullNullableParam(?string $start);
+    public function defaultValueStringNullNullableParam(?string $start = null);
 
     /**
      * @param int|null $start
      */
-    public function nullableReference(?int &$start);
+    public function nullableReference(?int &$start = null);
 
     /**
      * @param int[]|null[] ...$start
