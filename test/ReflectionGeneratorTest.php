@@ -1,6 +1,7 @@
 <?php
 namespace Hostnet\Component\EntityPlugin;
 
+use Hostnet\Component\EntityPlugin\Fixtures\DefaultValueParams;
 use Hostnet\Component\EntityPlugin\Fixtures\ExtendedReturnType;
 use Hostnet\Component\EntityPlugin\Fixtures\NullableParams;
 use Hostnet\Component\EntityPlugin\Fixtures\ReturnType;
@@ -136,6 +137,24 @@ class ReflectionGeneratorTest extends TestCase
         $actual   = file_get_contents(__DIR__ . '/Fixtures/Generated/NullableParamsInterface.php');
 
         unlink(__DIR__ . '/Fixtures/Generated/NullableParamsInterface.php');
+        rmdir(__DIR__ . '/Fixtures/Generated');
+
+        $this->assertSame($expected, $actual);
+    }
+
+    public function testGenerateWithDefaultValueParams()
+    {
+        if (PHP_MAJOR_VERSION < 7) {
+            $this->markTestSkipped('Scalar argument types are not available in PHP <7');
+        }
+
+        $package_class = new PackageClass(DefaultValueParams::class, __DIR__ . '/Fixtures/DefaultValueParams.php');
+        $this->reflection_generator->generate($package_class);
+
+        $expected = file_get_contents(__DIR__ . '/Fixtures/DefaultValueParamsInterface.php');
+        $actual   = file_get_contents(__DIR__ . '/Fixtures/Generated/DefaultValueParamsInterface.php');
+
+        unlink(__DIR__ . '/Fixtures/Generated/DefaultValueParamsInterface.php');
         rmdir(__DIR__ . '/Fixtures/Generated');
 
         $this->assertSame($expected, $actual);

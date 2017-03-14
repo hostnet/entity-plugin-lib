@@ -26,7 +26,7 @@ interface NullableParamsInterface
     /**
      * @param int|null $start
      */
-    public function defaultValueNullableParam(?int $start = null);
+    public function defaultValueNullableParam(?int $start = 2);
 
     /**
      * @param string|null $start
@@ -36,7 +36,7 @@ interface NullableParamsInterface
     /**
      * @param int|null $start
      */
-    public function nullableReference(?int &$start = null);
+    public function nullableReference(?int &$start = 0);
 
     /**
      * @param int[]|null[] ...$start
