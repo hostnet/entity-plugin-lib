@@ -12,8 +12,8 @@
     {% if parameter.isPassedByReference() %}&{% endif -%}
     {% if parameter.isVariadic() %}...{% endif -%}
     ${{ parameter.name -}}
-    {% if parameter.isOptional() and parameter.isDefaultValueAvailable() -%}
-        {{- ' = null' -}}
+    {% if parameter.isDefaultValueAvailable() -%}
+        {{- ' = ' ~ parameter.getPhpSafeDefaultValue() -}}
     {%- endif -%}
     {% if not loop.last %}, {% endif -%}
 {% endfor %}

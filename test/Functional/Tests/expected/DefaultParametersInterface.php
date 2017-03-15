@@ -11,18 +11,18 @@ interface DefaultParametersInterface
     /**
      * @param bool $bool
      */
-    public function oneParameter($bool = null);
+    public function oneParameter($bool = true);
 
     /**
      * @param bool   $bool
      * @param string $string
      */
-    public function twoParameters($bool = null, $string = null);
+    public function twoParameters($bool = true, $string = null);
 
     /**
      * @param bool           $bool
      * @param string         $string
      * @param \DateTime|null $date
      */
-    public function threeParameters($bool = null, $string = null, \DateTime $date = null);
+    public function threeParameters($bool = true, $string = null, \DateTime $date = null);
 }

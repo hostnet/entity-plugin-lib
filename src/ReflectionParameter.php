@@ -114,4 +114,51 @@ class ReflectionParameter
     {
         return $this->parameter->getDefaultValue();
     }
+
+    /**
+     * @return bool
+     */
+    public function isDefaultValueConstant()
+    {
+        return $this->parameter->isDefaultValueConstant();
+    }
+
+    /**
+     * @return string
+     */
+    public function getDefaultValueConstantName()
+    {
+        return $this->parameter->getDefaultValueConstantName();
+    }
+
+    /**
+     * Returns the default value in a manner which is safe to use in PHP code
+     * as a default value.
+     *
+     * @throws \ReflectionException If called on property without default value
+     * @return string
+     */
+    public function getPhpSafeDefaultValue()
+    {
+        $value     = $this->getDefaultValue();
+        $is_string = $this->hasType() && $this->getType()->getName() === 'string';
+
+        if ($value === true) {
+            return 'true';
+        } elseif ($value === false) {
+            return 'false';
+        } elseif ($this->isDefaultValueConstant()) {
+            if (strpos($this->getDefaultValueConstantName(), 'self') === 0) {
+                return $this->getDefaultValueConstantName();
+            }
+            return '\\' . $this->getDefaultValueConstantName();
+        } elseif (is_array($value)) {
+            return '[]';
+        } elseif (is_null($value)) {
+            return 'null';
+        } elseif (is_numeric($value) && !$is_string) {
+            return (string) $value;
+        }
+        return 'null';
+    }
 }
