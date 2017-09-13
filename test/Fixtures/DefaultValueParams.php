@@ -77,6 +77,26 @@ class DefaultValueParams
     /**
      * @param string $string
      */
+    public function defaultStringValueHereDoc(string $string = <<<str
+test
+str
+)
+    {
+    }
+
+    /**
+     * @param string $string
+     */
+    public function defaultStringValueNowDoc(string $string = <<<'str'
+test
+str
+)
+    {
+    }
+
+    /**
+     * @param string $string
+     */
     public function defaultNastyStringValue(string $string = '""')
     {
     }
@@ -99,6 +119,20 @@ class DefaultValueParams
      * @param string $string
      */
     public function defaultEscapedSingleQuoteStringValue(string $string = '\'')
+    {
+    }
+
+    /**
+     * @param string $string
+     */
+    public function defaultBackslashNStringValue(string $string = '\n')
+    {
+    }
+
+    /**
+     * @param string $string
+     */
+    public function defaultNewLineStringValue(string $string = "\n")
     {
     }
 

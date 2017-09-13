@@ -159,6 +159,6 @@ class ReflectionParameter
         } elseif (is_numeric($value) && !$is_string) {
             return (string) $value;
         }
-        return json_encode($value);
+        return var_export($value, true);
     }
 }
