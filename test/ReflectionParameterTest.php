@@ -91,7 +91,7 @@ class ReflectionParameterTest extends \PHPUnit_Framework_TestCase
             ['const_namespaced', '\Symfony\Component\Console\Input\InputArgument::REQUIRED'],
             ['array', '[]'],
             ['string_as_int', '1'],
-            ['string', 'null'],
+            ['string', '"foo"'],
         ];
     }
 

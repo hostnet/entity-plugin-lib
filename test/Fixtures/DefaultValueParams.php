@@ -95,6 +95,12 @@ class DefaultValueParams
     {
     }
 
+    /**
+     * @param string $string
+     */
+    public function defaultEscapedSingleQuoteStringValue(string $string = '\'')
+    {
+    }
 
     /**
      * @param string $string
