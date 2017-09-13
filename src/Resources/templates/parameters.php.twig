@@ -13,7 +13,7 @@
     {% if parameter.isVariadic() %}...{% endif -%}
     ${{ parameter.name -}}
     {% if parameter.isDefaultValueAvailable() -%}
-        {{- ' = ' ~ parameter.getPhpSafeDefaultValue() -}}
+        {{- ' = ' }}{{ parameter.getPhpSafeDefaultValue() | raw -}}
     {%- endif -%}
     {% if not loop.last %}, {% endif -%}
 {% endfor %}

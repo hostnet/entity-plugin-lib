@@ -154,11 +154,11 @@ class ReflectionParameter
             return '\\' . $this->getDefaultValueConstantName();
         } elseif (is_array($value)) {
             return '[]';
-        } elseif (is_null($value)) {
+        } elseif (null === $value || ($is_string && $value === 'null' && $this->allowsNull())) {
             return 'null';
         } elseif (is_numeric($value) && !$is_string) {
             return (string) $value;
         }
-        return 'null';
+        return var_export($value, true);
     }
 }

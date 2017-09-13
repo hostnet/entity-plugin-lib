@@ -56,22 +56,48 @@ interface DefaultValueParamsInterface
     /**
      * @param string $string
      */
-    public function defaultStringValue(string $string = null);
+    public function defaultStringValue(string $string = 'string');
 
     /**
      * @param string $string
      */
-    public function defaultNastyStringValue(string $string = null);
+    public function defaultStringValueHereDoc(string $string = 'test');
 
     /**
      * @param string $string
      */
-    public function defaultNullStringValue(string $string = null);
+    public function defaultStringValueNowDoc(string $string = 'test');
 
     /**
      * @param string $string
      */
-    public function defaultFunkyStringValue(string $string = null);
+    public function defaultNastyStringValue(string $string = '""');
+
+    /**
+     * @param string $string
+     */
+    public function defaultNullStringValue(string $string = 'null');
+
+    /**
+     * @param string $string
+     */
+    public function defaultFunkyStringValue(string $string = '\'\'');
+
+    /**
+     * @param string $string
+     */
+    public function defaultEscapedSingleQuoteStringValue(string $string = '\'');
+
+    /**
+     * @param string $string
+     */
+    public function defaultBackslashNStringValue(string $string = '\\n');
+
+    /**
+     * @param string $string
+     */
+    public function defaultNewLineStringValue(string $string = '
+');
 
     /**
      * @param string $string
@@ -81,12 +107,12 @@ interface DefaultValueParamsInterface
     /**
      * @param string $string
      */
-    public function defaultStringWithoutTypeHint($string = null);
+    public function defaultStringWithoutTypeHint($string = 'string');
 
     /**
      * @param string $string
      */
-    public function defaultStringWhichIsInt(string $string = null);
+    public function defaultStringWhichIsInt(string $string = '1');
 
     /**
      * @param string $string
