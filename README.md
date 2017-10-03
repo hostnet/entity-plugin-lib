@@ -6,7 +6,7 @@ entity-plugin-lib
 The Hostnet Entity Composer plugin was developed to solve several problems experienced with plain usage of the Doctrine ORM. Although our solution is inspired on working with doctrine it is perfectly usable for every other way of persisting entities. The problems we came across are:
 - Entities became really big;
 - Entities were shared between applications and these applications inherited functionality they were not allowed to use;
-- Knowledge areas like calculating discounts were spread through the model and not grouped together
+- Knowledge areas like calculating discounts were spread through the model and not grouped together;
 - Misuse of inheritance to prevent code duplication.
 
 To solve our problem we borrowed some ideas from another realm of software development, since we felt we were hitting the boundaries of [Object Oriented Programming][oop] and sought for more modularization. We used the ideas behind [Aspect Oriented Programming][aop] to solve our problems.
@@ -28,12 +28,12 @@ With this plugin you can create one package that is purely ```Client``` focussed
 
 ### Usage
 
-#### Creating an extendible package
+#### Creating an extendable package
 
 - Create a composer package to put your entities in.
 - Use PSR-0 or PSR-4 [autoloading][autoload] for the src/ directory.
 - The package should be of [type][type] ```hostnet-entity```.
-- The pagage should require ```"hostnet/entity-plugin-lib": "1.*"```
+- The package should require ```"hostnet/entity-plugin-lib": "1.*"```
 - Create one entity, say ```Page```, inside a namespace that ends with ```Entity```.
 - Run ```php composer.phar dump-autoload```. (The entity plugin hooks to this event.) This should cause some output:
 ```
@@ -46,7 +46,7 @@ Pass 3/3: Performing individual generation
     use \Hostnet\Page\Entity\Generated\PageTraits;
 ```
 
-Congratulations, you now have an extendible entity package.
+Congratulations, you now have an extendable entity package.
 
 #### Extending the package
 
@@ -62,7 +62,7 @@ If you run the composer.phar with ```-v``` or ```-vv``` or ```-vvv``` it will sh
 
 If you want to extend an entity from your main application, you can use the ```entity-bundle-dir``` setting in the extra section of your composer.json.
 
-For a quick overview hava a look at the [cheatsheet][cheatsheet].
+For a quick overview have a look at the [cheatsheet][cheatsheet].
 
 [aop]: http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.95.2500&rep=rep1&type=pdf "Aspect-oriented programming"
 [oop]: http://148.204.64.201/paginas%20anexas/POO/papers/papers%20de%20POO/p96-pokkunuri.pdf "Object Oriented Programming"
