@@ -33,7 +33,7 @@ With this plugin you can create one package that is purely ```Client``` focussed
 - Create a composer package to put your entities in.
 - Use PSR-0 or PSR-4 [autoloading][autoload] for the src/ directory.
 - The package should be of [type][type] ```hostnet-entity```.
-- The package should require ```"hostnet/entity-plugin-lib": "1.*"```
+- The package should require ```"hostnet/entity-plugin-lib": "2.*"```
 - Create one entity, say ```Page```, inside a namespace that ends with ```Entity```.
 - Run ```php composer.phar dump-autoload```. (The entity plugin hooks to this event.) This should cause some output:
 ```
