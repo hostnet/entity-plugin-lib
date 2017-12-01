@@ -5,7 +5,7 @@ use Composer\Config;
 use PHPUnit\Framework\TestCase;
 
 /**
- * @covers Hostnet\Component\EntityPlugin\Plugin
+ * @covers \Hostnet\Component\EntityPlugin\Plugin
  */
 class PluginTest extends TestCase
 {
@@ -17,7 +17,7 @@ class PluginTest extends TestCase
         $prophecy->getDownloadManager()->willReturn(null);
         $composer = $prophecy->reveal();
         $io       = $this->prophesize('Composer\IO\IOInterface')->reveal();
-        $plugin->activate($composer, $io);
+        self::assertNull($plugin->activate($composer, $io));
     }
 
     public function testGetSubscribedEvents()

@@ -1,12 +1,13 @@
 <?php
 namespace Hostnet\Component\EntityPlugin;
 
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Input\InputArgument;
 
 /**
  * @covers \Hostnet\Component\EntityPlugin\ReflectionParameter
  */
-class ReflectionParameterTest extends \PHPUnit_Framework_TestCase
+class ReflectionParameterTest extends TestCase
 {
     const FOO = 'BAR';
 

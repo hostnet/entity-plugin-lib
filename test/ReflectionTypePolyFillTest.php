@@ -1,10 +1,12 @@
 <?php
 namespace Hostnet\Component\EntityPlugin;
 
+use PHPUnit\Framework\TestCase;
+
 /**
  * @covers \Hostnet\Component\EntityPlugin\ReflectionTypePolyFill
  */
-class ReflectionTypePolyFillTest extends \PHPUnit_Framework_TestCase
+class ReflectionTypePolyFillTest extends TestCase
 {
     public function testGetName()
     {
