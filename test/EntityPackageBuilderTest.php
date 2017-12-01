@@ -6,7 +6,7 @@ use Composer\Package\Package;
 use phpunit\framework\TestCase;
 
 /**
- * @covers Hostnet\Component\EntityPlugin\EntityPackageBuilder
+ * @covers \Hostnet\Component\EntityPlugin\EntityPackageBuilder
  */
 class EntityPackageBuilderTest extends TestCase
 {
@@ -26,6 +26,8 @@ class EntityPackageBuilderTest extends TestCase
 
         $builder         = new EntityPackageBuilder($mock, $packages);
         $entity_packages = $builder->getEntityPackages();
+
+        self::assertTrue(is_array($entity_packages));
 
         foreach ($expected_required_packages as $package_name => $required_packages) {
             $actual_required = [];

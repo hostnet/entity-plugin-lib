@@ -1,10 +1,12 @@
 <?php
 namespace Hostnet\Component\EntityPlugin;
 
+use PHPUnit\Framework\TestCase;
+
 /**
  * @covers \Hostnet\Component\EntityPlugin\ReflectionType
  */
-class ReflectionTypeTest extends \PHPUnit_Framework_TestCase
+class ReflectionTypeTest extends TestCase
 {
 
     /**
