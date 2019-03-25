@@ -2,6 +2,8 @@
 namespace Hostnet\Component\EntityPlugin;
 
 use Symfony\Component\Filesystem\Filesystem;
+use Twig\Environment;
+use Twig\Error\Error;
 
 /**
  * A simple, light-weight generator that can be used runtime during development
@@ -16,11 +18,11 @@ class ReflectionGenerator
     private $filesystem;
 
     /**
-     * @param \Twig_Environment $environment
+     * @param Environment $environment
      * @param Filesystem $filesystem
      */
     public function __construct(
-        \Twig_Environment $environment,
+        Environment $environment,
         Filesystem $filesystem
     ) {
         $this->environment = $environment;
@@ -31,7 +33,7 @@ class ReflectionGenerator
      * Generates the interface
      *
      * @param PackageClass $package_class
-     * @throws \Twig_Error
+     * @throws Error
      */
     public function generate(PackageClass $package_class)
     {

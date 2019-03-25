@@ -9,6 +9,8 @@ use Hostnet\Component\EntityPlugin\Fixtures\ScalarParams;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Symfony\Component\Filesystem\Filesystem;
+use Twig\Environment;
+use Twig\Loader\FilesystemLoader;
 
 /**
  * More a functional test then a unit-test
@@ -29,7 +31,7 @@ class ReflectionGeneratorTest extends TestCase
     /**
      * The Twig enviroment used to load the twig templates from.
      *
-     * @var \Twig_Environment
+     * @var Environment
      */
     private $environment;
 
@@ -38,8 +40,8 @@ class ReflectionGeneratorTest extends TestCase
      */
     protected function setUp()
     {
-        $loader            = new \Twig_Loader_Filesystem(__DIR__ . '/../src/Resources/templates/');
-        $this->environment = new \Twig_Environment($loader);
+        $loader            = new FilesystemLoader(__DIR__ . '/../src/Resources/templates/');
+        $this->environment = new Environment($loader);
         $filesystem        = new Filesystem();
 
         // generate the files

@@ -9,6 +9,8 @@ use PHPUnit\Framework\TestCase;
 use Prophecy\Argument\Token\AnyValuesToken;
 use Prophecy\Argument\Token\AnyValueToken;
 use Symfony\Component\Filesystem\Filesystem;
+use Twig\Environment;
+use Twig\Loader\FilesystemLoader;
 
 /**
  * More of a functional-like test to check the outputted html.
@@ -36,8 +38,8 @@ class CompoundGeneratorTest extends TestCase
         }
         $io = $io->reveal();
 
-        $loader      = new \Twig_Loader_Filesystem(__DIR__ . '/../../src/Resources/templates/');
-        $environment = new \Twig_Environment($loader);
+        $loader      = new FilesystemLoader(__DIR__ . '/../../src/Resources/templates/');
+        $environment = new Environment($loader);
         $provider    = new PackageContentProvider(PackageContent::ENTITY);
         $entity_fs   = $this->mockFilesystem($entity_fs_input);
         $generator   = new CompoundGenerator($io, $environment, $entity_fs, $provider);

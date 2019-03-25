@@ -3,6 +3,8 @@ namespace Hostnet\Component\EntityPlugin;
 
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Filesystem\Filesystem;
+use Twig\Environment;
+use Twig\Loader\FilesystemLoader;
 
 /**
  * @covers \Hostnet\Component\EntityPlugin\EmptyGenerator
@@ -14,9 +16,9 @@ class EmptyGeneratorTest extends TestCase
      */
     public function testEmptyGenerator()
     {
-        $loader = new \Twig_Loader_Filesystem(__DIR__ . '/../src/Resources/templates/');
+        $loader = new FilesystemLoader(__DIR__ . '/../src/Resources/templates/');
 
-        $environment = new \Twig_Environment($loader);
+        $environment = new Environment($loader);
         $filesystem  = $this->prophesize(Filesystem::class);
 
         $interface = <<<EOI

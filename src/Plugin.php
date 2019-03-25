@@ -9,6 +9,8 @@ use Composer\Script\ScriptEvents;
 use Hostnet\Component\EntityPlugin\Compound\CompoundGenerator;
 use Hostnet\Component\EntityPlugin\Compound\PackageContentProvider;
 use Symfony\Component\Filesystem\Filesystem;
+use Twig\Environment;
+use Twig\Loader\FilesystemLoader;
 
 class Plugin implements PluginInterface, EventSubscriberInterface
 {
@@ -18,8 +20,8 @@ class Plugin implements PluginInterface, EventSubscriberInterface
     {
         // We don't really have a DI container, so lets create the "services" here.
         $filesystem       = new Filesystem();
-        $loader           = new \Twig_Loader_Filesystem(__DIR__ . '/Resources/templates/');
-        $twig_environment = new \Twig_Environment($loader);
+        $loader           = new FilesystemLoader(__DIR__ . '/Resources/templates/');
+        $twig_environment = new Environment($loader);
 
         $compound_generators   = [];
         $compound_generators[] = new CompoundGenerator(

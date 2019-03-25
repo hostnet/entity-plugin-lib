@@ -5,6 +5,7 @@ use Composer\IO\IOInterface;
 use Hostnet\Component\EntityPlugin\EntityPackage;
 use Hostnet\Component\EntityPlugin\PackageClass;
 use Symfony\Component\Filesystem\Filesystem;
+use Twig\Environment;
 
 /**
  * The generator for pass 1/3: Generating compound traits and interfaces
@@ -27,13 +28,13 @@ class CompoundGenerator
 
     /**
      * @param IOInterface $io
-     * @param \Twig_Environment $environment
+     * @param Environment $environment
      * @param Filesystem $filesystem
      * @param PackageContentProvider $content_provider
      */
     public function __construct(
         IOInterface $io,
-        \Twig_Environment $environment,
+        Environment $environment,
         Filesystem $filesystem,
         PackageContentProvider $content_provider
     ) {
