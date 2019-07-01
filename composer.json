@@ -16,6 +16,9 @@
         "hostnet/phpcs-tool": "^4.0.8",
         "phpunit/phpunit":    "^5.4.3 || ^6.4.0"
     },
+    "conflict": {
+        "phpdocumentor/type-resolver": ">=0.7.0"
+    },
     "autoload": {
         "psr-4": {
             "Hostnet\\Component\\EntityPlugin\\": "src/"
