@@ -15,7 +15,7 @@ class ReflectionMethodTest extends TestCase
      */
     private $method;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->method = new ReflectionMethod(new \ReflectionMethod(Reflection::class, 'docBlock'));
     }

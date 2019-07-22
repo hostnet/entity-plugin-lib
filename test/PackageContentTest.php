@@ -29,7 +29,7 @@ class PackageContentTest extends TestCase
      */
     private $content;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->empty_content = new PackageContent([], '\\Bar\\');
         $this->content       = new PackageContent(self::$map, '\\Bar\\');

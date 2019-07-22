@@ -26,7 +26,7 @@ class GenerationTest extends TestCase
 
     private $last_wdir;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->last_wdir = getcwd();
 
@@ -97,7 +97,7 @@ class GenerationTest extends TestCase
         );
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         chdir($this->last_wdir);
 

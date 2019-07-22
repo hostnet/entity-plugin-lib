@@ -4,17 +4,17 @@
     "description": "Installer for all the Hostnet Doctrine entity libraries",
     "license":     "MIT",
     "require": {
-        "php":                         ">=5.6",
+        "php":                         ">=7.2",
         "composer-plugin-api":         "^1.0.0",
         "doctrine/annotations":        "^1.3",
-        "phpdocumentor/type-resolver": "0.*,>=0.2.0",
+        "phpdocumentor/type-resolver": "0.*,>=0.6.0",
         "symfony/filesystem":          "^2.3.0 || ^3.0.0 || ^4.0.0",
         "twig/twig":                   "^1.38.2||^2.7.2"
     },
     "require-dev": {
         "composer/composer":  "^1.1.0",
         "hostnet/phpcs-tool": "^4.0.8",
-        "phpunit/phpunit":    "^5.4.3 || ^6.4.0"
+        "phpunit/phpunit":    "^8.0"
     },
     "conflict": {
         "phpdocumentor/type-resolver": ">=0.7.0"

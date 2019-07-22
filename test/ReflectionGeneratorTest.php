@@ -38,7 +38,7 @@ class ReflectionGeneratorTest extends TestCase
     /**
      * {@inheritDoc}
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         $loader            = new FilesystemLoader(__DIR__ . '/../src/Resources/templates/');
         $this->environment = new Environment($loader);
