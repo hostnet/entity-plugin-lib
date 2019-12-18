@@ -24,7 +24,7 @@ class ReflectionTypeTest extends TestCase
         // for testing only;
     }
 
-    protected function setUp()
+    protected function setUp(): void
     {
         if (PHP_MAJOR_VERSION < 7) {
             $this->markTestSkipped('ReflectionType is available since PHP7');

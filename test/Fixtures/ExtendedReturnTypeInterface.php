@@ -46,7 +46,7 @@ interface ExtendedReturnTypeInterface
     /**
      * @return \Hostnet\Component\EntityPlugin\Fixtures\object|null
      */
-    public function objectMethod(): ?\Hostnet\Component\EntityPlugin\Fixtures\object;
+    public function objectMethod(): ?\object;
 
     /**
      * @return int|null

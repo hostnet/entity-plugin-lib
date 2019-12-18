@@ -18,7 +18,7 @@ class InstallerTest extends TestCase
 {
     private $working_dir;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->working_dir = __DIR__ . '/..';
     }

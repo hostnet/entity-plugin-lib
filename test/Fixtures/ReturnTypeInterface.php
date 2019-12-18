@@ -46,7 +46,7 @@ interface ReturnTypeInterface
     /**
      * @return \Hostnet\Component\EntityPlugin\Fixtures\object
      */
-    public function objectMethod(): \Hostnet\Component\EntityPlugin\Fixtures\object;
+    public function objectMethod(): \object;
 
     /**
      * @return int

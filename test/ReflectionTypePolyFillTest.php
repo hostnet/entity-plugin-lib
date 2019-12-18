@@ -35,13 +35,13 @@ class ReflectionTypePolyFillTest extends TestCase
     }
 
     /**
-     * @expectedException \InvalidArgumentException
      * @dataProvider constructorProvider
      * @param mixed $name
      * @param mixed $allows_null
      */
     public function testConstructor($name, $allows_null)
     {
+        $this->expectException(\InvalidArgumentException::class);
         new ReflectionTypePolyFill($name, $allows_null);
     }
 }
