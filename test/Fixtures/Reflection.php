@@ -12,7 +12,7 @@ class Reflection
      * @param unknown $empty
      * @param \Exception $fully_qualified
      * @param array[] $array_of_arrays
-     * @return Generated\Blyp
+     * @return Generated\Blyp|$this
      */
     public function docBlock($param_1, array $param_2, \Exception $fully_qualified)
     {
@@ -29,7 +29,7 @@ class Reflection
      * @param \Hostnet\Component\EntityPlugin\Fixtures\unknown $empty
      * @param \Exception $fully_qualified
      * @param array[] $array_of_arrays
-     * @return Blyp
+     * @return Blyp|$this
      */
 EOS;
     }

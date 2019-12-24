@@ -10,7 +10,7 @@ interface WithTraitClassInterface
 
     /**
      * I am from a trait
-     * @return $this|WithTraitClass
+     * @return $this|\Hostnet\FunctionalFixtures\Entity\WithTraitClass
      */
     public function extra();
 }
