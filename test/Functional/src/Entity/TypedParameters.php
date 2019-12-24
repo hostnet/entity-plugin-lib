@@ -5,8 +5,6 @@ use Hostnet\Component\EntityPlugin\ReflectionGenerator;
 
 class TypedParameters
 {
-    use ExtraTrait;
-
     /**
      */
     public function oneParameter(\DateTime $date)

@@ -1,11 +1,10 @@
 <?php
-namespace Hostnet\FunctionalFixtures\Entity;
+namespace Hostnet\Component\EntityPlugin\Fixtures;
 
 trait ExtraTrait
 {
     /**
      * I am from a trait
-     * @return $this|WithTraitClass
      */
     public function extra()
     {

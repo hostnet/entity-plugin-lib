@@ -1,8 +1,6 @@
 <?php
 namespace Hostnet\Component\EntityPlugin\Fixtures;
 
-use Hostnet\FunctionalFixtures\Entity\ExtraTrait;
-
 class Reflection
 {
     use ExtraTrait;

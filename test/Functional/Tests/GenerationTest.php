@@ -63,37 +63,41 @@ class GenerationTest extends TestCase
 
         // test the output
         $dir = __DIR__ . '/../src/Entity/Generated';
-        self::assertEquals(
-            file_get_contents(__DIR__ . '/expected/BaseClassInterface.php'),
-            file_get_contents($dir . '/BaseClassInterface.php')
+        self::assertFileEquals(
+            __DIR__.'/expected/BaseClassInterface.php',
+            $dir.'/BaseClassInterface.php'
         );
-        self::assertEquals(
-            file_get_contents(__DIR__ . '/expected/ExtendedClassInterface.php'),
-            file_get_contents($dir . '/ExtendedClassInterface.php')
+        self::assertFileEquals(
+            __DIR__.'/expected/ExtendedClassInterface.php',
+            $dir.'/ExtendedClassInterface.php'
         );
-        self::assertEquals(
-            file_get_contents(__DIR__ . '/expected/ConstructShouldNotBePresentInterface.php'),
-            file_get_contents($dir . '/ConstructShouldNotBePresentInterface.php')
+        self::assertFileEquals(
+            __DIR__.'/expected/ConstructShouldNotBePresentInterface.php',
+            $dir.'/ConstructShouldNotBePresentInterface.php'
         );
-        self::assertEquals(
-            file_get_contents(__DIR__ . '/expected/MultipleArgumentsInterface.php'),
-            file_get_contents($dir . '/MultipleArgumentsInterface.php')
+        self::assertFileEquals(
+            __DIR__.'/expected/MultipleArgumentsInterface.php',
+            $dir.'/MultipleArgumentsInterface.php'
         );
-        self::assertEquals(
-            file_get_contents(__DIR__ . '/expected/TypedParametersInterface.php'),
-            file_get_contents($dir . '/TypedParametersInterface.php')
+        self::assertFileEquals(
+            __DIR__.'/expected/TypedParametersInterface.php',
+            $dir.'/TypedParametersInterface.php'
         );
-        self::assertEquals(
-            file_get_contents(__DIR__ . '/expected/VariadicTypedParametersInterface.php'),
-            file_get_contents($dir . '/VariadicTypedParametersInterface.php')
+        self::assertFileEquals(
+            __DIR__.'/expected/VariadicTypedParametersInterface.php',
+            $dir.'/VariadicTypedParametersInterface.php'
         );
-        self::assertEquals(
-            file_get_contents(__DIR__ . '/expected/ExtendedMissingParentClassInterface.php'),
-            file_get_contents($dir . '/ExtendedMissingParentClassInterface.php')
+        self::assertFileEquals(
+            __DIR__.'/expected/ExtendedMissingParentClassInterface.php',
+            $dir.'/ExtendedMissingParentClassInterface.php'
         );
-        self::assertEquals(
-            file_get_contents(__DIR__ . '/expected/DefaultParametersInterface.php'),
-            file_get_contents($dir . '/DefaultParametersInterface.php')
+        self::assertFileEquals(
+            __DIR__.'/expected/DefaultParametersInterface.php',
+            $dir.'/DefaultParametersInterface.php'
+        );
+        self::assertFileEquals(
+            __DIR__.'/expected/WithTraitClassInterface.php',
+            $dir.'/WithTraitClassInterface.php'
         );
     }
 
