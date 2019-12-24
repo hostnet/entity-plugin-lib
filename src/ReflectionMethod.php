@@ -90,7 +90,7 @@ class ReflectionMethod
      */
     public function getDocComment()
     {
-        $pattern = '/@(return|param)\s+((?:[\$\w\\\\]+(?:\[\])?(?:\s*[|]\s*[\$\w\\\\]+(?:\[\])?)*))(\s|$)/';
+        $pattern = '/@(return|param|throws)\s+((?:[\$\w\\\\]+(?:\[\])?(?:\s*[|]\s*[\$\w\\\\]+(?:\[\])?)*))(\s|$)/';
 
         return preg_replace_callback($pattern, [$this, 'processDocMatch'], $this->method->getDocComment());
     }
