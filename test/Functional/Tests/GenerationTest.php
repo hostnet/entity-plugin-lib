@@ -99,6 +99,10 @@ class GenerationTest extends TestCase
             __DIR__.'/expected/WithTraitClassInterface.php',
             $dir.'/WithTraitClassInterface.php'
         );
+        self::assertFileEquals(
+            __DIR__.'/expected/TypedExceptionsInterface.php',
+            $dir.'/TypedExceptionsInterface.php'
+        );
     }
 
     protected function tearDown(): void
