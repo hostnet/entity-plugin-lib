@@ -90,7 +90,7 @@ class ReflectionMethod
      */
     public function getDocComment()
     {
-        $pattern = '/@(return|param)\s+((?:[\w\\\\]+(?:\[\])?(?:\s*[|]\s*[\w\\\\]+(?:\[\])?)*))(\s|$)/';
+        $pattern = '/@(return|param)\s+((?:[\$\w\\\\]+(?:\[\])?(?:\s*[|]\s*[\$\w\\\\]+(?:\[\])?)*))(\s|$)/';
 
         return preg_replace_callback($pattern, [$this, 'processDocMatch'], $this->method->getDocComment());
     }
@@ -115,6 +115,11 @@ class ReflectionMethod
      */
     private function qualifyType($type)
     {
+        // "Type" is a variable, i.e. $this.
+        if ('$' === $type[0]) {
+            return $type;
+        }
+
         // Type is fully qualified.
         if ('\\' === $type[0]) {
             return $type;

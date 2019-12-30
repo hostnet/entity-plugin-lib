@@ -23,9 +23,4 @@ interface TypedParametersInterface
     /**
      */
     public function aNamespacedArgument(\Hostnet\Component\EntityPlugin\ReflectionGenerator $generator);
-
-    /**
-     * I am from a trait
-     */
-    public function extra();
 }
