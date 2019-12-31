@@ -9,6 +9,7 @@ use Composer\IO\BufferIO;
 use Composer\Package\RootPackage;
 use Composer\Repository\InstalledArrayRepository;
 use Composer\Repository\RepositoryManager;
+use Hostnet\Component\EntityPlugin\Installer;
 use Hostnet\Component\EntityPlugin\Plugin;
 use PHPUnit\Framework\TestCase;
 use RecursiveDirectoryIterator;
@@ -103,6 +104,20 @@ class GenerationTest extends TestCase
             __DIR__.'/expected/TypedExceptionsInterface.php',
             $dir.'/TypedExceptionsInterface.php'
         );
+    }
+
+    public function testGenerationWithoutInterfaces(): void
+    {
+        $this->composer->getPackage()->setExtra([Installer::GENERATE_INTERFACES => false]);
+        $this->plugin->activate($this->composer, $this->io);
+        $this->plugin->onPreAutoloadDump();
+        $this->plugin->onPostAutoloadDump();
+
+        $dir = __DIR__ . '/../src/Entity/Generated';
+        self::assertDirectoryExists($dir);
+        foreach (scandir($dir) as $file_name) {
+            self::assertStringNotContainsString('Interface', $file_name);
+        }
     }
 
     protected function tearDown(): void

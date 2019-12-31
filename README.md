@@ -62,6 +62,9 @@ If you run the composer.phar with ```-v``` or ```-vv``` or ```-vvv``` it will sh
 
 If you want to extend an entity from your main application, you can use the ```entity-bundle-dir``` setting in the extra section of your composer.json.
 
+If you do not want to generate interfaces, you can set the ```generate-interfaces``` setting to ```false``` in the extra setting of your composer.json. 
+We will change this to being the default behaviour in a future release.
+
 For a quick overview have a look at the [cheatsheet][cheatsheet].
 
 [aop]: http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.95.2500&rep=rep1&type=pdf "Aspect-oriented programming"

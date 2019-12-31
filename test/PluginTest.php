@@ -2,6 +2,7 @@
 namespace Hostnet\Component\EntityPlugin;
 
 use Composer\Config;
+use Composer\Package\RootPackage;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -13,6 +14,7 @@ class PluginTest extends TestCase
     {
         $plugin   = new Plugin();
         $prophecy = $this->prophesize('Composer\Composer');
+        $prophecy->getPackage()->willReturn(new RootPackage('hostnet/root-package', 1, 1));
         $prophecy->getConfig()->willReturn(new Config());
         $prophecy->getDownloadManager()->willReturn(null);
         $composer = $prophecy->reveal();
