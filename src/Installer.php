@@ -23,6 +23,7 @@ class Installer extends LibraryInstaller implements PackagePathResolverInterface
 {
     const PACKAGE_TYPE            = 'hostnet-entity';
     const EXTRA_ENTITY_BUNDLE_DIR = 'entity-bundle-dir';
+    const GENERATE_INTERFACES     = 'generate-interfaces';
 
     private $compound_generators;
 
@@ -31,6 +32,8 @@ class Installer extends LibraryInstaller implements PackagePathResolverInterface
     private $twig_environment = null;
 
     private $graph = null;
+
+    private $generate_interfaces = true;
 
     /**
      *
@@ -49,6 +52,12 @@ class Installer extends LibraryInstaller implements PackagePathResolverInterface
         $this->compound_generators  = $compound_generators;
         $this->empty_generator      = $empty_generator;
         $this->reflection_generator = $reflection_generator;
+
+        $extra = $composer->getPackage()->getExtra();
+        if (isset($extra[self::GENERATE_INTERFACES])) {
+            $this->generate_interfaces = filter_var($extra[self::GENERATE_INTERFACES], FILTER_VALIDATE_BOOLEAN);
+        }
+
     }
 
     /**
@@ -99,9 +108,14 @@ class Installer extends LibraryInstaller implements PackagePathResolverInterface
      */
     public function preAutoloadDump()
     {
+        $passes = $this->generate_interfaces ? 3 : 1;
         $graph = $this->getGraph();
-        $this->io->write('<info>Pass 1/3: Generating compound traits and interfaces</info>');
+        $this->io->write('<info>Pass 1/' . $passes . ': Generating compound traits and interfaces</info>');
         $this->generateCompoundCode($graph);
+
+        if (!$this->generate_interfaces) {
+            return;
+        }
 
         $this->io->write('<info>Pass 2/3: Preparing individual generation</info>');
         $this->generateEmptyCode($graph);
@@ -112,6 +126,10 @@ class Installer extends LibraryInstaller implements PackagePathResolverInterface
      */
     public function postAutoloadDump()
     {
+        if (!$this->generate_interfaces) {
+            return;
+        }
+
         $graph = $this->getGraph();
 
         $this->io->write('<info>Pass 3/3: Performing individual generation</info>');

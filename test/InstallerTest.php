@@ -40,7 +40,7 @@ class InstallerTest extends TestCase
 
         $installer = new MockInstaller($this->mockIO(), $this->mockComposer(), [], $empty, $reflection_generator);
 
-        $package = self::createMock('Composer\Package\PackageInterface');
+        $package = $this->createMock('Composer\Package\PackageInterface');
         $package->expects($this->once())->method('getPrettyName')->will($this->returnValue('prettyName'));
         $this->assertEquals($this->working_dir . '/vendor/prettyName', $installer->getInstallPath($package));
         $this->assertEquals(1, $installer->initialize_vendor_dir_called);
@@ -67,6 +67,7 @@ class InstallerTest extends TestCase
     private function mockComposer()
     {
         $composer = new Composer();
+        $composer->setPackage(new RootPackage('hostnet/root-package', 1, 1));
         $composer->setConfig($this->mockConfig());
         $composer->setRepositoryManager($this->mockRepositoryManager());
         $composer->setEventDispatcher(new EventDispatcher($composer, $this->mockIO()));
