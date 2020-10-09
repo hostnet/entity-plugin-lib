@@ -11,7 +11,7 @@ interface {{ class_name }}Interface{% if parent %} extends {{ parent }}Interface
 {% for method in methods %}
 {% if method.isPublic() and not method.isStatic() %}
 
-    {{ method.docComment }}
+    {{ method.docComment | raw }}
     public function {{ method.name }}({% include 'parameters.php.twig' with { parameters: method.parameters } %})
     {%- if method.returnType -%}
         : {% if method.returnType.allowsNull %}?{% endif %}{{ method.returnType.name }}

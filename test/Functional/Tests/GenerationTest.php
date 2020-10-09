@@ -104,6 +104,10 @@ class GenerationTest extends TestCase
             __DIR__.'/expected/TypedExceptionsInterface.php',
             $dir.'/TypedExceptionsInterface.php'
         );
+        self::assertFileEquals(
+            __DIR__.'/expected/SpecialCharactersInDocsInterface.php',
+            $dir.'/SpecialCharactersInDocsInterface.php'
+        );
     }
 
     public function testGenerationWithoutInterfaces(): void
