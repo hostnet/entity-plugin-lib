@@ -75,7 +75,7 @@ class ReflectionMethod
 
         if ($type = $this->method->getReturnType()) {
             // Self is not valid when used in different places.
-            if ('self' === $type->__toString()) {
+            if ('self' === $type->getName()) {
                 return null;
             }
 

@@ -15,7 +15,7 @@ class ReflectionType implements ReflectionTypeInterface
 
     public function getName()
     {
-        $name = (string) $this->type;
+        $name = $this->type->getName();
 
         // Some types can not be qualified
         if (in_array($name, self::NON_QUALIFIED_TYPES, true)) {
