@@ -1,18 +1,21 @@
 <?php
+/**
+ * @copyright 2014-present Hostnet B.V.
+ */
+declare(strict_types=1);
+
 namespace Hostnet\Component\EntityPlugin;
 
 use Composer\Autoload\ClassMapGenerator;
 use Composer\Package\PackageInterface;
+use Composer\Semver\Constraint\Constraint;
 
 /**
  * Builds EntityPackage-s
  * They are nodes in a (dependency) graph
- *
- * @author Nico Schoenmaker <nschoenmaker@hostnet.nl>
  */
 class EntityPackageBuilder
 {
-
     private $resolver;
 
     private $tree_nodes = [];
@@ -25,9 +28,13 @@ class EntityPackageBuilder
             $this->addPackage($package);
         }
         foreach ($this->tree_nodes as $entity_package) {
-            /* @var $entity_package EntityPackage */
+            /** @var EntityPackage $entity_package */
             $links = array_merge($entity_package->getRequires(), array_map(function ($str) use ($entity_package) {
-                return new \Composer\Package\Link($entity_package->getPackage()->getName(), $str);
+                return new \Composer\Package\Link(
+                    $entity_package->getPackage()->getName(),
+                    $str,
+                    new Constraint('=', '1')
+                );
             }, array_keys($entity_package->getSuggests())));
 
             foreach ($links as $link) {
@@ -43,7 +50,7 @@ class EntityPackageBuilder
         }
     }
 
-    private function addPackage(PackageInterface $package)
+    private function addPackage(PackageInterface $package): void
     {
         $class_map      = ClassMapGenerator::createMap($this->resolver->getSourcePath($package));
         $entity_content = new PackageContent($class_map, PackageContent::ENTITY);
@@ -61,7 +68,7 @@ class EntityPackageBuilder
      *
      * @return EntityPackage[]
      */
-    public function getEntityPackages()
+    public function getEntityPackages(): array
     {
         return $this->tree_nodes;
     }

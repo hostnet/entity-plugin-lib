@@ -1,4 +1,9 @@
 <?php
+/**
+ * @copyright 2014-present Hostnet B.V.
+ */
+declare(strict_types=1);
+
 namespace Hostnet\Component\EntityPlugin;
 
 use Composer\Composer;
@@ -6,13 +11,16 @@ use Composer\Config;
 use Composer\EventDispatcher\EventDispatcher;
 use Composer\IO\NullIO;
 use Composer\Package\RootPackage;
+use Composer\Repository\InstalledArrayRepository;
 use Composer\Repository\RepositoryManager;
 use Composer\Repository\WritableArrayRepository;
+use Composer\Util\HttpDownloader;
 use Hostnet\Component\EntityPlugin\Mock\Installer as MockInstaller;
 use phpunit\framework\TestCase;
 
 /**
- * @covers Hostnet\Component\EntityPlugin\Installer
+ * @covers \Hostnet\Component\EntityPlugin\Installer
+ * @covers \Hostnet\Component\EntityPlugin\Installer
  */
 class InstallerTest extends TestCase
 {
@@ -23,7 +31,7 @@ class InstallerTest extends TestCase
         $this->working_dir = __DIR__ . '/..';
     }
 
-    public function testGetInstallPath()
+    public function testGetInstallPath(): void
     {
         $empty                = $this->prophesize('Hostnet\Component\EntityPlugin\EmptyGenerator')->reveal();
         $reflection_generator = $this->prophesize(ReflectionGenerator::class)->reveal();
@@ -46,7 +54,7 @@ class InstallerTest extends TestCase
         $this->assertEquals(1, $installer->initialize_vendor_dir_called);
     }
 
-    public function testGetSourcePath()
+    public function testGetSourcePath(): void
     {
         $empty                = $this->prophesize('Hostnet\Component\EntityPlugin\EmptyGenerator')->reveal();
         $reflection_generator = $this->prophesize(ReflectionGenerator::class)->reveal();
@@ -76,8 +84,11 @@ class InstallerTest extends TestCase
 
     private function mockRepositoryManager()
     {
-        $repository_manager = new RepositoryManager($this->mockIO(), $this->mockConfig());
-        $repository_manager->setLocalRepository(new WritableArrayRepository());
+        $config             = $this->mockConfig();
+        $io                 = $this->mockIO();
+        $http_downloader    = new HttpDownloader($io, $config);
+        $repository_manager = new RepositoryManager($io, $config, $http_downloader);
+        $repository_manager->setLocalRepository(new InstalledArrayRepository());
         return $repository_manager;
     }
 

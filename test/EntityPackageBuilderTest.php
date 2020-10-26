@@ -1,8 +1,14 @@
 <?php
+/**
+ * @copyright 2014-present Hostnet B.V.
+ */
+declare(strict_types=1);
+
 namespace Hostnet\Component\EntityPlugin;
 
 use Composer\Package\Link;
 use Composer\Package\Package;
+use Composer\Semver\Constraint\Constraint;
 use phpunit\framework\TestCase;
 
 /**
@@ -10,7 +16,6 @@ use phpunit\framework\TestCase;
  */
 class EntityPackageBuilderTest extends TestCase
 {
-
     /**
      * @dataProvider addsDependenciesProvider
      */
@@ -18,7 +23,7 @@ class EntityPackageBuilderTest extends TestCase
         array $packages,
         array $expected_required_packages = [],
         array $expected_dependent_packages = []
-    ) {
+    ): void {
         $mock = self::createMock('Hostnet\Component\EntityPlugin\PackagePathResolverInterface');
         $mock->expects($this->any())
              ->method('getSourcePath')
@@ -52,17 +57,17 @@ class EntityPackageBuilderTest extends TestCase
     {
         $requires_external = new Package('hostnet/requires-external', 1, 1);
         $requires_external->setRequires([
-            new Link('hostnet/requires-external', 'hostnet/not-linked')
+            new Link('hostnet/requires-external', 'hostnet/not-linked', new Constraint('=', '1')),
         ]);
 
         $foo    = new Package('hostnet/foo', 1, 1);
         $bar    = new Package('hostnet/bar', 1, 1);
         $foobar = new Package('hostnet/foobar', 1, 1);
         $bar->setRequires([
-            new Link('hostnet/bar', 'hostnet/foo')
+            new Link('hostnet/bar', 'hostnet/foo', new Constraint('=', '1')),
         ]);
         $foo->setSuggests([
-            'hostnet/foobar' => 'Very useless text...'
+            'hostnet/foobar' => 'Very useless text...',
         ]);
 
         return [
@@ -70,40 +75,40 @@ class EntityPackageBuilderTest extends TestCase
                 [],
             ],
             [
-                [$requires_external]
+                [$requires_external],
             ],
             [
                 [
-                    $foo
+                    $foo,
                 ],
                 [
-                    'hostnet/foo' => []
+                    'hostnet/foo' => [],
                 ],
                 [
-                    'hostnet/foo' => []
-                ]
+                    'hostnet/foo' => [],
+                ],
             ],
             [
                 [
                     $foo,
                     $bar,
-                    $foobar
+                    $foobar,
                 ],
                 [
                     'hostnet/foo' => [
-                        $foobar
+                        $foobar,
                     ],
                     'hostnet/bar' => [
-                        $foo
-                    ]
+                        $foo,
+                    ],
                 ],
                 [
                     'hostnet/foo' => [
-                        $bar
+                        $bar,
                     ],
-                    'hostnet/bar' => []
-                ]
-            ]
+                    'hostnet/bar' => [],
+                ],
+            ],
         ];
     }
 }

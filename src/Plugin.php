@@ -1,4 +1,9 @@
 <?php
+/**
+ * @copyright 2014-present Hostnet B.V.
+ */
+declare(strict_types=1);
+
 namespace Hostnet\Component\EntityPlugin;
 
 use Composer\Composer;
@@ -16,7 +21,7 @@ class Plugin implements PluginInterface, EventSubscriberInterface
 {
     private $installer;
 
-    public function activate(Composer $composer, IOInterface $io)
+    public function activate(Composer $composer, IOInterface $io): void
     {
         // We don't really have a DI container, so lets create the "services" here.
         $filesystem       = new Filesystem();
@@ -43,18 +48,26 @@ class Plugin implements PluginInterface, EventSubscriberInterface
         $this->installer = new Installer($io, $composer, $compound_generators, $empty_generator, $reflection_generator);
     }
 
+    public function deactivate(Composer $composer, IOInterface $io): void
+    {
+    }
+
+    public function uninstall(Composer $composer, IOInterface $io): void
+    {
+    }
+
     public static function getSubscribedEvents()
     {
         return [
             ScriptEvents::POST_AUTOLOAD_DUMP => ['onPostAutoloadDump', 10 ],
-            ScriptEvents::PRE_AUTOLOAD_DUMP => ['onPreAutoloadDump', 10 ],
+            ScriptEvents::PRE_AUTOLOAD_DUMP  => ['onPreAutoloadDump', 10 ],
         ];
     }
 
     /**
      * Gets called on the POST_AUTOLOAD_DUMP event
      */
-    public function onPostAutoloadDump()
+    public function onPostAutoloadDump(): void
     {
         $this->installer->postAutoloadDump();
     }
@@ -62,7 +75,7 @@ class Plugin implements PluginInterface, EventSubscriberInterface
     /**
      * Gets called on the POST_AUTOLOAD_DUMP event
      */
-    public function onPreAutoloadDump()
+    public function onPreAutoloadDump(): void
     {
         $this->installer->preAutoloadDump();
     }

@@ -1,14 +1,22 @@
 <?php
+/**
+ * @copyright 2016-present Hostnet B.V.
+ */
+declare(strict_types=1);
+
 namespace Hostnet\Component\EntityPlugin\Functional;
 
 use Composer\Autoload\AutoloadGenerator;
 use Composer\Composer;
 use Composer\Config;
 use Composer\EventDispatcher\EventDispatcher;
+use Composer\Installer\InstallationManager;
 use Composer\IO\BufferIO;
 use Composer\Package\RootPackage;
 use Composer\Repository\InstalledArrayRepository;
 use Composer\Repository\RepositoryManager;
+use Composer\Util\HttpDownloader;
+use Composer\Util\Loop;
 use Hostnet\Component\EntityPlugin\Installer;
 use Hostnet\Component\EntityPlugin\Plugin;
 use PHPUnit\Framework\TestCase;
@@ -40,8 +48,10 @@ class GenerationTest extends TestCase
         $config->merge(
             ['config' => ['vendor-dir' => __DIR__]]
         );
-
-        $repo_manager       = new RepositoryManager($this->io, $config);
+        $http_downloader = new HttpDownloader($this->io, $config);
+        $loop            = new Loop($http_downloader);
+        $this->composer->setInstallationManager(new InstallationManager($loop, $this->io));
+        $repo_manager       = new RepositoryManager($this->io, $config, $http_downloader);
         $repository         = new InstalledArrayRepository();
         $package            = new RootPackage('foobar', 1, 1);
         $event_dispatcher   = new EventDispatcher($this->composer, $this->io);
@@ -56,7 +66,7 @@ class GenerationTest extends TestCase
         $this->composer->setAutoloadGenerator($autoload_generator);
     }
 
-    public function testGeneration()
+    public function testGeneration(): void
     {
         $this->plugin->activate($this->composer, $this->io);
         $this->plugin->onPreAutoloadDump();
@@ -65,48 +75,48 @@ class GenerationTest extends TestCase
         // test the output
         $dir = __DIR__ . '/../src/Entity/Generated';
         self::assertFileEquals(
-            __DIR__.'/expected/BaseClassInterface.php',
-            $dir.'/BaseClassInterface.php'
+            __DIR__ . '/expected/BaseClassInterface.php',
+            $dir . '/BaseClassInterface.php'
         );
         self::assertFileEquals(
-            __DIR__.'/expected/ExtendedClassInterface.php',
-            $dir.'/ExtendedClassInterface.php'
+            __DIR__ . '/expected/ExtendedClassInterface.php',
+            $dir . '/ExtendedClassInterface.php'
         );
         self::assertFileEquals(
-            __DIR__.'/expected/ConstructShouldNotBePresentInterface.php',
-            $dir.'/ConstructShouldNotBePresentInterface.php'
+            __DIR__ . '/expected/ConstructShouldNotBePresentInterface.php',
+            $dir . '/ConstructShouldNotBePresentInterface.php'
         );
         self::assertFileEquals(
-            __DIR__.'/expected/MultipleArgumentsInterface.php',
-            $dir.'/MultipleArgumentsInterface.php'
+            __DIR__ . '/expected/MultipleArgumentsInterface.php',
+            $dir . '/MultipleArgumentsInterface.php'
         );
         self::assertFileEquals(
-            __DIR__.'/expected/TypedParametersInterface.php',
-            $dir.'/TypedParametersInterface.php'
+            __DIR__ . '/expected/TypedParametersInterface.php',
+            $dir . '/TypedParametersInterface.php'
         );
         self::assertFileEquals(
-            __DIR__.'/expected/VariadicTypedParametersInterface.php',
-            $dir.'/VariadicTypedParametersInterface.php'
+            __DIR__ . '/expected/VariadicTypedParametersInterface.php',
+            $dir . '/VariadicTypedParametersInterface.php'
         );
         self::assertFileEquals(
-            __DIR__.'/expected/ExtendedMissingParentClassInterface.php',
-            $dir.'/ExtendedMissingParentClassInterface.php'
+            __DIR__ . '/expected/ExtendedMissingParentClassInterface.php',
+            $dir . '/ExtendedMissingParentClassInterface.php'
         );
         self::assertFileEquals(
-            __DIR__.'/expected/DefaultParametersInterface.php',
-            $dir.'/DefaultParametersInterface.php'
+            __DIR__ . '/expected/DefaultParametersInterface.php',
+            $dir . '/DefaultParametersInterface.php'
         );
         self::assertFileEquals(
-            __DIR__.'/expected/WithTraitClassInterface.php',
-            $dir.'/WithTraitClassInterface.php'
+            __DIR__ . '/expected/WithTraitClassInterface.php',
+            $dir . '/WithTraitClassInterface.php'
         );
         self::assertFileEquals(
-            __DIR__.'/expected/TypedExceptionsInterface.php',
-            $dir.'/TypedExceptionsInterface.php'
+            __DIR__ . '/expected/TypedExceptionsInterface.php',
+            $dir . '/TypedExceptionsInterface.php'
         );
         self::assertFileEquals(
-            __DIR__.'/expected/SpecialCharactersInDocsInterface.php',
-            $dir.'/SpecialCharactersInDocsInterface.php'
+            __DIR__ . '/expected/SpecialCharactersInDocsInterface.php',
+            $dir . '/SpecialCharactersInDocsInterface.php'
         );
     }
 

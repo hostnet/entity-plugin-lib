@@ -1,4 +1,9 @@
 <?php
+/**
+ * @copyright 2014-present Hostnet B.V.
+ */
+declare(strict_types=1);
+
 namespace Hostnet\Component\EntityPlugin;
 
 use Composer\Composer;
@@ -17,7 +22,6 @@ use Composer\Package\RootPackageInterface;
  * If verbose, will output package level detail
  * If very verbose, will output class level detail
  * @todo Cut the dependency to LibraryInstaller, this does not make sense now we are a plugin.
- * @author Nico Schoenmaker <nschoenmaker@hostnet.nl>
  */
 class Installer extends LibraryInstaller implements PackagePathResolverInterface
 {
@@ -36,7 +40,6 @@ class Installer extends LibraryInstaller implements PackagePathResolverInterface
     private $generate_interfaces = true;
 
     /**
-     *
      * @var ReflectionGenerator
      */
     private $reflection_generator;
@@ -57,7 +60,6 @@ class Installer extends LibraryInstaller implements PackagePathResolverInterface
         if (isset($extra[self::GENERATE_INTERFACES])) {
             $this->generate_interfaces = filter_var($extra[self::GENERATE_INTERFACES], FILTER_VALIDATE_BOOLEAN);
         }
-
     }
 
     /**
@@ -90,7 +92,7 @@ class Installer extends LibraryInstaller implements PackagePathResolverInterface
      * Calculate the dependency graph
      * @return \Hostnet\Component\EntityPlugin\EntityPackageBuilder
      */
-    private function getGraph()
+    private function getGraph(): \Hostnet\Component\EntityPlugin\EntityPackageBuilder
     {
         if ($this->graph === null) {
             $local_repository   = $this->composer->getRepositoryManager()->getLocalRepository();
@@ -106,10 +108,10 @@ class Installer extends LibraryInstaller implements PackagePathResolverInterface
     /**
      * Gets called on the PRE_AUTOLOAD_DUMP event
      */
-    public function preAutoloadDump()
+    public function preAutoloadDump(): void
     {
         $passes = $this->generate_interfaces ? 3 : 1;
-        $graph = $this->getGraph();
+        $graph  = $this->getGraph();
         $this->io->write('<info>Pass 1/' . $passes . ': Generating compound traits and interfaces</info>');
         $this->generateCompoundCode($graph);
 
@@ -124,7 +126,7 @@ class Installer extends LibraryInstaller implements PackagePathResolverInterface
     /**
      * Gets called on the POST_AUTOLOAD_DUMP event
      */
-    public function postAutoloadDump()
+    public function postAutoloadDump(): void
     {
         if (!$this->generate_interfaces) {
             return;
@@ -141,11 +143,11 @@ class Installer extends LibraryInstaller implements PackagePathResolverInterface
      * @param RootPackageInterface[] $packages
      * @return \Composer\Package\PackageInterface[]
      */
-    private function getSupportedPackages(array $packages)
+    private function getSupportedPackages(array $packages): array
     {
         $supported_packages = [];
         foreach ($packages as $package) {
-            /* @var $package \Composer\Package\PackageInterface */
+            /** @var $package \Composer\Package\PackageInterface */
             if ($this->supportsPackage($package)) {
                 $supported_packages[] = $package;
             }
@@ -155,9 +157,9 @@ class Installer extends LibraryInstaller implements PackagePathResolverInterface
 
     /**
      * @param PackageInterface $package
-     * @return boolean
+     * @return bool
      */
-    private function supportsPackage(PackageInterface $package)
+    private function supportsPackage(PackageInterface $package): bool
     {
         $extra = $package->getExtra();
         if (self::PACKAGE_TYPE === $package->getType() || isset($extra[self::EXTRA_ENTITY_BUNDLE_DIR])) {
@@ -169,16 +171,13 @@ class Installer extends LibraryInstaller implements PackagePathResolverInterface
     /**
      * Ensures all the packages are autoloaded, needed because classes are read using reflection.
      */
-    private function setUpAutoloading()
+    private function setUpAutoloading(): void
     {
         //Pre-required variable's
         $package              = $this->composer->getPackage();
         $autoload_generator   = $this->composer->getAutoloadGenerator();
         $local_repository     = $this->composer->getRepositoryManager()->getLocalRepository();
         $installation_manager = $this->composer->getInstallationManager();
-        if (!$installation_manager) {
-            $installation_manager = new InstallationManager();
-        }
 
         //API stolen from Composer see DumpAutoloadCommand.php
         $package_map = $autoload_generator->buildPackageMap(
@@ -198,16 +197,16 @@ class Installer extends LibraryInstaller implements PackagePathResolverInterface
      *
      * @param EntityPackageBuilder $graph
      */
-    private function generateCompoundCode(EntityPackageBuilder $graph)
+    private function generateCompoundCode(EntityPackageBuilder $graph): void
     {
         foreach ($graph->getEntityPackages() as $entity_package) {
-            /* @var $entity_package EntityPackage */
+            /** @var EntityPackage $entity_package */
             $this->writeIfVerbose(
-                '    - Generating for package <info>'.
+                '    - Generating for package <info>' .
                 $entity_package->getPackage()->getName() . '</info>'
             );
             foreach ($this->compound_generators as $compound_generator) {
-                /* @var $compound_generator Compound\CompoundGenerator */
+                /** @var Compound\CompoundGenerator $compound_generator */
                 $compound_generator->generate($entity_package);
             }
         }
@@ -219,10 +218,10 @@ class Installer extends LibraryInstaller implements PackagePathResolverInterface
      * @see EmptyGenerator
      * @param EntityPackageBuilder $graph
      */
-    private function generateEmptyCode(EntityPackageBuilder $graph)
+    private function generateEmptyCode(EntityPackageBuilder $graph): void
     {
         foreach ($graph->getEntityPackages() as $entity_package) {
-            /* @var $entity_package EntityPackage */
+            /** @var EntityPackage $entity_package */
             $this->writeIfVerbose(
                 '    - Preparing package <info>' . $entity_package->getPackage()
                     ->getName() . '</info>'
@@ -241,10 +240,10 @@ class Installer extends LibraryInstaller implements PackagePathResolverInterface
      *
      * @param EntityPackageBuilder $graph
      */
-    private function generateConcreteIndividualCode(EntityPackageBuilder $graph)
+    private function generateConcreteIndividualCode(EntityPackageBuilder $graph): void
     {
         foreach ($graph->getEntityPackages() as $entity_package) {
-            /* @var $entity_package EntityPackage */
+            /** @var EntityPackage $entity_package */
             $this->writeIfVerbose(
                 '    - Generating for package <info>' . $entity_package->getPackage()
                     ->getName() . '</info>'
@@ -258,14 +257,14 @@ class Installer extends LibraryInstaller implements PackagePathResolverInterface
         }
     }
 
-    private function writeIfVerbose($text)
+    private function writeIfVerbose($text): void
     {
         if ($this->io->isVerbose()) {
             $this->io->write($text);
         }
     }
 
-    private function writeIfVeryVerbose($text)
+    private function writeIfVeryVerbose($text): void
     {
         if ($this->io->isVeryVerbose()) {
             $this->io->write($text);
