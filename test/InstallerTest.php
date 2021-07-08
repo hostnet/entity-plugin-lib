@@ -17,6 +17,7 @@ use Composer\Repository\WritableArrayRepository;
 use Composer\Util\HttpDownloader;
 use Hostnet\Component\EntityPlugin\Mock\Installer as MockInstaller;
 use phpunit\framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 
 /**
  * @covers \Hostnet\Component\EntityPlugin\Installer
@@ -24,6 +25,8 @@ use phpunit\framework\TestCase;
  */
 class InstallerTest extends TestCase
 {
+    use ProphecyTrait;
+
     private $working_dir;
 
     protected function setUp(): void

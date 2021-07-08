@@ -24,6 +24,9 @@ use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 use Symfony\Component\Console\Output\StreamOutput;
 
+/**
+ * @coversNothing
+ */
 class GenerationTest extends TestCase
 {
     /**

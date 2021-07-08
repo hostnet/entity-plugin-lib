@@ -4,12 +4,15 @@ namespace Hostnet\Component\EntityPlugin;
 use Composer\Config;
 use Composer\Package\RootPackage;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 
 /**
  * @covers \Hostnet\Component\EntityPlugin\Plugin
  */
 class PluginTest extends TestCase
 {
+    use ProphecyTrait;
+
     public function testActivate()
     {
         $plugin   = new Plugin();
