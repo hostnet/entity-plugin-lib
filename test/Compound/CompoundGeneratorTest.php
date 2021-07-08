@@ -8,6 +8,7 @@ use Hostnet\Component\EntityPlugin\PackageContent;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument\Token\AnyValuesToken;
 use Prophecy\Argument\Token\AnyValueToken;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Symfony\Component\Filesystem\Filesystem;
 use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
@@ -19,6 +20,8 @@ use Twig\Loader\FilesystemLoader;
  */
 class CompoundGeneratorTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @dataProvider generateProvider
      * @param EntityPackage $entity_package

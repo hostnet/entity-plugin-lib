@@ -2,6 +2,7 @@
 namespace Hostnet\Component\EntityPlugin;
 
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Symfony\Component\Filesystem\Filesystem;
 use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
@@ -11,6 +12,8 @@ use Twig\Loader\FilesystemLoader;
  */
 class EmptyGeneratorTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * Test the empty Generator.
      */

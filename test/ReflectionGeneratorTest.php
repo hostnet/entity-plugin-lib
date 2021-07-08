@@ -8,6 +8,7 @@ use Hostnet\Component\EntityPlugin\Fixtures\ReturnType;
 use Hostnet\Component\EntityPlugin\Fixtures\ScalarParams;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Symfony\Component\Filesystem\Filesystem;
 use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
@@ -20,6 +21,7 @@ use Twig\Loader\FilesystemLoader;
  */
 class ReflectionGeneratorTest extends TestCase
 {
+    use ProphecyTrait;
 
     /**
      * The ReflectionGenerator under test
