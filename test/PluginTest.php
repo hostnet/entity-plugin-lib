@@ -2,6 +2,8 @@
 namespace Hostnet\Component\EntityPlugin;
 
 use Composer\Config;
+use Composer\Downloader\DownloaderInterface;
+use Composer\Downloader\DownloadManager;
 use Composer\Package\RootPackage;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
@@ -19,9 +21,10 @@ class PluginTest extends TestCase
         $prophecy = $this->prophesize('Composer\Composer');
         $prophecy->getPackage()->willReturn(new RootPackage('hostnet/root-package', 1, 1));
         $prophecy->getConfig()->willReturn(new Config());
-        $prophecy->getDownloadManager()->willReturn(null);
+        $prophecy->getDownloadManager()->willReturn($this->prophesize(DownloadManager::class)->reveal());
         $composer = $prophecy->reveal();
         $io       = $this->prophesize('Composer\IO\IOInterface')->reveal();
+
         self::assertNull($plugin->activate($composer, $io));
     }
 

@@ -9,6 +9,7 @@ namespace Hostnet\Component\EntityPlugin\Functional;
 use Composer\Autoload\AutoloadGenerator;
 use Composer\Composer;
 use Composer\Config;
+use Composer\Downloader\DownloadManager;
 use Composer\EventDispatcher\EventDispatcher;
 use Composer\Installer\InstallationManager;
 use Composer\IO\BufferIO;
@@ -20,6 +21,7 @@ use Composer\Util\Loop;
 use Hostnet\Component\EntityPlugin\Installer;
 use Hostnet\Component\EntityPlugin\Plugin;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 use Symfony\Component\Console\Output\StreamOutput;
@@ -29,6 +31,8 @@ use Symfony\Component\Console\Output\StreamOutput;
  */
 class GenerationTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var Plugin
      */
@@ -56,7 +60,7 @@ class GenerationTest extends TestCase
         $this->composer->setInstallationManager(new InstallationManager($loop, $this->io));
         $repo_manager       = new RepositoryManager($this->io, $config, $http_downloader);
         $repository         = new InstalledArrayRepository();
-        $package            = new RootPackage('foobar', 1, 1);
+        $package            = new RootPackage('foobar', '1', '1');
         $event_dispatcher   = new EventDispatcher($this->composer, $this->io);
         $autoload_generator = new AutoloadGenerator($event_dispatcher, $this->io);
 
@@ -67,6 +71,7 @@ class GenerationTest extends TestCase
         $this->composer->setRepositoryManager($repo_manager);
         $this->composer->setPackage($package);
         $this->composer->setAutoloadGenerator($autoload_generator);
+        $this->composer->setDownloadManager($this->prophesize(DownloadManager::class)->reveal());
     }
 
     public function testGeneration(): void

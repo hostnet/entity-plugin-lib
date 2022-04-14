@@ -8,6 +8,7 @@ namespace Hostnet\Component\EntityPlugin;
 
 use Composer\Composer;
 use Composer\Config;
+use Composer\Downloader\DownloadManager;
 use Composer\EventDispatcher\EventDispatcher;
 use Composer\IO\NullIO;
 use Composer\Package\RootPackage;
@@ -46,7 +47,7 @@ class InstallerTest extends TestCase
             $reflection_generator
         );
 
-        $root_package = new RootPackage('hostnet/root-package', 1, 1);
+        $root_package = new RootPackage('hostnet/root-package', '1', '1');
         $this->assertEquals('.', $installer->getInstallPath($root_package));
 
         $installer = new MockInstaller($this->mockIO(), $this->mockComposer(), [], $empty, $reflection_generator);
@@ -69,19 +70,22 @@ class InstallerTest extends TestCase
             $reflection_generator
         );
 
-        $root_package = new RootPackage('hostnet/root-package', 1, 1);
+        $root_package = new RootPackage('hostnet/root-package', '1', '1');
         $this->assertEquals('./src', $installer->getSourcePath($root_package));
         $root_package->setExtra(['entity-bundle-dir' => 'src/Hostnet/FooBundle']);
+
         $this->assertEquals('./src/Hostnet/FooBundle', $installer->getSourcePath($root_package));
     }
 
     private function mockComposer()
     {
         $composer = new Composer();
-        $composer->setPackage(new RootPackage('hostnet/root-package', 1, 1));
+        $composer->setPackage(new RootPackage('hostnet/root-package', '1', '1'));
         $composer->setConfig($this->mockConfig());
         $composer->setRepositoryManager($this->mockRepositoryManager());
         $composer->setEventDispatcher(new EventDispatcher($composer, $this->mockIO()));
+        $composer->setDownloadManager($this->prophesize(DownloadManager::class)->reveal());
+
         return $composer;
     }
 
