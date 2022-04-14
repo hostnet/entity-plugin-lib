@@ -90,6 +90,8 @@ class ReflectionParameter
 
     /**
      * @return mixed
+     *
+     * @phpcsSuppress SlevomatCodingStandard.TypeHints.ReturnTypeHint
      */
     public function getDefaultValue()
     {
