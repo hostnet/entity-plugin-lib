@@ -1,4 +1,9 @@
 <?php
+/**
+ * @copyright 2014-present Hostnet B.V.
+ */
+declare(strict_types=1);
+
 namespace Hostnet\Component\EntityPlugin;
 
 /**
@@ -11,12 +16,10 @@ namespace Hostnet\Component\EntityPlugin;
  */
 class EmptyGenerator extends ReflectionGenerator
 {
-
     /**
-     *
      * @see \Hostnet\Component\EntityPlugin\ReflectionGenerator::getMethods()
      */
-    protected function getMethods(PackageClass $package_class)
+    protected function getMethods(PackageClass $package_class): array
     {
         return [];
     }
@@ -24,7 +27,7 @@ class EmptyGenerator extends ReflectionGenerator
     /**
      * {@inheritDoc})
      */
-    protected function getParentClass(PackageClass $package_class)
+    protected function getParentClass(PackageClass $package_class): ?PackageClass
     {
         return null;
     }

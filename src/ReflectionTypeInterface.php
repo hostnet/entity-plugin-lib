@@ -1,4 +1,9 @@
 <?php
+/**
+ * @copyright 2016-present Hostnet B.V.
+ */
+declare(strict_types=1);
+
 namespace Hostnet\Component\EntityPlugin;
 
 interface ReflectionTypeInterface
@@ -16,7 +21,7 @@ interface ReflectionTypeInterface
         'string',
     ];
 
-    public function getName();
+    public function getName(): string;
 
-    public function allowsNull();
+    public function allowsNull(): bool;
 }

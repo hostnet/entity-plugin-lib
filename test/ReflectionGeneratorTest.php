@@ -1,4 +1,9 @@
 <?php
+/**
+ * @copyright 2014-present Hostnet B.V.
+ */
+declare(strict_types=1);
+
 namespace Hostnet\Component\EntityPlugin;
 
 use Hostnet\Component\EntityPlugin\Fixtures\DefaultValueParams;
@@ -37,9 +42,6 @@ class ReflectionGeneratorTest extends TestCase
      */
     private $environment;
 
-    /**
-     * {@inheritDoc}
-     */
     protected function setUp(): void
     {
         $loader            = new FilesystemLoader(__DIR__ . '/../src/Resources/templates/');
@@ -50,7 +52,7 @@ class ReflectionGeneratorTest extends TestCase
         $this->reflection_generator = new ReflectionGenerator($this->environment, $filesystem);
     }
 
-    public function testGenerateMain()
+    public function testGenerateMain(): void
     {
         $base_dir = __DIR__ . '/Functional/src/Entity';
 
@@ -66,7 +68,7 @@ class ReflectionGeneratorTest extends TestCase
         $this->assertEquals($actual, file_get_contents(__DIR__ . '/Functional/Tests/expected/BaseClassInterface.php'));
     }
 
-    public function testGenerateWithParent()
+    public function testGenerateWithParent(): void
     {
         $base_dir = __DIR__ . '/Functional/src/Entity';
 
@@ -88,7 +90,7 @@ class ReflectionGeneratorTest extends TestCase
         );
     }
 
-    public function testGenerateWithMissingParent()
+    public function testGenerateWithMissingParent(): void
     {
         $base_dir = __DIR__ . '/Functional/src/Entity';
 
@@ -110,7 +112,7 @@ class ReflectionGeneratorTest extends TestCase
         );
     }
 
-    public function testGenerateWithScalarParams()
+    public function testGenerateWithScalarParams(): void
     {
         if (PHP_MAJOR_VERSION < 7) {
             $this->markTestSkipped('Return types are not available in PHP <7');
@@ -128,7 +130,7 @@ class ReflectionGeneratorTest extends TestCase
         $this->assertSame($expected, $actual);
     }
 
-    public function testGenerateWithNullableParams()
+    public function testGenerateWithNullableParams(): void
     {
         if (PHP_VERSION_ID < 70100) {
             $this->markTestSkipped('Return types are not available in PHP <7');
@@ -146,7 +148,7 @@ class ReflectionGeneratorTest extends TestCase
         $this->assertSame($expected, $actual);
     }
 
-    public function testGenerateWithDefaultValueParams()
+    public function testGenerateWithDefaultValueParams(): void
     {
         if (PHP_MAJOR_VERSION < 7) {
             $this->markTestSkipped('Scalar argument types are not available in PHP <7');
@@ -164,7 +166,7 @@ class ReflectionGeneratorTest extends TestCase
         $this->assertSame($expected, $actual);
     }
 
-    public function testGenerateWithReturnType()
+    public function testGenerateWithReturnType(): void
     {
         if (PHP_MAJOR_VERSION < 7) {
             $this->markTestSkipped('Return types are not available in PHP <7');
@@ -185,7 +187,7 @@ class ReflectionGeneratorTest extends TestCase
         $this->assertSame($expected, $actual);
     }
 
-    public function testGenerateWithExtendedReturnType()
+    public function testGenerateWithExtendedReturnType(): void
     {
         if (PHP_VERSION_ID < 70100) {
             $this->markTestSkipped('Return types are not available in PHP <7.1');
@@ -198,7 +200,6 @@ class ReflectionGeneratorTest extends TestCase
         $package_class = new PackageClass(ExtendedReturnType::class, __DIR__ . '/Fixtures/ExtendedReturnType.php');
         $this->reflection_generator->generate($package_class);
 
-
         $expected = file_get_contents(__DIR__ . '/Fixtures/ExtendedReturnTypeInterface.php');
         $actual   = file_get_contents(__DIR__ . '/Fixtures/Generated/ExtendedReturnTypeInterface.php');
 
@@ -208,7 +209,7 @@ class ReflectionGeneratorTest extends TestCase
         $this->assertSame($expected, $actual);
     }
 
-    public function testGenerate()
+    public function testGenerate(): void
     {
         $package_class = new PackageClass('\stdClass', __DIR__);
         $package_io    = self::createMock(Filesystem::class);
@@ -225,7 +226,7 @@ class ReflectionGeneratorTest extends TestCase
         $this->assertNull($generator->generate($package_class));
     }
 
-    public function testGenerateReflectionErrorOnClass()
+    public function testGenerateReflectionErrorOnClass(): void
     {
         $filesystem           = $this->prophesize(Filesystem::class);
         $reflection_generator = new ReflectionGenerator($this->environment, $filesystem->reveal());

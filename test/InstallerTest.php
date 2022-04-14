@@ -14,7 +14,6 @@ use Composer\IO\NullIO;
 use Composer\Package\RootPackage;
 use Composer\Repository\InstalledArrayRepository;
 use Composer\Repository\RepositoryManager;
-use Composer\Repository\WritableArrayRepository;
 use Composer\Util\HttpDownloader;
 use Hostnet\Component\EntityPlugin\Mock\Installer as MockInstaller;
 use phpunit\framework\TestCase;
@@ -77,7 +76,7 @@ class InstallerTest extends TestCase
         $this->assertEquals('./src/Hostnet/FooBundle', $installer->getSourcePath($root_package));
     }
 
-    private function mockComposer()
+    private function mockComposer(): Composer
     {
         $composer = new Composer();
         $composer->setPackage(new RootPackage('hostnet/root-package', '1', '1'));
@@ -89,22 +88,23 @@ class InstallerTest extends TestCase
         return $composer;
     }
 
-    private function mockRepositoryManager()
+    private function mockRepositoryManager(): RepositoryManager
     {
         $config             = $this->mockConfig();
         $io                 = $this->mockIO();
         $http_downloader    = new HttpDownloader($io, $config);
         $repository_manager = new RepositoryManager($io, $config, $http_downloader);
         $repository_manager->setLocalRepository(new InstalledArrayRepository());
+
         return $repository_manager;
     }
 
-    private function mockIO()
+    private function mockIO(): NullIO
     {
         return new NullIO();
     }
 
-    private function mockConfig()
+    private function mockConfig(): Config
     {
         return new Config(true, $this->working_dir);
     }

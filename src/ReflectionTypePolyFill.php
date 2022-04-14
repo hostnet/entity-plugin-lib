@@ -1,9 +1,13 @@
 <?php
+/**
+ * @copyright 2016-present Hostnet B.V.
+ */
+declare(strict_types=1);
+
 namespace Hostnet\Component\EntityPlugin;
 
 class ReflectionTypePolyFill implements ReflectionTypeInterface
 {
-
     /**
      * @var string
      */
@@ -27,12 +31,12 @@ class ReflectionTypePolyFill implements ReflectionTypeInterface
         $this->allows_null = (true === $allows_null);
     }
 
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
 
-    public function allowsNull()
+    public function allowsNull(): bool
     {
         return $this->allows_null;
     }

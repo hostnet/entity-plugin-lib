@@ -53,7 +53,7 @@ class EntityPackageBuilderTest extends TestCase
         }
     }
 
-    public function addsDependenciesProvider()
+    public function addsDependenciesProvider(): iterable
     {
         $requires_external = new Package('hostnet/requires-external', '1', '1');
         $requires_external->setRequires([

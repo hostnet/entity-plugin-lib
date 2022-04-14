@@ -1,4 +1,9 @@
 <?php
+/**
+ * @copyright 2016-present Hostnet B.V.
+ */
+declare(strict_types=1);
+
 namespace Hostnet\Component\EntityPlugin;
 
 class ReflectionType implements ReflectionTypeInterface
@@ -13,7 +18,7 @@ class ReflectionType implements ReflectionTypeInterface
         $this->type = $type;
     }
 
-    public function getName()
+    public function getName(): string
     {
         $name = $this->type->getName();
 
@@ -25,7 +30,7 @@ class ReflectionType implements ReflectionTypeInterface
         return '\\' . $name;
     }
 
-    public function allowsNull()
+    public function allowsNull(): bool
     {
         return $this->type->allowsNull();
     }

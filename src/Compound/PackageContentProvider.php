@@ -1,4 +1,9 @@
 <?php
+/**
+ * @copyright 2015-present Hostnet B.V.
+ */
+declare(strict_types=1);
+
 namespace Hostnet\Component\EntityPlugin\Compound;
 
 use Hostnet\Component\EntityPlugin\EntityPackage;
@@ -21,9 +26,8 @@ class PackageContentProvider
 
     /**
      * @param EntityPackage $entity_package
-     * @return PackageContent
      */
-    public function getPackageContent(EntityPackage $entity_package)
+    public function getPackageContent(EntityPackage $entity_package): PackageContent
     {
         if ($this->type == PackageContent::ENTITY) {
             return $entity_package->getEntityContent();

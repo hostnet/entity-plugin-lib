@@ -127,7 +127,7 @@ class EntityPackageTest extends TestCase
         $this->assertSame($expected, $package_a->getFlattenedRequiredPackages());
     }
 
-    private function createEntityPackage(Package $package)
+    private function createEntityPackage(Package $package): EntityPackage
     {
         // Lets change this to ::class after 14 Sep '15 once PHP 5.4 is unsupported.
         return new EntityPackage(

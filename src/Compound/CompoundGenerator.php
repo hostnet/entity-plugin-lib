@@ -1,4 +1,9 @@
 <?php
+/**
+ * @copyright 2015-present Hostnet B.V.
+ */
+declare(strict_types=1);
+
 namespace Hostnet\Component\EntityPlugin\Compound;
 
 use Composer\IO\IOInterface;
@@ -12,12 +17,9 @@ use Twig\Environment;
  *
  * It generates the combined entity and repository traits
  * Generated/ClientTrait and Generated/ClientRepositoryTrait
- *
- * @author Nico Schoenmaker <nschoenmaker@hostnet.nl>
  */
 class CompoundGenerator
 {
-
     private $io;
 
     private $environment;
@@ -46,14 +48,12 @@ class CompoundGenerator
 
     /**
      * Ask the generator to generate all the trait of traits, and their matching combined interfaces
-     *
-     * @return void
      */
-    public function generate(EntityPackage $entity_package)
+    public function generate(EntityPackage $entity_package): void
     {
         $classes = $this->content_provider->getPackageContent($entity_package)->getClasses();
         foreach ($classes as $package_class) {
-            /* @var $package_class PackageClass */
+            /** @var PackageClass $package_class */
             $this->writeIfDebug(
                 '        - Finding traits for <info>' . $package_class->getName() . '</info>.'
             );
@@ -67,9 +67,8 @@ class CompoundGenerator
      * content. In this case we bypass it since we really want to know whether the entity exists.
      * @param EntityPackage $entity_package
      * @param string $requirement
-     * @return boolean
      */
-    private function doesEntityExistInTree(EntityPackage $entity_package, $requirement)
+    private function doesEntityExistInTree(EntityPackage $entity_package, $requirement): bool
     {
         foreach ($entity_package->getFlattenedRequiredPackages() as $required_entity_package) {
             if ($required_entity_package->getEntityContent()->hasClass($requirement)) {
@@ -92,7 +91,7 @@ class CompoundGenerator
         EntityPackage $entity_package,
         PackageClass $package_class,
         array &$checked = []
-    ) {
+    ): array {
         $result              = [];
         $entity_package_name = $entity_package->getPackage()->getName();
 
@@ -103,7 +102,7 @@ class CompoundGenerator
         }
 
         foreach ($entity_package->getDependentPackages() as $name => $dependent_package) {
-            /* @var $dependent_package EntityPackage */
+            /** @var EntityPackage $dependent_package */
             $use_statements = $this->recursivelyFindUseStatementsFor($dependent_package, $package_class, $checked);
             $result         = array_merge($result, $use_statements);
         }
@@ -116,18 +115,18 @@ class CompoundGenerator
         $traits   = $contents->getOptionalTraits($package_class->getShortName());
 
         foreach ($traits as $trait) {
-            /* @var $trait \Hostnet\Component\EntityPlugin\OptionalPackageTrait */
+            /** @var \Hostnet\Component\EntityPlugin\OptionalPackageTrait $trait */
             $requirement = $trait->getRequirement();
             if ($this->doesEntityExistInTree($entity_package, $requirement)) {
                 $result[] = $trait;
                 $this->writeIfDebug(
-                    '            Injected <info>' . $trait->getName() .   '</info> from <info>' .
+                    '            Injected <info>' . $trait->getName() . '</info> from <info>' .
                     $entity_package->getPackage()->getName() .
                     '</info>.'
                 );
             } else {
                 $this->writeIfDebug(
-                    '            Not injected <warn>' . $trait->getName() .   '</warn> from <info>' .
+                    '            Not injected <warn>' . $trait->getName() . '</warn> from <info>' .
                     $entity_package->getPackage()->getName() . ' because ' . $requirement . ' is not found</info>.'
                 );
             }
@@ -150,7 +149,7 @@ class CompoundGenerator
      * @param PackageClass $package_class
      * @param array $traits
      */
-    private function generateTrait(PackageClass $package_class, array $traits)
+    private function generateTrait(PackageClass $package_class, array $traits): void
     {
         $short_name = $package_class->getShortName();
 
@@ -171,9 +170,9 @@ class CompoundGenerator
         $data = $this->environment->render(
             'trait.php.twig',
             [
-                'class_name' => $short_name,
-                'namespace' => $generated_namespace,
-                'use_statements' => $use_statements
+                'class_name'     => $short_name,
+                'namespace'      => $generated_namespace,
+                'use_statements' => $use_statements,
             ]
         );
 
@@ -183,14 +182,14 @@ class CompoundGenerator
         );
     }
 
-    private function writeIfVeryVerbose($text)
+    private function writeIfVeryVerbose($text): void
     {
         if ($this->io->isVeryVerbose()) {
             $this->io->write($text);
         }
     }
 
-    private function writeIfDebug($text)
+    private function writeIfDebug($text): void
     {
         if ($this->io->isDebug()) {
             $this->io->write($text);
