@@ -11,5 +11,5 @@
   <rule ref="SlevomatCodingStandard.TypeHints.DeclareStrictTypes">
      <exclude-pattern>src/ReflectionGenerator.php</exclude-pattern>
   </rule>
-  <rule ref="Hostnet"/>
+  <rule ref="Hostnet-Level-2"/>
 </ruleset>
