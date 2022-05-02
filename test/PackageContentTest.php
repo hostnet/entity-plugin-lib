@@ -1,4 +1,9 @@
 <?php
+/**
+ * @copyright 2014-present Hostnet B.V.
+ */
+declare(strict_types=1);
+
 namespace Hostnet\Component\EntityPlugin;
 
 use PHPUnit\Framework\TestCase;
@@ -9,15 +14,15 @@ use PHPUnit\Framework\TestCase;
 class PackageContentTest extends TestCase
 {
     private static $map = [
-        'Foo\\Bar\\Baz' => 'Baz.php',
-        'Foo\\Bar\\BazInterface' => 'BazInterface.php',
-        'Foo\\Bar\\BazException' => 'BazException.php',
-        'Foo\\Bar\\BlahTrait' => 'BlahTrait.php',
-        'Foo\\Bar\\BazWhenBlahTrait' => '/BazWhenBlahTrait.php',
-        'Foo\\Bar\\Generated\\Baz' => 'Generated/Baz.php',
-        'Foo\\Baz\\Bar' => 'Bar.php',
-        'Hostnet\\Drink\\Entity\\Milk' => '/Milk.php',
-        'Hostnet\\Animal\\Entity\\Cow' => '/Cow.php',
+        'Foo\\Bar\\Baz'                                  => 'Baz.php',
+        'Foo\\Bar\\BazInterface'                         => 'BazInterface.php',
+        'Foo\\Bar\\BazException'                         => 'BazException.php',
+        'Foo\\Bar\\BlahTrait'                            => 'BlahTrait.php',
+        'Foo\\Bar\\BazWhenBlahTrait'                     => '/BazWhenBlahTrait.php',
+        'Foo\\Bar\\Generated\\Baz'                       => 'Generated/Baz.php',
+        'Foo\\Baz\\Bar'                                  => 'Bar.php',
+        'Hostnet\\Drink\\Entity\\Milk'                   => '/Milk.php',
+        'Hostnet\\Animal\\Entity\\Cow'                   => '/Cow.php',
         'Hostnet\\AnimalDrink\\Entity\\MilkWhenCowTrait' => '/MilkWhenCowTrait.php',
         'Hostnet\\AnimalDrink\\Entity\\CowWhenMilkTrait' => '/CowWhenMilkTrait.php',
     ];
@@ -35,7 +40,7 @@ class PackageContentTest extends TestCase
         $this->content       = new PackageContent(self::$map, '\\Bar\\');
     }
 
-    public function testGetClasses()
+    public function testGetClasses(): void
     {
         $this->assertEquals([], $this->empty_content->getClasses());
         $this->assertEquals(
@@ -44,7 +49,7 @@ class PackageContentTest extends TestCase
         );
     }
 
-    public function testGetClassOrTrait()
+    public function testGetClassOrTrait(): void
     {
         $this->assertNull($this->empty_content->getClassOrTrait('Baz'));
         $this->assertEquals(
@@ -58,7 +63,7 @@ class PackageContentTest extends TestCase
         $this->assertNull($this->content->getClassOrTrait('Bar'));
     }
 
-    public function testGetOptionalTraits()
+    public function testGetOptionalTraits(): void
     {
         $this->assertEquals([], $this->empty_content->getOptionalTraits('Baz'));
 
@@ -77,7 +82,7 @@ class PackageContentTest extends TestCase
                     'Hostnet\\AnimalDrink\\Entity\\CowWhenMilkTrait',
                     '/CowWhenMilkTrait.php',
                     'Milk'
-                )
+                ),
             ],
             $animaldrink->getOptionalTraits('Cow')
         );
@@ -87,13 +92,13 @@ class PackageContentTest extends TestCase
                     'Hostnet\\AnimalDrink\\Entity\\MilkWhenCowTrait',
                     '/MilkWhenCowTrait.php',
                     'Cow'
-                )
+                ),
             ],
             $animaldrink->getOptionalTraits('Milk')
         );
     }
 
-    public function testGetTraits()
+    public function testGetTraits(): void
     {
         $this->assertEquals([], $this->empty_content->getTraits());
         $this->assertEquals(
@@ -102,7 +107,7 @@ class PackageContentTest extends TestCase
         );
     }
 
-    public function testHasClass()
+    public function testHasClass(): void
     {
         $this->assertFalse($this->empty_content->hasClass('Bar'));
         $this->assertFalse($this->content->hasClass('Bar'));

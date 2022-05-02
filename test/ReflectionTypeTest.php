@@ -1,4 +1,9 @@
 <?php
+/**
+ * @copyright 2016-present Hostnet B.V.
+ */
+declare(strict_types=1);
+
 namespace Hostnet\Component\EntityPlugin;
 
 use PHPUnit\Framework\TestCase;
@@ -8,7 +13,6 @@ use PHPUnit\Framework\TestCase;
  */
 class ReflectionTypeTest extends TestCase
 {
-
     /**
      * @var ReflectionType
      */
@@ -19,7 +23,7 @@ class ReflectionTypeTest extends TestCase
      */
     private $t2;
 
-    private function method(array $param = null, \Exception $param_2)
+    private function method(array $param = null, \Exception $param_2): void
     {
         // for testing only;
     }
@@ -34,13 +38,13 @@ class ReflectionTypeTest extends TestCase
         $this->t2 = new ReflectionType((new \ReflectionParameter([$this, 'method'], 'param_2'))->getType());
     }
 
-    public function testGetName()
+    public function testGetName(): void
     {
         $this->assertSame('array', $this->t1->getName());
         $this->assertSame('\Exception', $this->t2->getName());
     }
 
-    public function testAllowsNull()
+    public function testAllowsNull(): void
     {
         $this->assertTrue($this->t1->allowsNull());
         $this->assertFalse($this->t2->allowsNull());

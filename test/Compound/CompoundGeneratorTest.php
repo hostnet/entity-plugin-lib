@@ -1,4 +1,9 @@
 <?php
+/**
+ * @copyright 2015-present Hostnet B.V.
+ */
+declare(strict_types=1);
+
 namespace Hostnet\Component\EntityPlugin\Compound;
 
 use Composer\IO\IOInterface;
@@ -15,7 +20,6 @@ use Twig\Loader\FilesystemLoader;
 
 /**
  * More of a functional-like test to check the outputted html.
- * @author Nico Schoenmaker <nschoenmaker@hostnet.nl>
  * @covers \Hostnet\Component\EntityPlugin\Compound\CompoundGenerator
  */
 class CompoundGeneratorTest extends TestCase
@@ -32,7 +36,7 @@ class CompoundGeneratorTest extends TestCase
         EntityPackage $entity_package,
         array $entity_fs_input,
         array $repo_fs_input
-    ) {
+    ): void {
         $io = $this->prophesize(IOInterface::class);
         $io->isDebug()->willReturn(true);
         $io->isVeryVerbose()->willReturn(true);
@@ -55,30 +59,32 @@ class CompoundGeneratorTest extends TestCase
         $generator->generate($entity_package);
     }
 
-    public function generateProvider()
+    public function generateProvider(): iterable
     {
-
         // Test case 2: Contract(repository) will be extended with client(repository)
         // While leaving Easter(repository) out
 
         $writes = [
-            'src/Entity/Generated/ClientTrait.php' => 'ClientTrait.php',
-            'src/Entity/Generated/ContractTrait.php' => 'ContractTrait.php',
-            'src/Entity/Generated/ProductTrait.php' => 'ProductTrait.php',
-            'src/Entity/Generated/DeathContractTrait.php' =>  'DeathContractTrait.php',
+            'src/Entity/Generated/ClientTrait.php'        => 'ClientTrait.php',
+            'src/Entity/Generated/ContractTrait.php'      => 'ContractTrait.php',
+            'src/Entity/Generated/ProductTrait.php'       => 'ProductTrait.php',
+            'src/Entity/Generated/DeathContractTrait.php' => 'DeathContractTrait.php',
         ];
 
         $repo_writes = [
             'src/Repository/Generated/ContractRepositoryTrait.php' => 'ContractRepositoryTrait.php',
-            'src/Repository/Generated/ProductRepositoryTrait.php' => 'ProductRepositoryTrait.php',
+            'src/Repository/Generated/ProductRepositoryTrait.php'  => 'ProductRepositoryTrait.php',
         ];
 
         $contract_class_map = [
-                'Hostnet\Contract\Entity\Contract' => 'src/Entity/Contract.php',
-                'Hostnet\Contract\Entity\DeathContract' => 'src/Entity/DeathContract.php',
-                'Hostnet\Contract\Entity\ContractWhenClientTrait' => 'src/Entity/ContractWhenClientTrait.php',
-                'Hostnet\Contract\Entity\ContractWhenEasterTrait' => 'src/Entity/ContractWhenEasterTrait.php',
-                'Hostnet\Contract\Repository\ContractRepository' => 'src/Repository/ContractRepository.php',
+                'Hostnet\Contract\Entity\Contract'                              => 'src/Entity/Contract.php',
+                'Hostnet\Contract\Entity\DeathContract'                         => 'src/Entity/DeathContract.php',
+                'Hostnet\Contract\Entity\ContractWhenClientTrait'               =>
+                    'src/Entity/ContractWhenClientTrait.php',
+                'Hostnet\Contract\Entity\ContractWhenEasterTrait'               =>
+                    'src/Entity/ContractWhenEasterTrait.php',
+                'Hostnet\Contract\Repository\ContractRepository'                =>
+                    'src/Repository/ContractRepository.php',
                 'Hostnet\Contract\Repository\ContractRepositoryWhenClientTrait' =>
                     'src/Repository/ContractRepositoryWhenClientTrait.php',
                 'Hostnet\Contract\Repository\ContractRepositoryWhenEasterTrait' =>
@@ -96,7 +102,7 @@ class CompoundGeneratorTest extends TestCase
         );
 
         $product_class_map = [
-                'Hostnet\Product\Entity\Product' => 'src/Entity/Product.php',
+                'Hostnet\Product\Entity\Product'               => 'src/Entity/Product.php',
                 'Hostnet\Product\Repository\ProductRepository' => 'src/Repository/ProductRepository.php',
             ];
         $product_package   = $this->mockEntityPackage(
@@ -106,7 +112,7 @@ class CompoundGeneratorTest extends TestCase
 
         $death_class_map = [
                 'Hostnet\Death\Entity\DeathContractWhenProductTrait' => 'src/Entity/DeathContractWhenProductTrait.php',
-                'Hostnet\Death\Entity\DeathContractWhenClientTrait' => 'src/Entity/DeathContractWhenClientTrait.php'
+                'Hostnet\Death\Entity\DeathContractWhenClientTrait'  => 'src/Entity/DeathContractWhenClientTrait.php',
             ];
         $death_package   = $this->mockEntityPackage(
             $death_class_map,
@@ -142,7 +148,6 @@ class CompoundGeneratorTest extends TestCase
         $app_package->addRequiredPackage($product_package);
         $app_package->addDependentPackage($death_package);
 
-
         $death_package->addRequiredPackage($contract_package);
         $death_package->addRequiredPackage($client_package);
         $death_package->addRequiredPackage($product_package);
@@ -158,7 +163,7 @@ class CompoundGeneratorTest extends TestCase
         ];
     }
 
-    private function mockEntityPackage(array $class_map, $name)
+    private function mockEntityPackage(array $class_map, $name): EntityPackage
     {
         $package        = new Package($name, '1.0.0', '1.0.0');
         $entity_content = new PackageContent($class_map, PackageContent::ENTITY);
@@ -168,7 +173,7 @@ class CompoundGeneratorTest extends TestCase
         return $entity_package;
     }
 
-    private function mockFilesystem(array $writes)
+    private function mockFilesystem(array $writes): Filesystem
     {
         $filesystem = $this->prophesize(Filesystem::class);
         if (!count($writes)) {
@@ -177,7 +182,7 @@ class CompoundGeneratorTest extends TestCase
         foreach ($writes as $path => $fixture_file) {
             $filesystem->dumpFile(
                 $path,
-                file_get_contents(__DIR__ . '/CompoundEdgeCases/'. $fixture_file)
+                file_get_contents(__DIR__ . '/CompoundEdgeCases/' . $fixture_file)
             )->shouldBeCalled();
         }
         return $filesystem->reveal();

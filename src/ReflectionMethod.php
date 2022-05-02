@@ -1,4 +1,9 @@
 <?php
+/**
+ * @copyright 2015-present Hostnet B.V.
+ */
+declare(strict_types=1);
+
 namespace Hostnet\Component\EntityPlugin;
 
 use phpDocumentor\Reflection\FqsenResolver;
@@ -27,10 +32,7 @@ class ReflectionMethod
         $this->method = $method;
     }
 
-    /**
-     * @return string
-     */
-    public function getName()
+    public function getName(): string
     {
         return $this->method->getName();
     }
@@ -38,7 +40,7 @@ class ReflectionMethod
     /**
      * @return array
      */
-    public function getParameters()
+    public function getParameters(): array
     {
         return array_map(
             function (\ReflectionParameter $parameter) {
@@ -48,26 +50,17 @@ class ReflectionMethod
         );
     }
 
-    /**
-     * @return bool
-     */
-    public function isPublic()
+    public function isPublic(): bool
     {
         return $this->method->isPublic();
     }
 
-    /**
-     * @return bool
-     */
-    public function isStatic()
+    public function isStatic(): bool
     {
         return $this->method->isStatic();
     }
 
-    /**
-     * @return ReflectionType|null
-     */
-    public function getReturnType()
+    public function getReturnType(): ?ReflectionType
     {
         if (!method_exists($this->method, 'getReturnType')) {
             return null;
@@ -85,21 +78,22 @@ class ReflectionMethod
         return null;
     }
 
-    /**
-     * @return string
-     */
-    public function getDocComment()
+    public function getDocComment(): string
     {
         $pattern = '/@(return|param|throws)\s+((?:[\$\w\\\\]+(?:\[\])?(?:\s*[|]\s*[\$\w\\\\]+(?:\[\])?)*))(\s|$)/';
+        $comment = $this->method->getDocComment();
+
+        if (!$comment) {
+            return '';
+        }
 
         return preg_replace_callback($pattern, [$this, 'processDocMatch'], $this->method->getDocComment());
     }
 
     /**
      * @param array $matches
-     * @return string
      */
-    private function processDocMatch(array $matches)
+    private function processDocMatch(array $matches): string
     {
         $types = [];
         foreach (explode('|', $matches[2]) as $type) {
@@ -111,9 +105,8 @@ class ReflectionMethod
 
     /**
      * @param $type
-     * @return string
      */
-    private function qualifyType($type)
+    private function qualifyType($type): string
     {
         // "Type" is a variable, i.e. $this.
         if ('$' === $type[0]) {
@@ -146,10 +139,7 @@ class ReflectionMethod
         return sprintf('%s%s', $this->getResolvedType($type), $array);
     }
 
-    /**
-     * @return \ReflectionClass
-     */
-    private function getDeclaringClass()
+    private function getDeclaringClass(): \ReflectionClass
     {
         $method_filename = $this->method->getFileName();
         $declaring_class = $this->method->getDeclaringClass();
@@ -164,9 +154,8 @@ class ReflectionMethod
 
     /**
      * @param $type
-     * @return string
      */
-    private function getResolvedType($type)
+    private function getResolvedType($type): string
     {
         $context_factory = new ContextFactory();
         $context         = $context_factory->createFromReflector($this->getDeclaringClass());

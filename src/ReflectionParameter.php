@@ -1,4 +1,9 @@
 <?php
+/**
+ * @copyright 2016-present Hostnet B.V.
+ */
+declare(strict_types=1);
+
 namespace Hostnet\Component\EntityPlugin;
 
 /**
@@ -19,18 +24,12 @@ class ReflectionParameter
         $this->parameter = $parameter;
     }
 
-    /**
-     * @return string
-     */
-    public function getName()
+    public function getName(): string
     {
         return $this->parameter->getName();
     }
 
-    /**
-     * @return ReflectionTypeInterface|null
-     */
-    public function getType()
+    public function getType(): ?ReflectionTypeInterface
     {
         if (PHP_MAJOR_VERSION >= 7) {
             if ($this->hasType()) {
@@ -55,10 +54,7 @@ class ReflectionParameter
         return $type;
     }
 
-    /**
-     * @return bool
-     */
-    public function hasType()
+    public function hasType(): bool
     {
         if (method_exists($this->parameter, 'getType')) {
             return $this->parameter->hasType();
@@ -67,66 +63,47 @@ class ReflectionParameter
         return null !== $this->getType();
     }
 
-    /**
-     * @return bool
-     */
-    public function allowsNull()
+    public function allowsNull(): bool
     {
         return $this->parameter->allowsNull();
     }
 
-    /**
-     * @return bool
-     */
-    public function isOptional()
+    public function isOptional(): bool
     {
         return $this->parameter->isOptional();
     }
 
-    /**
-     * @return bool
-     */
-    public function isDefaultValueAvailable()
+    public function isDefaultValueAvailable(): bool
     {
         return $this->parameter->isDefaultValueAvailable();
     }
 
-    /**
-     * @return bool
-     */
-    public function isVariadic()
+    public function isVariadic(): bool
     {
         return $this->parameter->isVariadic();
     }
 
-    /**
-     * @return bool
-     */
-    public function isPassedByReference()
+    public function isPassedByReference(): bool
     {
         return $this->parameter->isPassedByReference();
     }
 
     /**
      * @return mixed
+     *
+     * @phpcsSuppress SlevomatCodingStandard.TypeHints.ReturnTypeHint
      */
     public function getDefaultValue()
     {
         return $this->parameter->getDefaultValue();
     }
 
-    /**
-     * @return bool
-     */
-    public function isDefaultValueConstant()
+    public function isDefaultValueConstant(): bool
     {
         return $this->parameter->isDefaultValueConstant();
     }
 
-    /**
-     * @return string
-     */
-    public function getDefaultValueConstantName()
+    public function getDefaultValueConstantName(): ?string
     {
         return $this->parameter->getDefaultValueConstantName();
     }
@@ -136,9 +113,8 @@ class ReflectionParameter
      * as a default value.
      *
      * @throws \ReflectionException If called on property without default value
-     * @return string
      */
-    public function getPhpSafeDefaultValue()
+    public function getPhpSafeDefaultValue(): string
     {
         $value     = $this->getDefaultValue();
         $is_string = $this->hasType() && $this->getType()->getName() === 'string';

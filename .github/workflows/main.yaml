@@ -28,5 +28,7 @@ jobs:
             restore-keys: ${{ runner.os }}-composer-
       -   name: composer install
           run: composer install --no-progress --prefer-dist --optimize-autoloader
+      -   name: phpcs
+          run: php vendor/bin/phpcs
       -   name: phpunit
           run: php vendor/bin/phpunit

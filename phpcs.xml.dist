@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<ruleset name="entity-plugin-lib">
+  <description>Do not check the generated code for style</description>
+  <exclude-pattern>test/Fixtures</exclude-pattern>
+  <exclude-pattern>test/Compound/CompoundEdgeCases</exclude-pattern>
+  <exclude-pattern>test/Functional/src/Entity</exclude-pattern>
+  <exclude-pattern>test/Functional/Tests/expected</exclude-pattern>
+  <rule ref="Hostnet.Declares.Strict">
+     <exclude-pattern>src/ReflectionGenerator.php</exclude-pattern>
+  </rule>
+  <rule ref="SlevomatCodingStandard.TypeHints.DeclareStrictTypes">
+     <exclude-pattern>src/ReflectionGenerator.php</exclude-pattern>
+  </rule>
+  <rule ref="Hostnet-Level-2"/>
+</ruleset>

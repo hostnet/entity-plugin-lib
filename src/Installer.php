@@ -7,10 +7,8 @@ declare(strict_types=1);
 namespace Hostnet\Component\EntityPlugin;
 
 use Composer\Composer;
-use Composer\Installer\InstallationManager;
 use Composer\Installer\LibraryInstaller;
 use Composer\IO\IOInterface;
-use Composer\Package\Package;
 use Composer\Package\PackageInterface;
 use Composer\Package\RootPackageInterface;
 
@@ -25,9 +23,9 @@ use Composer\Package\RootPackageInterface;
  */
 class Installer extends LibraryInstaller implements PackagePathResolverInterface
 {
-    const PACKAGE_TYPE            = 'hostnet-entity';
-    const EXTRA_ENTITY_BUNDLE_DIR = 'entity-bundle-dir';
-    const GENERATE_INTERFACES     = 'generate-interfaces';
+    private const PACKAGE_TYPE            = 'hostnet-entity';
+    private const EXTRA_ENTITY_BUNDLE_DIR = 'entity-bundle-dir';
+    public const GENERATE_INTERFACES      = 'generate-interfaces';
 
     private $compound_generators;
 
@@ -65,7 +63,7 @@ class Installer extends LibraryInstaller implements PackagePathResolverInterface
     /**
      * @see \Hostnet\Component\EntityPlugin\PackagePathResolverInterface::getSourcePath()
      */
-    public function getSourcePath(PackageInterface $package)
+    public function getSourcePath(PackageInterface $package): string
     {
         $path  = $this->getInstallPath($package);
         $extra = $package->getExtra();
@@ -80,7 +78,7 @@ class Installer extends LibraryInstaller implements PackagePathResolverInterface
      *
      * @see \Composer\Installer\LibraryInstaller::getInstallPath()
      */
-    public function getInstallPath(PackageInterface $package)
+    public function getInstallPath(PackageInterface $package): string
     {
         if ($package instanceof RootPackageInterface) {
             return '.';
@@ -90,7 +88,6 @@ class Installer extends LibraryInstaller implements PackagePathResolverInterface
 
     /**
      * Calculate the dependency graph
-     * @return \Hostnet\Component\EntityPlugin\EntityPackageBuilder
      */
     private function getGraph(): \Hostnet\Component\EntityPlugin\EntityPackageBuilder
     {
@@ -147,7 +144,7 @@ class Installer extends LibraryInstaller implements PackagePathResolverInterface
     {
         $supported_packages = [];
         foreach ($packages as $package) {
-            /** @var $package \Composer\Package\PackageInterface */
+            /** @var \Composer\Package\PackageInterface $package */
             if ($this->supportsPackage($package)) {
                 $supported_packages[] = $package;
             }
@@ -157,7 +154,6 @@ class Installer extends LibraryInstaller implements PackagePathResolverInterface
 
     /**
      * @param PackageInterface $package
-     * @return bool
      */
     private function supportsPackage(PackageInterface $package): bool
     {

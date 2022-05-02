@@ -1,4 +1,9 @@
 <?php
+/**
+ * @copyright 2016-present Hostnet B.V.
+ */
+declare(strict_types=1);
+
 namespace Hostnet\Component\EntityPlugin;
 
 use PHPUnit\Framework\TestCase;
@@ -17,7 +22,7 @@ class EmptyGeneratorTest extends TestCase
     /**
      * Test the empty Generator.
      */
-    public function testEmptyGenerator()
+    public function testEmptyGenerator(): void
     {
         $loader = new FilesystemLoader(__DIR__ . '/../src/Resources/templates/');
 

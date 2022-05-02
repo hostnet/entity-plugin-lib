@@ -1,4 +1,9 @@
 <?php
+/**
+ * @copyright 2016-present Hostnet B.V.
+ */
+declare(strict_types=1);
+
 namespace Hostnet\Component\EntityPlugin;
 
 use PHPUnit\Framework\TestCase;
@@ -8,13 +13,13 @@ use PHPUnit\Framework\TestCase;
  */
 class ReflectionTypePolyFillTest extends TestCase
 {
-    public function testGetName()
+    public function testGetName(): void
     {
         $type = new ReflectionTypePolyFill('name', true);
         $this->assertSame('name', $type->getName());
     }
 
-    public function testAllowsNull()
+    public function testAllowsNull(): void
     {
         $type = new ReflectionTypePolyFill('name', true);
         $this->assertTrue($type->allowsNull());
@@ -23,7 +28,7 @@ class ReflectionTypePolyFillTest extends TestCase
         $this->assertFalse($type->allowsNull());
     }
 
-    public function constructorProvider()
+    public function constructorProvider(): iterable
     {
         return [
             ['name', 'yes'],
@@ -39,7 +44,7 @@ class ReflectionTypePolyFillTest extends TestCase
      * @param mixed $name
      * @param mixed $allows_null
      */
-    public function testConstructor($name, $allows_null)
+    public function testConstructor($name, $allows_null): void
     {
         $this->expectException(\InvalidArgumentException::class);
         new ReflectionTypePolyFill($name, $allows_null);

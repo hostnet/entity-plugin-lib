@@ -8,12 +8,12 @@ namespace Hostnet\Component\EntityPlugin;
 
 use Composer\Composer;
 use Composer\Config;
+use Composer\Downloader\DownloadManager;
 use Composer\EventDispatcher\EventDispatcher;
 use Composer\IO\NullIO;
 use Composer\Package\RootPackage;
 use Composer\Repository\InstalledArrayRepository;
 use Composer\Repository\RepositoryManager;
-use Composer\Repository\WritableArrayRepository;
 use Composer\Util\HttpDownloader;
 use Hostnet\Component\EntityPlugin\Mock\Installer as MockInstaller;
 use phpunit\framework\TestCase;
@@ -46,7 +46,7 @@ class InstallerTest extends TestCase
             $reflection_generator
         );
 
-        $root_package = new RootPackage('hostnet/root-package', 1, 1);
+        $root_package = new RootPackage('hostnet/root-package', '1', '1');
         $this->assertEquals('.', $installer->getInstallPath($root_package));
 
         $installer = new MockInstaller($this->mockIO(), $this->mockComposer(), [], $empty, $reflection_generator);
@@ -69,38 +69,42 @@ class InstallerTest extends TestCase
             $reflection_generator
         );
 
-        $root_package = new RootPackage('hostnet/root-package', 1, 1);
+        $root_package = new RootPackage('hostnet/root-package', '1', '1');
         $this->assertEquals('./src', $installer->getSourcePath($root_package));
         $root_package->setExtra(['entity-bundle-dir' => 'src/Hostnet/FooBundle']);
+
         $this->assertEquals('./src/Hostnet/FooBundle', $installer->getSourcePath($root_package));
     }
 
-    private function mockComposer()
+    private function mockComposer(): Composer
     {
         $composer = new Composer();
-        $composer->setPackage(new RootPackage('hostnet/root-package', 1, 1));
+        $composer->setPackage(new RootPackage('hostnet/root-package', '1', '1'));
         $composer->setConfig($this->mockConfig());
         $composer->setRepositoryManager($this->mockRepositoryManager());
         $composer->setEventDispatcher(new EventDispatcher($composer, $this->mockIO()));
+        $composer->setDownloadManager($this->prophesize(DownloadManager::class)->reveal());
+
         return $composer;
     }
 
-    private function mockRepositoryManager()
+    private function mockRepositoryManager(): RepositoryManager
     {
         $config             = $this->mockConfig();
         $io                 = $this->mockIO();
         $http_downloader    = new HttpDownloader($io, $config);
         $repository_manager = new RepositoryManager($io, $config, $http_downloader);
         $repository_manager->setLocalRepository(new InstalledArrayRepository());
+
         return $repository_manager;
     }
 
-    private function mockIO()
+    private function mockIO(): NullIO
     {
         return new NullIO();
     }
 
-    private function mockConfig()
+    private function mockConfig(): Config
     {
         return new Config(true, $this->working_dir);
     }

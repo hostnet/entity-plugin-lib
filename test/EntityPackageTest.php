@@ -19,7 +19,7 @@ class EntityPackageTest extends TestCase
 {
     public function testGetPackage(): void
     {
-        $package        = new Package('hostnet/foo', 1.0, 1.0);
+        $package        = new Package('hostnet/foo', '1.0', '1.0');
         $entity_package = $this->createEntityPackage($package);
         $this->assertSame($package, $entity_package->getPackage());
     }
@@ -28,7 +28,7 @@ class EntityPackageTest extends TestCase
     {
         $entity_content = self::createMock('Hostnet\Component\EntityPlugin\PackageContentInterface');
         $entity_package = new EntityPackage(
-            new Package('hostnet/foo', 1.0, 1.0),
+            new Package('hostnet/foo', '1.0', '1.0'),
             $entity_content,
             self::createMock('Hostnet\Component\EntityPlugin\PackageContentInterface')
         );
@@ -39,7 +39,7 @@ class EntityPackageTest extends TestCase
     {
         $repo_content   = self::createMock('Hostnet\Component\EntityPlugin\PackageContentInterface');
         $entity_package = new EntityPackage(
-            new Package('hostnet/foo', 1.0, 1.0),
+            new Package('hostnet/foo', '1.0', '1.0'),
             self::createMock('Hostnet\Component\EntityPlugin\PackageContentInterface'),
             $repo_content
         );
@@ -48,18 +48,18 @@ class EntityPackageTest extends TestCase
 
     public function testGetRequires(): void
     {
-        $package        = new Package('hostnet/foo', 1.0, 1.0);
+        $package        = new Package('hostnet/foo', '1.0', '1.0');
         $content        = self::createMock('Hostnet\Component\EntityPlugin\PackageContentInterface');
         $entity_package = new EntityPackage($package, $content, $content);
         $this->assertEquals([], $entity_package->getRequires());
         $link = new Link('hostnet/a', 'hostnet/foo', new Constraint('=', '1'));
-        $package->setRequires([$link]);
-        $this->assertSame([$link], $entity_package->getRequires());
+        $package->setRequires(['hostnet/foo' => $link]);
+        $this->assertSame(['hostnet/foo' => $link], $entity_package->getRequires());
     }
 
     public function testGetSuggests(): void
     {
-        $package        = new Package('hostnet/foo', 1.0, 1.0);
+        $package        = new Package('hostnet/foo', '1.0', '1.0');
         $entity_package = $this->createEntityPackage($package);
         $this->assertEquals([], $entity_package->getSuggests());
         $link = new Link('hostnet/a', 'hostnet/foo', new Constraint('=', '1'));
@@ -73,11 +73,11 @@ class EntityPackageTest extends TestCase
 
     public function testAddRequiredPackage(): void
     {
-        $package        = new Package('hostnet/foo', 1.0, 1.0);
+        $package        = new Package('hostnet/foo', '1.0', '1.0');
         $entity_package = $this->createEntityPackage($package);
 
-        $child_a = $this->createEntityPackage(new Package('hostnet/a', 1.0, 1.0));
-        $child_b = $this->createEntityPackage(new Package('hostnet/b', 1.0, 1.0));
+        $child_a = $this->createEntityPackage(new Package('hostnet/a', '1.0', '1.0'));
+        $child_b = $this->createEntityPackage(new Package('hostnet/b', '1.0', '1.0'));
 
         $this->assertEquals([], $entity_package->getRequiredPackages());
 
@@ -94,11 +94,11 @@ class EntityPackageTest extends TestCase
 
     public function testAddDependentPackage(): void
     {
-        $package        = new Package('hostnet/foo', 1.0, 1.0);
+        $package        = new Package('hostnet/foo', '1.0', '1.0');
         $entity_package = $this->createEntityPackage($package);
 
-        $parent_a = $this->createEntityPackage(new Package('hostnet/a', 1.0, 1.0));
-        $parent_b = $this->createEntityPackage(new Package('hostnet/b', 1.0, 1.0));
+        $parent_a = $this->createEntityPackage(new Package('hostnet/a', '1.0', '1.0'));
+        $parent_b = $this->createEntityPackage(new Package('hostnet/b', '1.0', '1.0'));
         $this->assertEquals([], $entity_package->getDependentPackages());
         $entity_package->addDependentPackage($parent_a);
         $this->assertSame([
@@ -114,20 +114,20 @@ class EntityPackageTest extends TestCase
     public function testGetFlattenedRequiredPackages(): void
     {
         // Test case 1: Package with no required packages = empty list.
-        $package_a = $this->createEntityPackage(new Package('hostnet/a', 1.0, 1.0));
+        $package_a = $this->createEntityPackage(new Package('hostnet/a', '1.0', '1.0'));
         $this->assertEquals([], $package_a->getFlattenedRequiredPackages());
 
         // Test case 1: Package a depends on b. Package b depends on C.
-        $package_b = $this->createEntityPackage(new Package('hostnet/b', 1.0, 1.0));
+        $package_b = $this->createEntityPackage(new Package('hostnet/b', '1.0', '1.0'));
         $package_a->addRequiredPackage($package_b);
 
-        $package_c = $this->createEntityPackage(new Package('hostnet/c', 1.0, 1.0));
+        $package_c = $this->createEntityPackage(new Package('hostnet/c', '1.0', '1.0'));
         $package_b->addRequiredPackage($package_c);
         $expected = ['hostnet/b' => $package_b, 'hostnet/c' => $package_c];
         $this->assertSame($expected, $package_a->getFlattenedRequiredPackages());
     }
 
-    private function createEntityPackage(Package $package)
+    private function createEntityPackage(Package $package): EntityPackage
     {
         // Lets change this to ::class after 14 Sep '15 once PHP 5.4 is unsupported.
         return new EntityPackage(

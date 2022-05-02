@@ -1,15 +1,18 @@
 <?php
+/**
+ * @copyright 2014-present Hostnet B.V.
+ */
+declare(strict_types=1);
+
 namespace Hostnet\Component\EntityPlugin;
 
 /**
  * Concrete implementation of the PackageContentInterface
- *
- * @author Nico Schoenmaker <nschoenmaker@hostnet.nl>
  */
 class PackageContent implements PackageContentInterface
 {
-    const ENTITY     = '\\Entity\\';
-    const REPOSITORY = '\\Repository\\';
+    public const ENTITY     = '\\Entity\\';
+    public const REPOSITORY = '\\Repository\\';
 
     private $class_map;
     private $type;
@@ -27,7 +30,7 @@ class PackageContent implements PackageContentInterface
         $this->type      = $type;
     }
 
-    private function ensureCacheIsWarmed()
+    private function ensureCacheIsWarmed(): void
     {
         if ($this->classes !== null) {
             return;
@@ -62,9 +65,8 @@ class PackageContent implements PackageContentInterface
      * Generated files, interfaces and exceptions are not relevant.
      *
      * @param PackageClass $package_class
-     * @return boolean
      */
-    private function isRelevant(PackageClass $package_class)
+    private function isRelevant(PackageClass $package_class): bool
     {
         $class_name = $package_class->getName();
         if (strstr($class_name, '\\Generated\\')
@@ -80,7 +82,7 @@ class PackageContent implements PackageContentInterface
     /**
      * @see \Hostnet\Component\EntityPlugin\PackageContentInterface::getClasses()
      */
-    public function getClasses()
+    public function getClasses(): array
     {
         $this->ensureCacheIsWarmed();
         return $this->classes;
@@ -89,28 +91,30 @@ class PackageContent implements PackageContentInterface
     /**
      * @see \Hostnet\Component\EntityPlugin\PackageContentInterface::getClassOrTrait()
      */
-    public function getClassOrTrait($name)
+    public function getClassOrTrait($name): ?PackageClass
     {
         $this->ensureCacheIsWarmed();
         foreach ($this->classes as $class) {
-            /* @var $class PackageClass */
+            /** @var PackageClass $class */
             if ($class->getShortName() == $name) {
                 return $class;
             }
         }
         $looking_for = $name . 'Trait';
         foreach ($this->traits as $class) {
-            /* @var $class PackageClass */
+            /** @var PackageClass $class */
             if ($class->getShortName() == $looking_for) {
                 return $class;
             }
         }
+
+        return null;
     }
 
     /**
      * @see \Hostnet\Component\EntityPlugin\PackageContentInterface::getOptionalTraits()
      */
-    public function getOptionalTraits($name)
+    public function getOptionalTraits($name): array
     {
         $this->ensureCacheIsWarmed();
 
@@ -123,7 +127,7 @@ class PackageContent implements PackageContentInterface
     /**
      * @see \Hostnet\Component\EntityPlugin\PackageContentInterface::getTraits()
      */
-    public function getTraits()
+    public function getTraits(): array
     {
         $this->ensureCacheIsWarmed();
         return $this->traits;
@@ -132,7 +136,7 @@ class PackageContent implements PackageContentInterface
     /**
      * @see \Hostnet\Component\EntityPlugin\PackageContentInterface::hasClass()
      */
-    public function hasClass($short_name)
+    public function hasClass($short_name): bool
     {
         $this->ensureCacheIsWarmed();
         foreach ($this->classes as $entity) {

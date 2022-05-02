@@ -1,4 +1,7 @@
 <?php
+/**
+ * @copyright 2014-present Hostnet B.V.
+ */
 namespace Hostnet\Component\EntityPlugin;
 
 use Symfony\Component\Filesystem\Filesystem;
@@ -8,8 +11,6 @@ use Twig\Error\Error;
 /**
  * A simple, light-weight generator that can be used runtime during development
  * It does not know about the composer structure, since thats expensive to build
- *
- * @author Nico Schoenmaker <nschoenmaker@hostnet.nl>
  */
 class ReflectionGenerator
 {
@@ -35,7 +36,7 @@ class ReflectionGenerator
      * @param PackageClass $package_class
      * @throws Error
      */
-    public function generate(PackageClass $package_class)
+    public function generate(PackageClass $package_class): void
     {
         $parent              = $this->getParentClass($package_class);
         $class_name          = $package_class->getShortName();
@@ -43,10 +44,10 @@ class ReflectionGenerator
         $methods             = $this->getMethods($package_class);
 
         $params = [
-            'class_name'  => $class_name,
-            'namespace'   => $generated_namespace,
-            'methods'     => $methods,
-            'parent'      => $parent ? $parent->getShortName() : null,
+            'class_name' => $class_name,
+            'namespace'  => $generated_namespace,
+            'methods'    => $methods,
+            'parent'     => $parent ? $parent->getShortName() : null,
         ];
 
         $interface = $this->environment->render('interface.php.twig', $params);
@@ -59,7 +60,7 @@ class ReflectionGenerator
      *
      * @return \ReflectionMethod[]
      */
-    protected function getMethods(PackageClass $package_class)
+    protected function getMethods(PackageClass $package_class): array
     {
         try {
             $class = new \ReflectionClass($package_class->getName());
@@ -84,9 +85,9 @@ class ReflectionGenerator
      * Get the Parent of the given base class, if any.
      *
      * @param PackageClass $package_class the base for which the parent needs to be extracted.
-     * @return NULL|\Hostnet\Component\EntityPlugin\PackageClass the parent class if any, otherwise null is returned.
+     * @return \Hostnet\Component\EntityPlugin\PackageClass|NULL the parent class if any, otherwise null is returned.
      */
-    protected function getParentClass(PackageClass $package_class)
+    protected function getParentClass(PackageClass $package_class): ?\Hostnet\Component\EntityPlugin\PackageClass
     {
         try {
             $base_class = new \ReflectionClass($package_class->getName());

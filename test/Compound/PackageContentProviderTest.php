@@ -1,4 +1,9 @@
 <?php
+/**
+ * @copyright 2015-present Hostnet B.V.
+ */
+declare(strict_types=1);
+
 namespace Hostnet\Component\EntityPlugin\Compound;
 
 use Composer\Package\Package;
@@ -7,11 +12,12 @@ use Hostnet\Component\EntityPlugin\PackageContent;
 use PHPUnit\Framework\TestCase;
 
 /**
- * @covers Hostnet\Component\EntityPlugin\Compound\PackageContentProvider
+ * @covers \Hostnet\Component\EntityPlugin\Compound\PackageContentProvider
+ * @covers \Hostnet\Component\EntityPlugin\Compound\PackageContentProvider
  */
 class PackageContentProviderTest extends TestCase
 {
-    public function testGetPackageContent()
+    public function testGetPackageContent(): void
     {
         $package        = new Package('hostnet/package', '1.0.0', '1.0.0');
         $entity_content = new PackageContent([], PackageContent::ENTITY);

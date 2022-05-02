@@ -53,16 +53,16 @@ class EntityPackageBuilderTest extends TestCase
         }
     }
 
-    public function addsDependenciesProvider()
+    public function addsDependenciesProvider(): iterable
     {
-        $requires_external = new Package('hostnet/requires-external', 1, 1);
+        $requires_external = new Package('hostnet/requires-external', '1', '1');
         $requires_external->setRequires([
             new Link('hostnet/requires-external', 'hostnet/not-linked', new Constraint('=', '1')),
         ]);
 
-        $foo    = new Package('hostnet/foo', 1, 1);
-        $bar    = new Package('hostnet/bar', 1, 1);
-        $foobar = new Package('hostnet/foobar', 1, 1);
+        $foo    = new Package('hostnet/foo', '1', '1');
+        $bar    = new Package('hostnet/bar', '1', '1');
+        $foobar = new Package('hostnet/foobar', '1', '1');
         $bar->setRequires([
             new Link('hostnet/bar', 'hostnet/foo', new Constraint('=', '1')),
         ]);
