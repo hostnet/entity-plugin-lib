@@ -19,6 +19,7 @@ interface ReflectionTypeInterface
         'float',
         'int',
         'string',
+        'mixed',
     ];
 
     public function getName(): string;

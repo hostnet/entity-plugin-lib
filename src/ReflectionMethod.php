@@ -67,12 +67,10 @@ class ReflectionMethod
         }
 
         if ($type = $this->method->getReturnType()) {
-            // Self is not valid when used in different places.
-            if ('self' === $type->getName()) {
-                return null;
-            }
+            $reflection_type = new ReflectionType($type);
 
-            return new ReflectionType($type);
+            // Self is not valid when used in different places.
+            return false === \strpos($reflection_type->getName(), 'self') ? $reflection_type : null;
         }
 
         return null;

@@ -3,7 +3,7 @@
         {% if parameter.allowsNull() -%}
             {% set is_obligatory = not parameter.isOptional() -%}
             {% set has_actual_default_value = parameter.isDefaultValueAvailable() and parameter.defaultValue is not null -%}
-            {% if is_obligatory or has_actual_default_value -%}
+            {% if (is_obligatory or has_actual_default_value) and parameter.type.name != "mixed" -%}
                 ?
             {%- endif -%}
         {% endif -%}

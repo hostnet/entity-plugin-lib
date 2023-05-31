@@ -14,7 +14,7 @@ interface {{ class_name }}Interface{% if parent %} extends {{ parent }}Interface
     {{ method.docComment | raw }}
     public function {{ method.name }}({% include 'parameters.php.twig' with { parameters: method.parameters } %})
     {%- if method.returnType -%}
-        : {% if method.returnType.allowsNull %}?{% endif %}{{ method.returnType.name }}
+        : {% if method.returnType.allowsNull and method.returnType.name != "mixed" %}?{% endif %}{{ method.returnType.name }}
     {%- endif -%}
     ;
 {% endif %}

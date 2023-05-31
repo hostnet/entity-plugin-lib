@@ -4,7 +4,7 @@
     "description": "Installer for all the Hostnet Doctrine entity libraries",
     "license":     "MIT",
     "require": {
-        "php":                         ">=7.3",
+        "php":                         ">=7.3|^8.0",
         "composer-plugin-api":         "^2.0.0",
         "doctrine/annotations":        "^1.13.2",
         "phpdocumentor/type-resolver": "^1.4.0",
