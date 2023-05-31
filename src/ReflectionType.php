@@ -20,18 +20,30 @@ class ReflectionType implements ReflectionTypeInterface
 
     public function getName(): string
     {
-        $name = $this->type->getName();
+        if ($this->type instanceof \ReflectionUnionType) {
+            $names = [];
+            foreach ($this->type->getTypes() as $type) {
+                $names[] = $this->resolveName($type->getName());
+            }
 
+            return implode('|', $names);
+        }
+
+        return $this->resolveName($this->type->getName());
+    }
+
+    public function allowsNull(): bool
+    {
+        return $this->type->allowsNull();
+    }
+
+    private function resolveName(string $name): string
+    {
         // Some types can not be qualified
         if (in_array($name, self::NON_QUALIFIED_TYPES, true)) {
             return $name;
         }
 
         return '\\' . $name;
-    }
-
-    public function allowsNull(): bool
-    {
-        return $this->type->allowsNull();
     }
 }

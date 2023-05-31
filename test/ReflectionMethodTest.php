@@ -8,6 +8,7 @@ namespace Hostnet\Component\EntityPlugin;
 
 use Hostnet\Component\EntityPlugin\Fixtures\Reflection;
 use Hostnet\Component\EntityPlugin\Fixtures\ReflectionReturn;
+use Hostnet\Component\EntityPlugin\Fixtures\ReflectionReturnSelf;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -62,9 +63,15 @@ class ReflectionMethodTest extends TestCase
     {
         $this->assertEquals(null, $this->method->getReturnType());
 
-        if (PHP_MAJOR_VERSION >= 7) {
-            $php7_method = new ReflectionMethod(new \ReflectionMethod(ReflectionReturn::class, 'docBlock'));
-            $this->assertEquals('array', $php7_method->getReturnType()->getName());
-        }
+        $php7_method = new ReflectionMethod(new \ReflectionMethod(ReflectionReturn::class, 'docBlock'));
+        $this->assertEquals('array', $php7_method->getReturnType()->getName());
+    }
+
+    public function testGetReturnTypeSelf(): void
+    {
+        $this->assertEquals(null, $this->method->getReturnType());
+
+        $php7_method = new ReflectionMethod(new \ReflectionMethod(ReflectionReturnSelf::class, 'docBlock'));
+        $this->assertEquals(null, $php7_method->getReturnType());
     }
 }

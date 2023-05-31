@@ -88,12 +88,7 @@ class ReflectionParameter
         return $this->parameter->isPassedByReference();
     }
 
-    /**
-     * @return mixed
-     *
-     * @phpcsSuppress SlevomatCodingStandard.TypeHints.ReturnTypeHint
-     */
-    public function getDefaultValue()
+    public function getDefaultValue(): mixed
     {
         return $this->parameter->getDefaultValue();
     }
