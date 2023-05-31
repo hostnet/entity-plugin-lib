@@ -16,7 +16,7 @@ class ReflectionParameterTest extends TestCase
 {
     private const FOO = 'BAR';
 
-    private function method(array $param = null, $param_2, \Exception $param_3, $param_4 = \DateTime::ATOM): void
+    private function method($param, \Exception $param_2, array $param_3 = null, $param_4 = \DateTime::ATOM): void
     {
         // for testing only;
     }
@@ -27,14 +27,14 @@ class ReflectionParameterTest extends TestCase
         $p2 = new ReflectionParameter(new \ReflectionParameter([$this, 'method'], 'param_2'));
         $p3 = new ReflectionParameter(new \ReflectionParameter([$this, 'method'], 'param_3'));
 
-        $this->assertEquals('array', $p1->getType()->getName());
-        $this->assertNull($p2->getType());
-        $this->assertEquals('\\' . \Exception::class, $p3->getType()->getName());
+        $this->assertEquals('array', $p3->getType()->getName());
+        $this->assertNull($p1->getType());
+        $this->assertEquals('\\' . \Exception::class, $p2->getType()->getName());
     }
 
     public function testHasType(): void
     {
-        $php_parameter = new \ReflectionParameter([$this, 'method'], 'param');
+        $php_parameter = new \ReflectionParameter([$this, 'method'], 'param_3');
         $our_parameter = new ReflectionParameter($php_parameter);
 
         $this->assertTrue($our_parameter->hasType());
@@ -42,7 +42,7 @@ class ReflectionParameterTest extends TestCase
 
     public function testWrappedMethods(): void
     {
-        $php_parameter = new \ReflectionParameter([$this, 'method'], 'param');
+        $php_parameter = new \ReflectionParameter([$this, 'method'], 'param_3');
         $our_parameter = new ReflectionParameter($php_parameter);
 
         $this->assertSame($php_parameter->getName(), $our_parameter->getName());
