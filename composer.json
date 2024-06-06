@@ -8,7 +8,7 @@
         "composer-plugin-api":         "^2.0.0",
         "doctrine/annotations":        "^1.13.2",
         "phpdocumentor/type-resolver": "^1.4.0",
-        "symfony/filesystem":          "^4.4||^5.0",
+        "symfony/filesystem":          "^5.4||^6.0",
         "twig/twig":                   "^3.0"
     },
     "require-dev": {
