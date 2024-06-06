@@ -37,9 +37,6 @@ class ReflectionMethod
         return $this->method->getName();
     }
 
-    /**
-     * @return array
-     */
     public function getParameters(): array
     {
         return array_map(
