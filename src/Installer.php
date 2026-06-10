@@ -23,9 +23,9 @@ use Composer\Package\RootPackageInterface;
  */
 class Installer extends LibraryInstaller implements PackagePathResolverInterface
 {
-    private const PACKAGE_TYPE            = 'hostnet-entity';
-    private const EXTRA_ENTITY_BUNDLE_DIR = 'entity-bundle-dir';
-    public const GENERATE_INTERFACES      = 'generate-interfaces';
+    private const string PACKAGE_TYPE            = 'hostnet-entity';
+    private const string EXTRA_ENTITY_BUNDLE_DIR = 'entity-bundle-dir';
+    public const string GENERATE_INTERFACES      = 'generate-interfaces';
 
     private $compound_generators;
 

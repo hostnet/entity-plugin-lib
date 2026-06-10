@@ -8,7 +8,7 @@ namespace Hostnet\Component\EntityPlugin;
 
 interface ReflectionTypeInterface
 {
-    public const NON_QUALIFIED_TYPES = [
+    public const array NON_QUALIFIED_TYPES = [
         'null',
         'void',
         'self',

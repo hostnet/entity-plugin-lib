@@ -14,7 +14,7 @@ use Symfony\Component\Console\Input\InputArgument;
  */
 class ReflectionParameterTest extends TestCase
 {
-    private const FOO = 'BAR';
+    private const string FOO = 'BAR';
 
     private function method($param, \Exception $param_2, array $param_3 = null, $param_4 = \DateTime::ATOM): void
     {
