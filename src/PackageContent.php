@@ -11,8 +11,8 @@ namespace Hostnet\Component\EntityPlugin;
  */
 class PackageContent implements PackageContentInterface
 {
-    public const ENTITY     = '\\Entity\\';
-    public const REPOSITORY = '\\Repository\\';
+    public const string ENTITY     = '\\Entity\\';
+    public const string REPOSITORY = '\\Repository\\';
 
     private $class_map;
     private $type;
