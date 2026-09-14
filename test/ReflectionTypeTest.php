@@ -28,6 +28,11 @@ class ReflectionTypeTest extends TestCase
      */
     private $t3;
 
+    /**
+     * @var ReflectionType
+     */
+    private $t4;
+
     private function method(array $param = null, \Exception $param_2): void
     {
         // for testing only;
@@ -36,6 +41,11 @@ class ReflectionTypeTest extends TestCase
     private function php8method(string|int $union_param): string|int
     {
         return $union_param;
+    }
+
+    private function fluentMethod(): static
+    {
+        return $this;
     }
 
     protected function setUp(): void
@@ -47,6 +57,7 @@ class ReflectionTypeTest extends TestCase
         $this->t1 = new ReflectionType((new \ReflectionParameter([$this, 'method'], 'param'))->getType());
         $this->t2 = new ReflectionType((new \ReflectionParameter([$this, 'method'], 'param_2'))->getType());
         $this->t3 = new ReflectionType((new \ReflectionParameter([$this, 'php8method'], 'union_param'))->getType());
+        $this->t4 = new ReflectionType((new \ReflectionMethod($this, 'fluentMethod'))->getReturnType());
     }
 
     public function testGetName(): void
@@ -54,6 +65,12 @@ class ReflectionTypeTest extends TestCase
         $this->assertSame('array', $this->t1->getName());
         $this->assertSame('\Exception', $this->t2->getName());
         $this->assertSame('string|int', $this->t3->getName());
+    }
+
+    public function testGetNameDoesNotQualifyStaticReturnType(): void
+    {
+        // "static" is a reserved word, not a class name — qualifying it as "\static" is invalid PHP.
+        $this->assertSame('static', $this->t4->getName());
     }
 
     public function testAllowsNull(): void
