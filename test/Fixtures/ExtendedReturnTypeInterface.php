@@ -44,9 +44,9 @@ interface ExtendedReturnTypeInterface
     public function streamMethod(): ?\Hostnet\Component\EntityPlugin\Fixtures\resource;
 
     /**
-     * @return \Hostnet\Component\EntityPlugin\Fixtures\object|null
+     * @return object|null
      */
-    public function objectMethod(): ?\object;
+    public function objectMethod(): ?object;
 
     /**
      * @return int|null

@@ -13,6 +13,7 @@ interface ReflectionTypeInterface
         'void',
         'self',
         'static',
+        'object',
         'array',
         'callable',
         'iterable',
