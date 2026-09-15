@@ -33,6 +33,11 @@ class ReflectionTypeTest extends TestCase
      */
     private $t4;
 
+    /**
+     * @var ReflectionType
+     */
+    private $t5;
+
     private function method(array $param = null, \Exception $param_2): void
     {
         // for testing only;
@@ -48,6 +53,11 @@ class ReflectionTypeTest extends TestCase
         return $this;
     }
 
+    private function objectParamMethod(object $param_3): void
+    {
+        // for testing only;
+    }
+
     protected function setUp(): void
     {
         if (PHP_MAJOR_VERSION < 7) {
@@ -58,6 +68,7 @@ class ReflectionTypeTest extends TestCase
         $this->t2 = new ReflectionType((new \ReflectionParameter([$this, 'method'], 'param_2'))->getType());
         $this->t3 = new ReflectionType((new \ReflectionParameter([$this, 'php8method'], 'union_param'))->getType());
         $this->t4 = new ReflectionType((new \ReflectionMethod($this, 'fluentMethod'))->getReturnType());
+        $this->t5 = new ReflectionType((new \ReflectionParameter([$this, 'objectParamMethod'], 'param_3'))->getType());
     }
 
     public function testGetName(): void
@@ -71,6 +82,12 @@ class ReflectionTypeTest extends TestCase
     {
         // "static" is a reserved word, not a class name — qualifying it as "\static" is invalid PHP.
         $this->assertSame('static', $this->t4->getName());
+    }
+
+    public function testGetNameDoesNotQualifyObjectType(): void
+    {
+        // "object" is a pseudo-type, not a class name — qualifying it as "\object" is invalid PHP.
+        $this->assertSame('object', $this->t5->getName());
     }
 
     public function testAllowsNull(): void
